@@ -1,0 +1,231 @@
+openapi: 3.1.1
+info:
+  title: Geocoding API
+  description: |
+    The Geocoding API provides location services to translate coordinates into human-readable addresses and vice versa.
+    
+    ## Features
+    
+    * **Reverse Geocoding**: Convert latitude/longitude coordinates to addresses
+    * **High Accuracy**: Precise location resolution
+    * **Global Coverage**: Worldwide address resolution
+    
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.facephi.com'
+security:
+  - apiKey: []
+tags:
+  - name: Geocoding
+    description: Location and address resolution services
+paths:
+  '/reverse-geocoding':
+    post:
+      tags:
+        - Geocoding
+      summary: Reverse Geocoding
+      description: This API translates a location on the map into a human-readable address. Provide latitude and longitude coordinates to get detailed address information.
+      operationId: reverseGeocoding
+      requestBody:
+        description: Coordinates to reverse geocode
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReverseGeocodingRequest'
+            example:
+              latitude: -70.961452
+              longitude: 100.714224
+      responses:
+        '200':
+          description: Successfully retrieved address information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReverseGeocodingResponse'
+              example:
+                results:
+                  - address_components:
+                      - long_name: "Antarctica"
+                        short_name: "AQ"
+                        types:
+                          - "country"
+                          - "political"
+                          - "Admin-0 country"
+                          - "Indeterminate"
+                    formatted_address: "Antarctica"
+                    geocoding:
+                      distance: null
+                      type: "Exact"
+                    types:
+                      - "country"
+                      - "political"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimit'
+        '500':
+          $ref: '#/components/responses/InternalError'
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key for authentication
+  schemas:
+    ReverseGeocodingRequest:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+          description: Latitude coordinate (decimal degrees)
+          minimum: -90
+          maximum: 90
+          example: -70.961452
+        longitude:
+          type: number
+          format: double
+          description: Longitude coordinate (decimal degrees)
+          minimum: -180
+          maximum: 180
+          example: 100.714224
+    ReverseGeocodingResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeocodingResult'
+    GeocodingResult:
+      type: object
+      properties:
+        address_components:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressComponent'
+        formatted_address:
+          type: string
+          description: Human-readable address string
+          example: "Antarctica"
+        geocoding:
+          $ref: '#/components/schemas/GeocodingInfo'
+        types:
+          type: array
+          items:
+            type: string
+          description: Array of feature types that apply to this result
+          example: ["country", "political"]
+    AddressComponent:
+      type: object
+      properties:
+        long_name:
+          type: string
+          description: Full text description or name of the address component
+          example: "Antarctica"
+        short_name:
+          type: string
+          description: Abbreviated textual name for the address component
+          example: "AQ"
+        types:
+          type: array
+          items:
+            type: string
+          description: Array indicating the type of the address component
+          example: ["country", "political", "Admin-0 country", "Indeterminate"]
+    GeocodingInfo:
+      type: object
+      properties:
+        distance:
+          type: number
+          nullable: true
+          description: Distance from the input coordinates to the result
+          example: null
+        type:
+          type: string
+          description: The type of geocoding match
+          enum: ["Exact", "Approximate", "Interpolated"]
+          example: "Exact"
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Error code
+            message:
+              type: string
+              description: Error message
+            details:
+              type: string
+              description: Additional error details
+  responses:
+    BadRequest:
+      description: Bad Request - Invalid input parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: "INVALID_INPUT"
+              message: "Invalid latitude or longitude values"
+              details: "Latitude must be between -90 and 90, longitude must be between -180 and 180"
+    Unauthorized:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: "UNAUTHORIZED"
+              message: "Invalid API key"
+              details: "Please provide a valid x-api-key header"
+    Forbidden:
+      description: Forbidden - Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    RateLimit:
+      description: Too Many Requests - Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: "RATE_LIMIT_EXCEEDED"
+              message: "Too many requests"
+              details: "Please wait before making another request"
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: "INTERNAL_ERROR"
+              message: "An internal server error occurred"
+              details: "Please try again later"

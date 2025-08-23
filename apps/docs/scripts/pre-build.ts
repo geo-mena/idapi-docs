@@ -1,15 +1,22 @@
 import { buildRegistry } from '@/scripts/build-registry';
 import * as OpenAPI from 'fumadocs-openapi';
 import { rimraf } from 'rimraf';
-import { openapi } from '@/lib/openapi';
+import { openapi, geocodingapi } from '@/lib/openapi';
 
 export async function generateDocs() {
   await rimraf('./content/docs/openapi/(generated)');
+  await rimraf('./content/docs/geocoding/(generated)');
 
   await Promise.all([
     OpenAPI.generateFiles({
       input: openapi,
       output: './content/docs/openapi/(generated)',
+      per: 'operation',
+      includeDescription: true,
+    }),
+    OpenAPI.generateFiles({
+      input: geocodingapi,
+      output: './content/docs/geocoding/(generated)',
       per: 'operation',
       includeDescription: true,
     }),

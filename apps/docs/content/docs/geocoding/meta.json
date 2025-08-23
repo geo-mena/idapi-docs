@@ -1,0 +1,7 @@
+{
+  "title": "Geocoding",
+  "description": "Location and address resolution APIs",
+  "root": true,
+  "icon": "MapPin",
+  "pages": ["index", "...(generated)"]
+}
