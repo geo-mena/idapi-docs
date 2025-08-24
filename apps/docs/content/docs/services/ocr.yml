@@ -112,6 +112,91 @@ paths:
                 Message: "User is not authorized to access this resource with an explicit deny"
       security:
         - apiKey: []
+  '/services/extractDocumentData':
+    post:
+      tags:
+        - OCR
+      summary: Extract Document Data
+      description: This service returns all the data extracted from an identification document by applying OCR to MRZ code, PDF, Barcode, and visible fields in other areas of the document according to the model defined for each country. For passports, OCR is exclusively applied to the MRZ code due to its standardized format.
+      operationId: extractDocumentData
+      requestBody:
+        description: Document images and configuration for OCR processing
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtractDocumentDataRequest'
+            example:
+              frontDocument: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              backDocument: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              countryCode: "ESP"
+              decompose: false
+              tracking:
+                extraData: "BQABAQG2gBNjuHN..."
+                operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+      responses:
+        '200':
+          description: Document data extracted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractDocumentDataResponse'
+              example:
+                serviceResultCode: 0
+                serviceResultLog: "Service request successfully processed"
+                serviceTime: "1842"
+                serviceDocument: "{\"ASK4BACK\":\"NO\",\"BACKSIDE\":{\"FIELD_DATA\":{\"BARCODES\":[{\"DATA\":\"\",\"TYPE\":\"\"}]},\"MRZ_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"IDENTITY_NUMBER\":\"123\",\"ISSUING_COUNTRY\":\"ESP\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"ESP\",\"PERSONAL_NUMBER\":\"12345678\",\"SERIAL_NUMBER\":\"000000001\",\"SURNAME\":\"DOE\"}},\"CHECKS\":{\"BIRTH_DATE_SIDE_MATCH\":true,\"EXPEDITION_DATE_SIDE_MATCH\":true,\"EXPIRATION_DATE_SIDE_MATCH\":true,\"NAME_SIDE_MATCH\":true,\"NATIONALITY_SIDE_MATCH\":true,\"SURNAME_SIDE_MATCH\":true},\"COUNTRY_CODE\":\"ESP\",\"DECOMPOSED\":{\"FACE\":\"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/p3Vg7fMCvXH/66ujh6VJXhFfkzHE4rEYqV6kmz/9k=...\"},\"DOC_MODEL\":\"NEW\",\"FRONTSIDE\":{\"FIELD_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"BIRTH_PLACE\":\"MADRID/ESP\",\"DOCUMENT_NUMBER\":\"1.234.567-A\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"ESP\",\"SURNAME\":\"DOE\"}},\"SCORING\":{\"BACK_CONFIDENCE\":0.927620202303,\"BACK_SHA256\":\"0f8b53d5724a186cf19c882baa20eb92fa6e1708065987a32ecbf0141a86e6a5\",\"FIELDS_RETURNED\":27,\"FIELDS_TOTAL\":27,\"FRONT_CONFIDENCE\":0.97401304245,\"FRONT_SHA256\":\"a3dccd459f4674ec8440a11c7c65ab0e1ebaa5fd8357b55484574e71116bef2c\",\"OVERALL_RATING\":100.0}}"
+                serviceTransactionId: "456e7890-e89b-12d3-a456-426614174001"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  title:
+                    type: string
+                    example: "Bad Request"
+                  detail:
+                    type: string
+                    example: "Invalid request."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+              example:
+                status: 400
+                title: "Bad Request"
+                detail: "Invalid request."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+              example:
+                message: "Unauthorized"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Message:
+                    type: string
+                    example: "User is not authorized to access this resource with an explicit deny"
+              example:
+                Message: "User is not authorized to access this resource with an explicit deny"
+      security:
+        - apiKey: []
 components:
   securitySchemes:
     apiKey:
@@ -183,3 +268,53 @@ components:
           type: string
           description: Operation identifier generated by Mobile/Web SDK.
           example: "{OPERATION_ID}"
+    ExtractDocumentDataRequest:
+      type: object
+      required:
+        - frontDocument
+        - backDocument
+        - countryCode
+      properties:
+        frontDocument:
+          type: string
+          format: byte
+          description: Base64 encoded image of the front side of the document, removing the mime type header.
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        backDocument:
+          type: string
+          format: byte
+          description: Base64 encoded image of the back side of the document, removing the mime type header.
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        countryCode:
+          type: string
+          description: Country code in ISO 3166-1 alpha-3 format. If not present in the request body, the service will use the default country defined for the client in the API settings.
+          example: "ESP"
+        decompose:
+          type: boolean
+          description: Indicates whether to obtain the face image present in the document and the signature crop. (*) Consult with Latam Support team for enabled countries.
+          example: false
+        tracking:
+          $ref: '#/components/schemas/TrackingInfo'
+    ExtractDocumentDataResponse:
+      type: object
+      properties:
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
+          example: 0
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the service execution result. Details of the module are included in case of an error or exception.
+          example: "Service request successfully processed"
+        serviceDocument:
+          type: string
+          description: Object that represents the captured document. Its properties are all the fields extracted by the OCR process including the face image present in the document.
+          example: "{\"ASK4BACK\":\"NO\",\"BACKSIDE\":{\"FIELD_DATA\":{\"BARCODES\":[{\"DATA\":\"\",\"TYPE\":\"\"}]},\"MRZ_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"IDENTITY_NUMBER\":\"123\",\"ISSUING_COUNTRY\":\"ESP\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"ESP\",\"PERSONAL_NUMBER\":\"12345678\",\"SERIAL_NUMBER\":\"000000001\",\"SURNAME\":\"DOE\"}},\"CHECKS\":{\"BIRTH_DATE_SIDE_MATCH\":true,\"EXPEDITION_DATE_SIDE_MATCH\":true,\"EXPIRATION_DATE_SIDE_MATCH\":true,\"NAME_SIDE_MATCH\":true,\"NATIONALITY_SIDE_MATCH\":true,\"SURNAME_SIDE_MATCH\":true},\"COUNTRY_CODE\":\"ESP\",\"DECOMPOSED\":{\"FACE\":\"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/p3Vg7fMCvXH/66ujh6VJXhFfkzHE4rEYqV6kmz/9k=...\"},\"DOC_MODEL\":\"NEW\",\"FRONTSIDE\":{\"FIELD_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"BIRTH_PLACE\":\"MADRID/ESP\",\"DOCUMENT_NUMBER\":\"1.234.567-A\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"ESP\",\"SURNAME\":\"DOE\"}},\"SCORING\":{\"BACK_CONFIDENCE\":0.927620202303,\"BACK_SHA256\":\"0f8b53d5724a186cf19c882baa20eb92fa6e1708065987a32ecbf0141a86e6a5\",\"FIELDS_RETURNED\":27,\"FIELDS_TOTAL\":27,\"FRONT_CONFIDENCE\":0.97401304245,\"FRONT_SHA256\":\"a3dccd459f4674ec8440a11c7c65ab0e1ebaa5fd8357b55484574e71116bef2c\",\"OVERALL_RATING\":100.0}}"
+        serviceTime:
+          type: string
+          description: Total execution time of the service (milliseconds).
+          example: "1842"
+        serviceTransactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API.
+          example: "456e7890-e89b-12d3-a456-426614174001"

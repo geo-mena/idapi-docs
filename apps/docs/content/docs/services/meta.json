@@ -4,6 +4,7 @@
   "root": true,
   "icon": "Server",
   "pages": [
+    "---Introduction---",
     "index",
     "serviceResultCodes",
     "---Onboarding---",
@@ -14,6 +15,7 @@
     "authentication/(generated)/authenticateUserV2",
     "authentication/(generated)/deleteUsers",
     "---OCR---",
-    "ocr/(generated)/extractDocumentDataWeb"
+    "ocr/(generated)/extractDocumentDataWeb",
+    "ocr/(generated)/extractDocumentData"
   ]
 }
