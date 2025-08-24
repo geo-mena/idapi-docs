@@ -273,7 +273,7 @@ components:
       properties:
         serviceResultCode:
           type: integer
-          description: Code indicating the overall result of the service execution. See Table 1 - Service Result Code
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
           example: 0
         serviceTime:
           type: string
@@ -281,7 +281,7 @@ components:
           example: "516"
         serviceFacialAuthenticationResult:
           type: integer
-          description: Code indicating the result of the facial matching. See Table 2 - Service Facial Authentication Result
+          description: Code indicating the result of the facial matching. See [Service Facial Authentication Result](/docs/services/serviceResultCodes#service-facial-authentication-result)
           example: 3
         serviceResultLog:
           type: string
@@ -305,7 +305,7 @@ components:
       properties:
         serviceResultCode:
           type: integer
-          description: Code indicating the overall result of the service execution. See Table 1 - Service Result Code
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
           example: 0
         serviceTime:
           type: string
@@ -313,7 +313,7 @@ components:
           example: "799"
         serviceLivenessResult:
           type: integer
-          description: Code indicating the result of the passive liveness test evaluation. See Table 3 - Service Liveness Result
+          description: Code indicating the result of the passive liveness test evaluation. See [Service Liveness Result](/docs/services/serviceResultCodes#service-liveness-result)
           example: 3
         serviceResultLog:
           type: string

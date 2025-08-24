@@ -5,11 +5,13 @@
   "icon": "Server",
   "pages": [
     "index",
+    "serviceResultCodes",
     "---Onboarding---",
     "onboarding/(generated)/authenticateFacial",
     "onboarding/(generated)/evaluatePassiveLivenessToken",
     "---Authentication---",
     "authentication/(generated)/authenticateUser",
+    "authentication/(generated)/authenticateUserV2",
     "authentication/(generated)/deleteUsers"
   ]
 }

@@ -1,0 +1,85 @@
+---
+title: Service Result Codes
+---
+
+This page contains reference tables for understanding the various codes returned by the Identity API services.
+
+## Service Result Code
+
+The `serviceResultCode` indicates the overall result of the service execution:
+
+| serviceResultCode | Description | HTTP code |
+|---|---|---|
+| 0 | The service execution was successful, the module processed the request correctly. | 200 |
+
+## Service Result Code /authenticateUser
+
+Specific result codes for the `authenticateUser` endpoint:
+
+| serviceResultCode | Description | HTTP code |
+|---|---|---|
+| 0 | User authenticated successfully. | 200 |
+| -100 | The registeredTemplateRaw parameter does not match the ID: [XXX] | 200 |
+| -101 | The bestImageToken parameter does not match a living person. | 200 |
+| -102 | User authentication failed due to non-matching templateRaw. | 200 |
+
+## Service Result Code /updateUserTemplate
+
+Specific result codes for the `updateUserTemplate` endpoint:
+
+| serviceResultCode | Description | HTTP code |
+|---|---|---|
+| 0 | The user's templateRaw was updated successfully. | 200 |
+| -100 | The registeredTemplateRaw parameter does not match the ID: [XXX] | 401 |
+| -102 | The registeredTemplateRaw parameter sent does not match the registered user's templateRaw for the user ID: [XXX]. InvalidRegisteredTemplateRaw. | 401 |
+| -103 | User not found | 400 |
+
+## Service Facial Authentication Result
+
+The `serviceFacialAuthenticationResult` indicates the result of facial matching operations:
+
+| Code | Result | Description |
+|---|---|---|
+| 0 | NONE | Facial verification could not be performed. |
+| 1 | NEGATIVE | The process was successfully executed. The facial pattern comparison of the faces does not match. |
+| 3 | POSITIVE | The process was successfully executed. The facial pattern comparison of the faces is positive. The value of serviceFacialSimilarityResult indicates the % of similarity between the compared images. |
+| 4 | NONE BECAUSE POSE EXCEED | Facial verification could not be performed due to face pose. |
+| 5 | NONE BECAUSE INVALID EXTRACTIONS | Facial verification could not be performed due to issues in facial pattern extraction. |
+
+## Service Liveness Result
+
+The `serviceLivenessResult` indicates the result of passive liveness test evaluation:
+
+| Code | Result | Description |
+|---|---|---|
+| 0 | None | Liveness check could not be evaluated. |
+| 1 | Spoof | DEPRECATED. Use 'NoLive' instead. |
+| 2 | Uncertain | DEPRECATED |
+| 3 | Live | The subject is assumed to be alive. |
+| 4 | NoneBecauseBadQuality | Liveness check could not be evaluated due to poor image quality. |
+| 5 | NoneBecauseFaceTooClose | Liveness check could not be evaluated because faces were detected too close to the edges. |
+| 6 | NoneBecauseFaceNotFound | Liveness check could not be evaluated because no faces were detected. |
+| 7 | NoneBecauseFaceTooSmall | Liveness check could not be evaluated because faces detected were too small. |
+| 8 | NoneBecauseAngleTooLarge | Liveness check could not be evaluated because the angle between faces exceeded the allowed limit. |
+| 9 | NoneBecauseImageDataError | Liveness check could not be evaluated due to image format errors. |
+| 10 | NoneBecauseInternalError | Liveness check could not be evaluated due to an internal error. |
+| 11 | NoneBecauseImagePreprocessError | Liveness check could not be evaluated due to an image preprocessing error. |
+| 12 | NoneBecauseTooManyFaces | Liveness check could not be evaluated because too many faces were detected in the image. |
+| 13 | NoneBecauseFaceTooCloseToBorder | Liveness check could not be evaluated because the face is too close to the border. |
+| 14 | NoneBecauseFaceCropped | Liveness check could not be evaluated because the face is cropped. |
+| 15 | NoneBecauseLicenseError | Liveness check could not be evaluated due to a license error. |
+| 16 | NoneBecauseFaceOccluded | Liveness check could not be evaluated because the face is occluded. |
+| 17 | NoLive | No liveness detected. |
+| 18 | NoneBecauseEyesClosed | Liveness check could not be evaluated because the person's eyes are closed. |
+
+## Error Scenarios and Responses
+
+<Callout type="warn">
+For cases of input parameter validation errors, a response will be obtained according to RFC 9457 Problem Details.
+</Callout>
+
+| Example Scenario | HTTP code | Content-type | Body |
+|---|---|---|---|
+| Missing required parameter | 400 | application/json | `{"status": 400, "title": "Bad Request", "detail": "Invalid request.", "type": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400", "errors": ["countryCode is required"]}` |
+| Communication failure with external service | 502 | application/json | `{"status": 502, "title": "Bad Gateway", "detail": "Server got an invalid response.", "type": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"}` |
+| Timeout | 504 | application/json | `{"message": "Endpoint request timed out"}` |
