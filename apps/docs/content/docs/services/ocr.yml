@@ -1,0 +1,185 @@
+openapi: 3.1.1
+info:
+  title: OCR Services API
+  description: |
+    The OCR Services API provides optical character recognition capabilities for identification documents.
+    
+    ## Features
+    
+    * **Document Data Extraction**: Extract all data from identification documents using OCR
+    * **MRZ Processing**: Process Machine Readable Zone codes
+    * **Barcode/PDF Support**: Extract data from various document formats
+    * **Multi-country Support**: Support for different document models by country
+    
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: OCR
+    description: Optical character recognition services for document processing
+paths:
+  '/services/extractDocumentDataWeb':
+    post:
+      tags:
+        - OCR
+      summary: Extract Document Data Web
+      description: This service returns all the data extracted from an identification document by applying OCR to MRZ code, PDF, Barcode, and visible fields in other areas of the document according to the model defined for each country. For passports, OCR is exclusively applied to the MRZ code due to its standardized format.
+      operationId: extractDocumentDataWeb
+      requestBody:
+        description: Document images and configuration for OCR processing
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtractDocumentDataWebRequest'
+            example:
+              tokenFrontDocument: "{TOKEN_FRONT_DOCUMENT}"
+              tokenBackDocument: "{TOKEN_BACK_DOCUMENT}"
+              countryCode: "{COUNTRY_CODE}"
+              decompose: false
+              tracking:
+                extraData: "{EXTRA_DATA}"
+                operationId: "{OPERATION_ID}"
+      responses:
+        '200':
+          description: Document data extracted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractDocumentDataWebResponse'
+              example:
+                serviceResultCode: 0
+                serviceResultLog: "Service request successfully processed"
+                serviceTime: "2237"
+                serviceDocument: "{\"ASK4BACK\":\"NO\",\"BACKSIDE\":{\"FIELD_DATA\":{\"BARCODES\":[{\"DATA\":\"\",\"TYPE\":\"\"}]},\"MRZ_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"IDENTITY_NUMBER\":\"123\",\"ISSUING_COUNTRY\":\"XYZ\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"XYZ\",\"PERSONAL_NUMBER\":\"12345678\",\"SERIAL_NUMBER\":\"000000001\",\"SURNAME\":\"DOE\"}},\"CHECKS\":{\"BIRTH_DATE_SIDE_MATCH\":true,\"EXPEDITION_DATE_SIDE_MATCH\":true,\"EXPIRATION_DATE_SIDE_MATCH\":true,\"NAME_SIDE_MATCH\":true,\"NATIONALITY_SIDE_MATCH\":true,\"SURNAME_SIDE_MATCH\":true},\"COUNTRY_CODE\":\"XYZ\",\"DECOMPOSED\":{\"FACE\":\"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/p3Vg7fMCvXH/66ujh6VJXhFfkzHE4rEYqV6kmz/9k=...\"},\"DOC_MODEL\":\"NEW\",\"FRONTSIDE\":{\"FIELD_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"BIRTH_PLACE\":\"SOMEPLACE/XYZ\",\"DOCUMENT_NUMBER\":\"1.234.567-8\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"XYZ\",\"SURNAME\":\"DOE\"}},\"SCORING\":{\"BACK_CONFIDENCE\":0.927620202303,\"BACK_SHA256\":\"0f8b53d5724a186cf19c882baa20eb92fa6e1708065987a32ecbf0141a86e6a5\",\"FIELDS_RETURNED\":27,\"FIELDS_TOTAL\":27,\"FRONT_CONFIDENCE\":0.97401304245,\"FRONT_SHA256\":\"a3dccd459f4674ec8440a11c7c65ab0e1ebaa5fd8357b55484574e71116bef2c\",\"OVERALL_RATING\":100.0}}"
+                serviceTransactionId: "123e4567-e89b-12d3-a456-426614174000"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  title:
+                    type: string
+                    example: "Bad Request"
+                  detail:
+                    type: string
+                    example: "Invalid request."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+              example:
+                status: 400
+                title: "Bad Request"
+                detail: "Invalid request."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+              example:
+                message: "Unauthorized"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Message:
+                    type: string
+                    example: "User is not authorized to access this resource with an explicit deny"
+              example:
+                Message: "User is not authorized to access this resource with an explicit deny"
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key for authentication
+  schemas:
+    ExtractDocumentDataWebRequest:
+      type: object
+      required:
+        - tokenFrontDocument
+        - tokenBackDocument
+        - countryCode
+      properties:
+        tokenFrontDocument:
+          type: string
+          format: byte
+          description: Base64 encoded image of the front side of the document, removing the mime type header.
+          example: "{TOKEN_FRONT_DOCUMENT}"
+        tokenBackDocument:
+          type: string
+          format: byte
+          description: Base64 encoded image of the back side of the document, removing the mime type header.
+          example: "{TOKEN_BACK_DOCUMENT}"
+        countryCode:
+          type: string
+          description: Country code in ISO 3166-1 alpha-3 format. If not present in the request body, the service will use the default country defined for the client in the API settings.
+          example: "{COUNTRY_CODE}"
+        decompose:
+          type: boolean
+          description: Indicates whether to obtain the face image present in the document and the signature crop. (*) Consult with Latam Support team for enabled countries.
+          example: false
+        tracking:
+          $ref: '#/components/schemas/TrackingInfo'
+    ExtractDocumentDataWebResponse:
+      type: object
+      properties:
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
+          example: 0
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the service execution result. Details of the module are included in case of an error or exception.
+          example: "Service request successfully processed"
+        serviceDocument:
+          type: string
+          description: Object that represents the captured document. Its properties are all the fields extracted by the OCR process including the face image present in the document.
+          example: "{\"ASK4BACK\":\"NO\",\"BACKSIDE\":{\"FIELD_DATA\":{\"BARCODES\":[{\"DATA\":\"\",\"TYPE\":\"\"}]},\"MRZ_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"IDENTITY_NUMBER\":\"123\",\"ISSUING_COUNTRY\":\"XYZ\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"XYZ\",\"PERSONAL_NUMBER\":\"12345678\",\"SERIAL_NUMBER\":\"000000001\",\"SURNAME\":\"DOE\"}},\"CHECKS\":{\"BIRTH_DATE_SIDE_MATCH\":true,\"EXPEDITION_DATE_SIDE_MATCH\":true,\"EXPIRATION_DATE_SIDE_MATCH\":true,\"NAME_SIDE_MATCH\":true,\"NATIONALITY_SIDE_MATCH\":true,\"SURNAME_SIDE_MATCH\":true},\"COUNTRY_CODE\":\"XYZ\",\"DECOMPOSED\":{\"FACE\":\"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/p3Vg7fMCvXH/66ujh6VJXhFfkzHE4rEYqV6kmz/9k=...\"},\"DOC_MODEL\":\"NEW\",\"FRONTSIDE\":{\"FIELD_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"BIRTH_PLACE\":\"SOMEPLACE/XYZ\",\"DOCUMENT_NUMBER\":\"1.234.567-8\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"XYZ\",\"SURNAME\":\"DOE\"}},\"SCORING\":{\"BACK_CONFIDENCE\":0.927620202303,\"BACK_SHA256\":\"0f8b53d5724a186cf19c882baa20eb92fa6e1708065987a32ecbf0141a86e6a5\",\"FIELDS_RETURNED\":27,\"FIELDS_TOTAL\":27,\"FRONT_CONFIDENCE\":0.97401304245,\"FRONT_SHA256\":\"a3dccd459f4674ec8440a11c7c65ab0e1ebaa5fd8357b55484574e71116bef2c\",\"OVERALL_RATING\":100.0}}"
+        serviceTime:
+          type: string
+          description: Total execution time of the service (milliseconds).
+          example: "2237"
+        serviceTransactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API.
+          example: "123e4567-e89b-12d3-a456-426614174000"
+    TrackingInfo:
+      type: object
+      description: Object that represents necessary tracking information.
+      properties:
+        extraData:
+          type: string
+          format: byte
+          description: Token generated by Mobile/Web SDK. Contains tokenized tracking information with Platform.
+          example: "{EXTRA_DATA}"
+        operationId:
+          type: string
+          description: Operation identifier generated by Mobile/Web SDK.
+          example: "{OPERATION_ID}"

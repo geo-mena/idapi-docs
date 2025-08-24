@@ -59,3 +59,15 @@ export const authenticationapi = createOpenAPI({
     },
   },
 });
+
+export const ocrapi = createOpenAPI({
+  input: ['./content/docs/services/ocr.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
