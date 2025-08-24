@@ -35,3 +35,27 @@ export const servicesapi = createOpenAPI({
     },
   },
 });
+
+export const onboardingapi = createOpenAPI({
+  input: ['./content/docs/services/onboarding.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
+export const authenticationapi = createOpenAPI({
+  input: ['./content/docs/services/authentication.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});

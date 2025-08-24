@@ -1,7 +1,15 @@
 {
-  "title": "Services",
+  "title": "Identity API",
   "description": "Identity verification and biometric services",
   "root": true,
   "icon": "Server",
-  "pages": ["index", "...(generated)"]
+  "pages": [
+    "index",
+    "---Onboarding---",
+    "onboarding/(generated)/authenticateFacial",
+    "onboarding/(generated)/evaluatePassiveLivenessToken",
+    "---Authentication---",
+    "authentication/(generated)/authenticateUser",
+    "authentication/(generated)/deleteUsers"
+  ]
 }

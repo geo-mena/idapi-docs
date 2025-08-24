@@ -1,0 +1,328 @@
+openapi: 3.1.1
+info:
+  title: Authentication Services API
+  description: |
+    The Authentication Services API provides user authentication and management services for registered users.
+    
+    ## Features
+    
+    * **User Authentication**: Validate registered users with biometric templates or civil registry images
+    * **User Management**: Delete registered users from the system
+    * **Real-time Processing**: Fast response times for critical applications
+    
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: Authentication
+    description: User authentication and management services
+paths:
+  '/services/authenticateUser':
+    post:
+      tags:
+        - Authentication
+      summary: Authenticate User
+      description: This service validates both liveness and facial authentication. It compares the biometric template (templateRaw), which was previously validated and stored in the client's data repository during the Onboarding process, with a bestImageToken generated at the time of authentication.
+      operationId: authenticateUser
+      requestBody:
+        description: User authentication data with biometric templates and tokens
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticateUserRequest'
+            examples:
+              WithRegisteredTemplate:
+                summary: Authentication with registered biometric template
+                value:
+                  userId: "001"
+                  registeredTemplateRaw: "BAIBAQFpWLJtBYBymCoRF…"
+                  bestImageToken: "BAIBAQIJTHP8obR2r9ALdDtR5lT…"
+                  merchantReferenceId: "authenticate-001"
+                  tracking:
+                    extraData: "BQABAQG2gBNjuHN..."
+                    operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+              WithImage:
+                summary: Authentication with civil registry image
+                value:
+                  userId: "001"
+                  image: "/9j/4AAQ..."
+                  bestImageToken: "BAIBAQIJTHP8obR2r9ALdDtR5lT…"
+                  merchantReferenceId: "authenticate-001"
+                  tracking:
+                    extraData: "BQABAQG2gBNjuHN..."
+                    operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+      responses:
+        '200':
+          description: User authentication processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticateUserResponse'
+              example:
+                merchantReferenceId: "82b0084f-ddec-4415-8d2f-b085b42a0155"
+                serviceResultCode: 0
+                serviceResultLog: ""
+                serviceFacialSimilarityResult: 0.9946970343589783
+                timestamp: "2024-10-29T20:29:24Z"
+                transactionId: "531ecbb1-de3d-4907-a737-0db236674e9a"
+                registeredTemplateRaw: "BAIBAQGo+puJyHjfRD8n"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  title:
+                    type: string
+                    example: "Bad Request"
+                  detail:
+                    type: string
+                    example: "Invalid request."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+              example:
+                status: 400
+                title: "Bad Request"
+                detail: "Invalid request."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+              example:
+                message: "Unauthorized"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Message:
+                    type: string
+                    example: "User is not authorized to access this resource with an explicit deny"
+              example:
+                Message: "User is not authorized to access this resource with an explicit deny"
+      security:
+        - apiKey: []
+    delete:
+      tags:
+        - Authentication
+      summary: Delete Users
+      description: Allows batch deletion of registered users from the authentication system.
+      operationId: deleteUsers
+      requestBody:
+        description: List of user IDs to delete
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteUsersRequest'
+            example:
+              userIds: ["001"]
+      responses:
+        '200':
+          description: Users deletion processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteUsersResponse'
+              example:
+                serviceResultCode: 0
+                serviceResultLog: "Service request successfully processed"
+                timestamp: "2024-10-29T20:29:24Z"
+                transactionId: "531ecbb1-de3d-4907-a737-0db236674e9a"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  title:
+                    type: string
+                    example: "Bad Request"
+                  detail:
+                    type: string
+                    example: "Invalid request."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+              example:
+                status: 400
+                title: "Bad Request"
+                detail: "Invalid request."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+              example:
+                message: "Unauthorized"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Message:
+                    type: string
+                    example: "User is not authorized to access this resource with an explicit deny"
+              example:
+                Message: "User is not authorized to access this resource with an explicit deny"
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key for authentication
+  schemas:
+    AuthenticateUserRequest:
+      type: object
+      required:
+        - userId
+        - bestImageToken
+        - merchantReferenceId
+      properties:
+        userId:
+          type: string
+          description: Unique identifier for the user. Must be persisted and associated with the corresponding biometric template. Needs to be at least two digits.
+          example: "001"
+        registeredTemplateRaw:
+          type: string
+          format: byte
+          description: Template generated by the Selphi widget, AES256 encrypted and tokenized, sent in Base64 format. Represents the user's facial pattern with the most frontal face pose detected.
+          example: "BAIBAQFpWLJtBYBymCoRF…"
+        image:
+          type: string
+          format: byte
+          description: Base64 formatted image obtained from the civil registry. Becomes mandatory if the registered biometric template (registeredTemplateRaw) is not provided.
+          example: "/9j/4AAQ..."
+        bestImageToken:
+          type: string
+          format: byte
+          description: Tokenized bestImage property generated by the Selphi widget at the time of authentication.
+          example: "BAIBAQIJTHP8obR2r9ALdDtR5lT…"
+        template:
+          type: string
+          format: byte
+          description: Base64 formatted biometric template. Becomes mandatory if tokenized bestImage (bestImageToken) is not provided.
+          example: "templateBase64..."
+        merchantReferenceId:
+          type: string
+          description: Client reference for each authentication. It is recommended that this data does not contain sensitive information such as PII (personally identifiable information).
+          example: "authenticate-001"
+        tracking:
+          $ref: '#/components/schemas/TrackingInfo'
+    AuthenticateUserResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (UTC) of the response in the format YYYY-MM-DDThh:mm:ss.SSSZ
+          example: "2024-10-29T20:29:24Z"
+        transactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API.
+          example: "531ecbb1-de3d-4907-a737-0db236674e9a"
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See Table 1 - Service Result Code
+          example: 0
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the execution result when there is an error or exception. If successful, it indicates the result code description.
+          example: ""
+        serviceFacialSimilarityResult:
+          type: number
+          format: float
+          description: Value indicating the facial similarity between the registeredTemplateRaw and the bestImageToken. 1.0 = 100%.
+          example: 0.9946970343589783
+        merchantReferenceId:
+          type: string
+          description: Reference sent in the body of the request.
+          example: "82b0084f-ddec-4415-8d2f-b085b42a0155"
+        registeredTemplateRaw:
+          type: string
+          format: byte
+          description: Registered biometric template returned by the SelphID SDK extract for use in subsequent authentications.
+          example: "BAIBAQGo+puJyHjfRD8n"
+    DeleteUsersRequest:
+      type: object
+      required:
+        - userIds
+      properties:
+        userIds:
+          type: array
+          items:
+            type: string
+          description: List of unique user identifiers to be deleted
+          example: ["001"]
+    DeleteUsersResponse:
+      type: object
+      properties:
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See Table 1 - Service Result Code
+          example: 0
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the service execution result. Includes details when there is an error or exception.
+          example: "Service request successfully processed"
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (UTC) of the response in the format YYYY-MM-DDThh:mm:ss.SSSZ
+          example: "2024-10-29T20:29:24Z"
+        transactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API.
+          example: "531ecbb1-de3d-4907-a737-0db236674e9a"
+    TrackingInfo:
+      type: object
+      description: Object that represents necessary tracking information.
+      properties:
+        extraData:
+          type: string
+          format: byte
+          description: Token generated by Mobile/Web SDK. Contains tokenized tracking information with Platform.
+          example: "BQABAQG2gBNjuHN..."
+        operationId:
+          type: string
+          description: Operation identifier generated by Mobile/Web SDK.
+          example: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
