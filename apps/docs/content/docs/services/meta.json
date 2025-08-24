@@ -1,0 +1,7 @@
+{
+  "title": "Services",
+  "description": "Identity verification and biometric services",
+  "root": true,
+  "icon": "Shield",
+  "pages": ["index", "...(generated)"]
+}

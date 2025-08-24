@@ -23,3 +23,15 @@ export const geocodingapi = createOpenAPI({
     },
   },
 });
+
+export const servicesapi = createOpenAPI({
+  input: ['./services.yaml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
