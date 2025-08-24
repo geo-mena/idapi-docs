@@ -63,6 +63,11 @@
   --color-fd-primary: var(--headless-color);
 }
 
+/* Add styles for the services category */
+.services {
+  --color-fd-primary: var(--headless-color);
+}
+
 :root {
   --headless-color: hsl(250, 80%, 54%);
   --ui-color: hsl(220, 91%, 54%);
