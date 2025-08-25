@@ -117,23 +117,25 @@ paths:
       tags:
         - OCR
       summary: Extract Document Data
-      description: This service returns all the data extracted from an identification document by applying OCR to MRZ code, PDF, Barcode, and visible fields in other areas of the document according to the model defined for each country. For passports, OCR is exclusively applied to the MRZ code due to its standardized format.
+      description: |
+        This service returns all the data extracted from an identification document by applying OCR to MRZ code, PDF, Barcode, and visible fields in other areas of the document according to the model defined for each country.
+        
+        ## Integration
+        
+        This service is used for implementations of the SelphID Mobile widget by sending the TokenOCR property generated from the widget's native function.
       operationId: extractDocumentData
       requestBody:
-        description: Document images and configuration for OCR processing
+        description: TokenOCR data and tracking information for document processing
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ExtractDocumentDataRequest'
             example:
-              frontDocument: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-              backDocument: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-              countryCode: "ESP"
-              decompose: false
+              tokenOcr: "{{tokenOcr}}"
               tracking:
-                extraData: "BQABAQG2gBNjuHN..."
-                operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+                extraData: "{{extraData}}"
+                operationId: "{{operationId}}"
       responses:
         '200':
           description: Document data extracted successfully
@@ -144,9 +146,9 @@ paths:
               example:
                 serviceResultCode: 0
                 serviceResultLog: "Service request successfully processed"
-                serviceTime: "1842"
-                serviceDocument: "{\"ASK4BACK\":\"NO\",\"BACKSIDE\":{\"FIELD_DATA\":{\"BARCODES\":[{\"DATA\":\"\",\"TYPE\":\"\"}]},\"MRZ_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"IDENTITY_NUMBER\":\"123\",\"ISSUING_COUNTRY\":\"ESP\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"ESP\",\"PERSONAL_NUMBER\":\"12345678\",\"SERIAL_NUMBER\":\"000000001\",\"SURNAME\":\"DOE\"}},\"CHECKS\":{\"BIRTH_DATE_SIDE_MATCH\":true,\"EXPEDITION_DATE_SIDE_MATCH\":true,\"EXPIRATION_DATE_SIDE_MATCH\":true,\"NAME_SIDE_MATCH\":true,\"NATIONALITY_SIDE_MATCH\":true,\"SURNAME_SIDE_MATCH\":true},\"COUNTRY_CODE\":\"ESP\",\"DECOMPOSED\":{\"FACE\":\"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/p3Vg7fMCvXH/66ujh6VJXhFfkzHE4rEYqV6kmz/9k=...\"},\"DOC_MODEL\":\"NEW\",\"FRONTSIDE\":{\"FIELD_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"BIRTH_PLACE\":\"MADRID/ESP\",\"DOCUMENT_NUMBER\":\"1.234.567-A\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"ESP\",\"SURNAME\":\"DOE\"}},\"SCORING\":{\"BACK_CONFIDENCE\":0.927620202303,\"BACK_SHA256\":\"0f8b53d5724a186cf19c882baa20eb92fa6e1708065987a32ecbf0141a86e6a5\",\"FIELDS_RETURNED\":27,\"FIELDS_TOTAL\":27,\"FRONT_CONFIDENCE\":0.97401304245,\"FRONT_SHA256\":\"a3dccd459f4674ec8440a11c7c65ab0e1ebaa5fd8357b55484574e71116bef2c\",\"OVERALL_RATING\":100.0}}"
-                serviceTransactionId: "456e7890-e89b-12d3-a456-426614174001"
+                serviceTime: "19"
+                serviceDocument: "{\"Back/BARCODE/BarcodeData\":\"ABC123\",\"Back/BARCODE/BarcodeType\":\"Code39\",\"Back/BARCODE/DocumentData\":\"ABC123\",\"Back/INPUT/Issuer\":\"USA\",\"Back/MRZ/DateOfBirth\":\"01/01/1980\",\"Back/MRZ/DateOfExpiry\":\"01/01/2030\",\"Back/MRZ/DocumentCode\":\"P\",\"Back/MRZ/DocumentData\":\"123456789\",\"Back/MRZ/DocumentNumber\":\"987654321\",\"Back/MRZ/FirstName\":\"JOHN\",\"Back/MRZ/FullName\":\"JOHN DOE\",\"Back/MRZ/Issuer\":\"USA\",\"Back/MRZ/LastName\":\"DOE\",\"Back/MRZ/MrzText\":\"P<USA123456789987654321<<<<<<<<<<<<<\\n8001015<3001017USA<<<<<<<<<<<1\\nDOE<<JOHN<<<<<<<<<<<<<<<<<<<<<\",\"Back/MRZ/Nationality\":\"USA\",\"Back/MRZ/NfcKey\":\"123456789\",\"Back/MRZ/Opt2\":\"300101\",\"Back/MRZ/PrimaryID\":\"DOE\",\"Back/MRZ/SecondaryID\":\"JOHN\",\"Back/MRZ/Verified\":\"YES\",\"DateOfBirth\":\"01/01/1980\",\"DateOfExpiry\":\"01/01/2030\",\"DateOfIssue\":\"01/01/2020\",\"DocumentCaptured\":\"US/v2\",\"DocumentNumber\":\"987654321\",\"FirstName\":\"JOHN\",\"Front/INPUT/Issuer\":\"USA\",\"Front/ML/DateOfBirth\":\"01/01/1980\",\"Front/ML/DateOfExpiry\":\"01/01/2030\",\"Front/ML/DateOfIssue\":\"01/01/2020\",\"Front/ML/DocumentNumber\":\"987654321\",\"Front/ML/FirstName\":\"JOHN\",\"Front/ML/LastName\":\"DOE\",\"Front/ML/Nationality\":\"USA\",\"FullName\":\"JOHN DOE\",\"Issuer\":\"USA\",\"LastName\":\"DOE\",\"MatchingSidesScore\":\"1.000\",\"Nationality\":\"USA\",\"NfcKey\":\"123456789\"}"
+                serviceTransactionId: "123e4567-e89b-12d3-a456-426614174000"
         '400':
           description: Bad Request
           content:
@@ -271,28 +273,13 @@ components:
     ExtractDocumentDataRequest:
       type: object
       required:
-        - frontDocument
-        - backDocument
-        - countryCode
+        - tokenOcr
       properties:
-        frontDocument:
+        tokenOcr:
           type: string
           format: byte
-          description: Base64 encoded image of the front side of the document, removing the mime type header.
-          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-        backDocument:
-          type: string
-          format: byte
-          description: Base64 encoded image of the back side of the document, removing the mime type header.
-          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-        countryCode:
-          type: string
-          description: Country code in ISO 3166-1 alpha-3 format. If not present in the request body, the service will use the default country defined for the client in the API settings.
-          example: "ESP"
-        decompose:
-          type: boolean
-          description: Indicates whether to obtain the face image present in the document and the signature crop. (*) Consult with Latam Support team for enabled countries.
-          example: false
+          description: Token generated by the native or hybrid SelphID widget, AES256 encrypted and tokenized, sent in Base64 format. Contains the OCR result from the document capture.
+          example: "{{tokenOcr}}"
         tracking:
           $ref: '#/components/schemas/TrackingInfo'
     ExtractDocumentDataResponse:
@@ -308,13 +295,13 @@ components:
           example: "Service request successfully processed"
         serviceDocument:
           type: string
-          description: Object that represents the captured document. Its properties are all the fields extracted by the OCR process including the face image present in the document.
-          example: "{\"ASK4BACK\":\"NO\",\"BACKSIDE\":{\"FIELD_DATA\":{\"BARCODES\":[{\"DATA\":\"\",\"TYPE\":\"\"}]},\"MRZ_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"IDENTITY_NUMBER\":\"123\",\"ISSUING_COUNTRY\":\"ESP\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"ESP\",\"PERSONAL_NUMBER\":\"12345678\",\"SERIAL_NUMBER\":\"000000001\",\"SURNAME\":\"DOE\"}},\"CHECKS\":{\"BIRTH_DATE_SIDE_MATCH\":true,\"EXPEDITION_DATE_SIDE_MATCH\":true,\"EXPIRATION_DATE_SIDE_MATCH\":true,\"NAME_SIDE_MATCH\":true,\"NATIONALITY_SIDE_MATCH\":true,\"SURNAME_SIDE_MATCH\":true},\"COUNTRY_CODE\":\"ESP\",\"DECOMPOSED\":{\"FACE\":\"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/p3Vg7fMCvXH/66ujh6VJXhFfkzHE4rEYqV6kmz/9k=...\"},\"DOC_MODEL\":\"NEW\",\"FRONTSIDE\":{\"FIELD_DATA\":{\"BIRTH_DATE\":\"01/01/1980\",\"BIRTH_PLACE\":\"MADRID/ESP\",\"DOCUMENT_NUMBER\":\"1.234.567-A\",\"EXPEDITION_DATE\":\"01/01/2020\",\"EXPIRATION_DATE\":\"01/01/2030\",\"NAME\":\"JOHN\",\"NATIONALITY\":\"ESP\",\"SURNAME\":\"DOE\"}},\"SCORING\":{\"BACK_CONFIDENCE\":0.927620202303,\"BACK_SHA256\":\"0f8b53d5724a186cf19c882baa20eb92fa6e1708065987a32ecbf0141a86e6a5\",\"FIELDS_RETURNED\":27,\"FIELDS_TOTAL\":27,\"FRONT_CONFIDENCE\":0.97401304245,\"FRONT_SHA256\":\"a3dccd459f4674ec8440a11c7c65ab0e1ebaa5fd8357b55484574e71116bef2c\",\"OVERALL_RATING\":100.0}}"
+          description: Object that represents the captured document. Its properties are all the fields extracted by the OCR process.
+          example: "{\"Back/BARCODE/BarcodeData\":\"ABC123\",\"Back/BARCODE/BarcodeType\":\"Code39\",\"Back/BARCODE/DocumentData\":\"ABC123\",\"Back/INPUT/Issuer\":\"USA\",\"Back/MRZ/DateOfBirth\":\"01/01/1980\",\"Back/MRZ/DateOfExpiry\":\"01/01/2030\",\"Back/MRZ/DocumentCode\":\"P\",\"Back/MRZ/DocumentData\":\"123456789\",\"Back/MRZ/DocumentNumber\":\"987654321\",\"Back/MRZ/FirstName\":\"JOHN\",\"Back/MRZ/FullName\":\"JOHN DOE\",\"Back/MRZ/Issuer\":\"USA\",\"Back/MRZ/LastName\":\"DOE\",\"Back/MRZ/MrzText\":\"P<USA123456789987654321<<<<<<<<<<<<<\\n8001015<3001017USA<<<<<<<<<<<1\\nDOE<<JOHN<<<<<<<<<<<<<<<<<<<<<\",\"Back/MRZ/Nationality\":\"USA\",\"Back/MRZ/NfcKey\":\"123456789\",\"Back/MRZ/Opt2\":\"300101\",\"Back/MRZ/PrimaryID\":\"DOE\",\"Back/MRZ/SecondaryID\":\"JOHN\",\"Back/MRZ/Verified\":\"YES\",\"DateOfBirth\":\"01/01/1980\",\"DateOfExpiry\":\"01/01/2030\",\"DateOfIssue\":\"01/01/2020\",\"DocumentCaptured\":\"US/v2\",\"DocumentNumber\":\"987654321\",\"FirstName\":\"JOHN\",\"Front/INPUT/Issuer\":\"USA\",\"Front/ML/DateOfBirth\":\"01/01/1980\",\"Front/ML/DateOfExpiry\":\"01/01/2030\",\"Front/ML/DateOfIssue\":\"01/01/2020\",\"Front/ML/DocumentNumber\":\"987654321\",\"Front/ML/FirstName\":\"JOHN\",\"Front/ML/LastName\":\"DOE\",\"Front/ML/Nationality\":\"USA\",\"FullName\":\"JOHN DOE\",\"Issuer\":\"USA\",\"LastName\":\"DOE\",\"MatchingSidesScore\":\"1.000\",\"Nationality\":\"USA\",\"NfcKey\":\"123456789\"}"
         serviceTime:
           type: string
           description: Total execution time of the service (milliseconds).
-          example: "1842"
+          example: "19"
         serviceTransactionId:
           type: string
           description: Transaction identifier associated with the request processed by the API.
-          example: "456e7890-e89b-12d3-a456-426614174001"
+          example: "123e4567-e89b-12d3-a456-426614174000"
