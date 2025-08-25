@@ -79,8 +79,10 @@ The `serviceLivenessResult` indicates the result of passive liveness test evalua
 For cases of input parameter validation errors, a response will be obtained according to RFC 9457 Problem Details.
 </Callout>
 
-| Example Scenario | HTTP code | Content-type | Body |
+| Example Scenario | HTTP code | Content-type | Description |
 |---|---|---|---|
-| Missing required parameter | 400 | application/json | `{"status": 400, "title": "Bad Request", "detail": "Invalid request.", "type": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400", "errors": ["countryCode is required"]}` |
-| Communication failure with external service | 502 | application/json | `{"status": 502, "title": "Bad Gateway", "detail": "Server got an invalid response.", "type": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"}` |
-| Timeout | 504 | application/json | `{"message": "Endpoint request timed out"}` |
+| Missing required parameter | 400 | application/json | Request validation failed. Check that all required parameters are included and properly formatted. |
+| Unauthorized access | 401 | application/json | Authentication failed. Verify your API key is correct and included in the x-api-key header. |
+| Access forbidden | 403 | application/json | API key is valid but lacks permission for this resource. Contact support to verify your access level. |
+| Communication failure with external service | 502 | application/json | Internal service communication error. Contact support@facephi.com if this error persists. |
+| Timeout | 504 | application/json | Request processing timeout. Contact support@facephi.com if this error persists. |
