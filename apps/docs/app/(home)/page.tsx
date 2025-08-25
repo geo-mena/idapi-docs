@@ -27,7 +27,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { CodeBlock } from '@/components/code-block';
 import { UwuHero } from '@/app/(home)/uwu';
 import SourceImage from '@/public/source.png';
-import ContributorCounter from '@/components/contributor-count';
+// import ContributorCounter from '@/components/contributor-count';
 import {
   CreateAppAnimation,
   PreviewImages,
@@ -85,7 +85,7 @@ export default function Page() {
           <Highlights />
           <Architecture />
           <Why />
-          <Contributing />
+          {/* <Contributing /> */}
           <End />
         </div>
       </main>
@@ -545,7 +545,7 @@ Hello World
   );
 }
 
-function Contributing() {
+/* function Contributing() {
   return (
     <div className="flex flex-col items-center border-x border-t px-4 py-16 text-center">
       <Heart fill="currentColor" className="text-pink-500 mb-4" />
@@ -573,7 +573,7 @@ function Contributing() {
       <ContributorCounter repoOwner={owner} repoName={repo} />
     </div>
   );
-}
+} */
 
 function Features() {
   return (
