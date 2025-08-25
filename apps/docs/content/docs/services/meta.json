@@ -10,6 +10,7 @@
     "---Onboarding---",
     "onboarding/(generated)/authenticateFacial",
     "onboarding/(generated)/evaluatePassiveLivenessToken",
+    "onboarding/(generated)/finishTracking",
     "---Authentication---",
     "authentication/(generated)/authenticateUser",
     "authentication/(generated)/authenticateUserV2",
