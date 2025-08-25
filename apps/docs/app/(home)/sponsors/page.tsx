@@ -2,9 +2,9 @@ import { Fragment } from 'react';
 import Image from 'next/image';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
-import { getSponsors } from '@/lib/get-sponsors';
-import { owner } from '@/lib/github';
-import { organizationAsUserSponsors } from '@/app/(home)/sponsors/data';
+// import { getSponsors } from '@/lib/get-sponsors';
+// import { owner } from '@/lib/github';
+// import { organizationAsUserSponsors } from '@/app/(home)/sponsors/data';
 
 const tiers = [
   {
@@ -27,29 +27,29 @@ const tiers = [
 export const revalidate = 6000;
 
 export default async function Page() {
-  const result = await getSponsors(owner);
+  // const result = await getSponsors(owner);
 
-  const sponsors = result.map((v) => {
-    const entity = organizationAsUserSponsors.find(
-      (entity) => entity.asUser === v.login,
-    );
-    if (entity) {
-      return {
-        login: entity.github,
-        name: entity.label,
-        websiteUrl: entity.url,
-        logo: entity.logo,
-        __typename: 'Organization',
-        tier: v.tier,
-        avatarUrl: undefined,
-      };
-    }
+  // const sponsors = result.map((v) => {
+  //   const entity = organizationAsUserSponsors.find(
+  //     (entity) => entity.asUser === v.login,
+  //   );
+  //   if (entity) {
+  //     return {
+  //       login: entity.github,
+  //       name: entity.label,
+  //       websiteUrl: entity.url,
+  //       logo: entity.logo,
+  //       __typename: 'Organization',
+  //       tier: v.tier,
+  //       avatarUrl: undefined,
+  //     };
+  //   }
 
-    return {
-      logo: undefined,
-      ...v,
-    };
-  });
+  //   return {
+  //     logo: undefined,
+  //     ...v,
+  //   };
+  // });
 
   return (
     <main className="container flex flex-col items-center py-16 text-center z-2">
@@ -188,7 +188,7 @@ export default async function Page() {
         </text>
       </svg>
       <h2 className="mt-12 font-mono text-xs mb-7">Organization Sponsors</h2>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      {/* <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {sponsors
           .filter((sponsor) => sponsor.__typename === 'Organization')
           .map((sponsor) => {
@@ -225,7 +225,7 @@ export default async function Page() {
               </a>
             );
           })}
-      </div>
+      </div> */}
       <h2 className="mt-12 font-mono text-xs mb-7">Hosting Sponsor</h2>
       <a href="https://vercel.com" rel="noreferrer noopener">
         <svg
@@ -241,7 +241,7 @@ export default async function Page() {
         </svg>
       </a>
       <h2 className="mt-12 font-mono text-xs">Individual Sponsors</h2>
-      <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      {/* <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {sponsors
           .filter((sponsor) => sponsor.__typename === 'User')
           .map((sponsor) => (
@@ -263,7 +263,7 @@ export default async function Page() {
               {sponsor.name}
             </a>
           ))}
-      </div>
+      </div> */}
     </main>
   );
 }
