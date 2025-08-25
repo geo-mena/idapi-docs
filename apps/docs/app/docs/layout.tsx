@@ -12,11 +12,12 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
   const base = baseOptions();
 
   return (
-    <DocsLayout
-      {...base}
-      tree={source.pageTree}
-      // just icon items
-      links={linkItems.filter((item) => item.type === 'icon')}
+    <div className="floating-sidebar-layout">
+      <DocsLayout
+        {...base}
+        tree={source.pageTree}
+        // just icon items
+        links={linkItems.filter((item) => item.type === 'icon')}
       searchToggle={{
         components: {
           lg: (
@@ -91,8 +92,9 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
           },
         },
       }}
-    >
-      {children}
-    </DocsLayout>
+      >
+        {children}
+      </DocsLayout>
+    </div>
   );
 }

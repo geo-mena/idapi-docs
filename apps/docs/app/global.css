@@ -109,8 +109,27 @@ body {
   }
 }
 
-/* Fix collapsed sidebar control positioning */
+/* Fix: collapsed sidebar control positioning */
 .fixed.flex.shadow-lg.transition-opacity.rounded-xl.p-0\.5.border.bg-fd-muted {
   left: 1rem !important;
   right: auto !important;
+}
+
+/* Fix: floating sidebar */
+.floating-sidebar-layout aside {
+  margin: 0.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .floating-sidebar-layout aside {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    border: none;
+  }
 }
