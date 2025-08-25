@@ -23,3 +23,63 @@ export const geocodingapi = createOpenAPI({
     },
   },
 });
+
+export const servicesapi = createOpenAPI({
+  input: ['./services.yaml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
+export const onboardingapi = createOpenAPI({
+  input: ['./content/docs/services/onboarding.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
+export const authenticationapi = createOpenAPI({
+  input: ['./content/docs/services/authentication.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
+export const ocrapi = createOpenAPI({
+  input: ['./content/docs/services/ocr.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
+export const morphologyapi = createOpenAPI({
+  input: ['./content/docs/services/morphology.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});

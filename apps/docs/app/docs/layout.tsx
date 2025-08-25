@@ -12,11 +12,12 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
   const base = baseOptions();
 
   return (
-    <DocsLayout
-      {...base}
-      tree={source.pageTree}
-      // just icon items
-      links={linkItems.filter((item) => item.type === 'icon')}
+    <div className="floating-sidebar-layout">
+      <DocsLayout
+        {...base}
+        tree={source.pageTree}
+        // just icon items
+        links={linkItems.filter((item) => item.type === 'icon')}
       searchToggle={{
         components: {
           lg: (
@@ -44,7 +45,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
           <>
             {logo}
             <span className="font-medium [.uwu_&]:hidden max-md:hidden">
-              Fumadocs
+              IDAPI Docs
             </span>
           </>
         ),
@@ -65,6 +66,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
         ),
       }}
       sidebar={{
+        collapsible: false,
         tabs: {
           transform(option, node) {
             const meta = source.getNodeMeta(node);
@@ -90,8 +92,9 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
           },
         },
       }}
-    >
-      {children}
-    </DocsLayout>
+      >
+        {children}
+      </DocsLayout>
+    </div>
   );
 }

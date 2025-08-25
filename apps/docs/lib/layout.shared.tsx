@@ -57,10 +57,11 @@ export function baseOptions(): BaseLayoutProps {
         <>
           {logo}
           <span className="font-medium [.uwu_&]:hidden [header_&]:text-[15px]">
-            Fumadocs
+              IDAPI Docs
           </span>
         </>
       ),
+      url: '#',
       transparentMode: 'top',
     },
   };
