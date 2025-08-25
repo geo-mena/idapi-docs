@@ -99,11 +99,15 @@ paths:
                   type:
                     type: string
                     example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                  errors:
+                    type: array
+                    example: []
               example:
                 status: 400
                 title: "Bad Request"
                 detail: "Invalid request."
                 type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                errors: []
         '401':
           description: Unauthorized
           content:
@@ -128,6 +132,42 @@ paths:
                     example: "User is not authorized to access this resource with an explicit deny"
               example:
                 Message: "User is not authorized to access this resource with an explicit deny"
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 502
+                  title:
+                    type: string
+                    example: "Bad Gateway"
+                  detail:
+                    type: string
+                    example: "Server got an invalid response."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+              example:
+                status: 502
+                title: "Bad Gateway"
+                detail: "Server got an invalid response."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Endpoint request timed out"
+              example:
+                message: "Endpoint request timed out"
       security:
         - apiKey: []
   '/services/authenticateUser':
@@ -199,11 +239,15 @@ paths:
                   type:
                     type: string
                     example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                  errors:
+                    type: array
+                    example: []
               example:
                 status: 400
                 title: "Bad Request"
                 detail: "Invalid request."
                 type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                errors: []
         '401':
           description: Unauthorized
           content:
@@ -228,6 +272,42 @@ paths:
                     example: "User is not authorized to access this resource with an explicit deny"
               example:
                 Message: "User is not authorized to access this resource with an explicit deny"
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 502
+                  title:
+                    type: string
+                    example: "Bad Gateway"
+                  detail:
+                    type: string
+                    example: "Server got an invalid response."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+              example:
+                status: 502
+                title: "Bad Gateway"
+                detail: "Server got an invalid response."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Endpoint request timed out"
+              example:
+                message: "Endpoint request timed out"
       security:
         - apiKey: []
     delete:
@@ -276,11 +356,15 @@ paths:
                   type:
                     type: string
                     example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                  errors:
+                    type: array
+                    example: []
               example:
                 status: 400
                 title: "Bad Request"
                 detail: "Invalid request."
                 type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                errors: []
         '401':
           description: Unauthorized
           content:
@@ -305,6 +389,42 @@ paths:
                     example: "User is not authorized to access this resource with an explicit deny"
               example:
                 Message: "User is not authorized to access this resource with an explicit deny"
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 502
+                  title:
+                    type: string
+                    example: "Bad Gateway"
+                  detail:
+                    type: string
+                    example: "Server got an invalid response."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+              example:
+                status: 502
+                title: "Bad Gateway"
+                detail: "Server got an invalid response."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Endpoint request timed out"
+              example:
+                message: "Endpoint request timed out"
       security:
         - apiKey: []
 components:
