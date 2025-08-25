@@ -2,40 +2,40 @@ import { cn } from '@/utils/cn';
 import { Star } from 'lucide-react';
 import { type AnchorHTMLAttributes } from 'react';
 
-async function getRepoStarsAndForks(
-  owner: string,
-  repo: string,
-  token?: string,
-): Promise<{
-  stars: number;
-  forks: number;
-}> {
-  const endpoint = `https://api.github.com/repos/${owner}/${repo}`;
-  const headers = new Headers({
-    'Content-Type': 'application/json',
-  });
+// async function getRepoStarsAndForks(
+//   owner: string,
+//   repo: string,
+//   token?: string,
+// ): Promise<{
+//   stars: number;
+//   forks: number;
+// }> {
+//   const endpoint = `https://api.github.com/repos/${owner}/${repo}`;
+//   const headers = new Headers({
+//     'Content-Type': 'application/json',
+//   });
 
-  if (token) headers.set('Authorization', `Bearer ${token}`);
+//   if (token) headers.set('Authorization', `Bearer ${token}`);
 
-  const response = await fetch(endpoint, {
-    headers,
-    next: {
-      revalidate: 60,
-    },
-  });
+//   const response = await fetch(endpoint, {
+//     headers,
+//     next: {
+//       revalidate: 60,
+//     },
+//   });
 
-  if (!response.ok) {
-    const message = await response.text();
+//   if (!response.ok) {
+//     const message = await response.text();
 
-    throw new Error(`Failed to fetch repository data: ${message}`);
-  }
+//     throw new Error(`Failed to fetch repository data: ${message}`);
+//   }
 
-  const data = await response.json();
-  return {
-    stars: data.stargazers_count,
-    forks: data.forks_count,
-  };
-}
+//   const data = await response.json();
+//   return {
+//     stars: data.stargazers_count,
+//     forks: data.forks_count,
+//   };
+// }
 
 export async function GithubInfo({
   repo,
@@ -47,7 +47,9 @@ export async function GithubInfo({
   repo: string;
   token?: string;
 }) {
-  const { stars } = await getRepoStarsAndForks(owner, repo, token);
+  // const { stars } = await getRepoStarsAndForks(owner, repo, token);
+  // const humanizedStars = humanizeNumber(stars);
+  const stars = 0;
   const humanizedStars = humanizeNumber(stars);
 
   return (
