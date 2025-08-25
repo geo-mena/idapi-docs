@@ -71,3 +71,15 @@ export const ocrapi = createOpenAPI({
     },
   },
 });
+
+export const morphologyapi = createOpenAPI({
+  input: ['./content/docs/services/morphology.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});

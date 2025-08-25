@@ -1,0 +1,528 @@
+openapi: 3.1.1
+info:
+  title: Morphology Services API
+  description: |
+    The Morphology Services API provides document validation capabilities through morphological analysis of identity documents.
+    
+    ## Features
+    
+    * **Document Validation**: Morphological validation process for identity documents
+    * **Multi-step Process**: Start, Status, and Data retrieval workflow
+    * **Multiple Document Types**: Support for passport, driving license, ID card, and visa
+    * **Real-time Processing**: Asynchronous processing with status monitoring
+    
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: Morphology
+    description: Document validation services through morphological analysis
+paths:
+  '/verify/documentValidation/start':
+    post:
+      tags:
+        - Morphology
+      summary: Document Validation Start
+      description: |
+        Start the morphological validation process of identity documents.
+        
+        **Process Overview:**
+        
+        The morphological validation consists of 3 steps:
+        1. **Start**: Send document information (images, country, and document type) for analysis
+        2. **Status**: Query operation status until analysis is completed  
+        3. **Data**: Retrieve morphological analysis results
+      operationId: documentValidationStart
+      requestBody:
+        description: Document validation start request with images and metadata
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentValidationStartRequest'
+            example:
+              country: "ESP"
+              idType: "ID_CARD"
+              frontsideImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              backsideImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              merchantIdScanReference: "my-scan-ref-001"
+      responses:
+        '200':
+          description: Document validation process started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentValidationStartResponse'
+              example:
+                timestamp: "1970-01-01T00:00:00.000Z"
+                scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
+                type: "1"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  title:
+                    type: string
+                    example: "Bad Request"
+                  detail:
+                    type: string
+                    example: "Invalid request."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                  errors:
+                    type: array
+                    example: []
+              example:
+                status: 400
+                title: "Bad Request"
+                detail: "Invalid request."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                errors: []
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+              example:
+                message: "Unauthorized"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Message:
+                    type: string
+                    example: "User is not authorized to access this resource with an explicit deny"
+              example:
+                Message: "User is not authorized to access this resource with an explicit deny"
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 502
+                  title:
+                    type: string
+                    example: "Bad Gateway"
+                  detail:
+                    type: string
+                    example: "Server got an invalid response."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+              example:
+                status: 502
+                title: "Bad Gateway"
+                detail: "Server got an invalid response."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Endpoint request timed out"
+              example:
+                message: "Endpoint request timed out"
+      security:
+        - apiKey: []
+  '/verify/documentValidation/status':
+    post:
+      tags:
+        - Morphology
+      summary: Document Validation Status
+      description: |
+        Query the status of the morphological validation operation.
+        
+        This endpoint should be called repeatedly until the analysis operation is completed (status becomes "DONE" or "FAILED").
+      operationId: documentValidationStatus
+      requestBody:
+        description: Status request with scan reference
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentValidationStatusRequest'
+            example:
+              scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
+              type: "1"
+      responses:
+        '200':
+          description: Status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentValidationStatusResponse'
+              example:
+                timestamp: "1970-01-01T00:00:00.000Z"
+                scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
+                status: "DONE"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  title:
+                    type: string
+                    example: "Bad Request"
+                  detail:
+                    type: string
+                    example: "Invalid request."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                  errors:
+                    type: array
+                    example: []
+              example:
+                status: 400
+                title: "Bad Request"
+                detail: "Invalid request."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                errors: []
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+              example:
+                message: "Unauthorized"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Message:
+                    type: string
+                    example: "User is not authorized to access this resource with an explicit deny"
+              example:
+                Message: "User is not authorized to access this resource with an explicit deny"
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 502
+                  title:
+                    type: string
+                    example: "Bad Gateway"
+                  detail:
+                    type: string
+                    example: "Server got an invalid response."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+              example:
+                status: 502
+                title: "Bad Gateway"
+                detail: "Server got an invalid response."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Endpoint request timed out"
+              example:
+                message: "Endpoint request timed out"
+      security:
+        - apiKey: []
+  '/verify/documentValidation/data':
+    post:
+      tags:
+        - Morphology
+      summary: Document Validation Data
+      description: |
+        Retrieve the results of the morphological analysis of the document.
+        
+        **Note:** The response fields will depend on the configured morphology provider.
+      operationId: documentValidationData
+      requestBody:
+        description: Data request with scan reference
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentValidationDataRequest'
+            example:
+              scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
+              type: "1"
+      responses:
+        '200':
+          description: Validation data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentValidationDataResponse'
+              example:
+                timestamp: "1970-01-01T00:00:00.000Z"
+                scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
+                result: "VALID"
+                confidence: 0.95
+                details: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  title:
+                    type: string
+                    example: "Bad Request"
+                  detail:
+                    type: string
+                    example: "Invalid request."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                  errors:
+                    type: array
+                    example: []
+              example:
+                status: 400
+                title: "Bad Request"
+                detail: "Invalid request."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                errors: []
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+              example:
+                message: "Unauthorized"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Message:
+                    type: string
+                    example: "User is not authorized to access this resource with an explicit deny"
+              example:
+                Message: "User is not authorized to access this resource with an explicit deny"
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 502
+                  title:
+                    type: string
+                    example: "Bad Gateway"
+                  detail:
+                    type: string
+                    example: "Server got an invalid response."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+              example:
+                status: 502
+                title: "Bad Gateway"
+                detail: "Server got an invalid response."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Endpoint request timed out"
+              example:
+                message: "Endpoint request timed out"
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key for authentication
+  schemas:
+    DocumentValidationStartRequest:
+      type: object
+      required:
+        - country
+        - idType
+        - frontsideImage
+      properties:
+        country:
+          type: string
+          description: ISO 3166-1 alpha-3 country code
+          example: "ESP"
+        idType:
+          type: string
+          description: Type of the provided ID
+          enum: ["PASSPORT", "DRIVING_LICENSE", "ID_CARD", "VISA"]
+          example: "ID_CARD"
+        frontsideImage:
+          type: string
+          format: byte
+          description: Base64 encoded open or tokenized image of ID front side
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        backsideImage:
+          type: string
+          format: byte
+          description: Base64 encoded open or tokenized image of ID back side. Optional for single-sided documents like PASSPORT
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        merchantIdScanReference:
+          type: string
+          description: Custom operation reference. Max. length 100 characters
+          maxLength: 100
+          example: "my-scan-ref-001"
+    DocumentValidationStartResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (UTC) of the response in ISO 8601 format
+          example: "1970-01-01T00:00:00.000Z"
+        scanReference:
+          type: string
+          description: Reference number for each scan
+          example: "fe294c25-17e1-4d98-a958-710edbf00064"
+        type:
+          type: string
+          description: Deprecated value. Will be removed in future versions
+          example: "1"
+          deprecated: true
+    DocumentValidationStatusRequest:
+      type: object
+      required:
+        - scanReference
+      properties:
+        scanReference:
+          type: string
+          description: Scan reference number
+          example: "fe294c25-17e1-4d98-a958-710edbf00064"
+        type:
+          type: string
+          description: Deprecated value. Will be removed in future versions
+          example: "1"
+          deprecated: true
+    DocumentValidationStatusResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (UTC) of the response in ISO 8601 format
+          example: "1970-01-01T00:00:00.000Z"
+        scanReference:
+          type: string
+          description: Scan reference number
+          example: "fe294c25-17e1-4d98-a958-710edbf00064"
+        status:
+          type: string
+          description: Operation status
+          enum: ["PENDING", "DONE", "FAILED"]
+          example: "DONE"
+    DocumentValidationDataRequest:
+      type: object
+      required:
+        - scanReference
+      properties:
+        scanReference:
+          type: string
+          description: Scan reference number
+          example: "fe294c25-17e1-4d98-a958-710edbf00064"
+        type:
+          type: string
+          description: Deprecated value. Will be removed in future versions
+          example: "1"
+          deprecated: true
+    DocumentValidationDataResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (UTC) of the response in ISO 8601 format
+          example: "1970-01-01T00:00:00.000Z"
+        scanReference:
+          type: string
+          description: Scan reference number
+          example: "fe294c25-17e1-4d98-a958-710edbf00064"
+        result:
+          type: string
+          description: Validation result
+          example: "VALID"
+        confidence:
+          type: number
+          format: float
+          description: Confidence score of the validation
+          example: 0.95
+        details:
+          type: object
+          description: Additional validation details (provider-dependent)
+          example: {}

@@ -17,6 +17,10 @@
     "authentication/(generated)/deleteUsers",
     "---OCR---",
     "ocr/(generated)/extractDocumentDataWeb",
-    "ocr/(generated)/extractDocumentData"
+    "ocr/(generated)/extractDocumentData",
+    "---Morphology---",
+    "morphology/(generated)/documentValidationStart",
+    "morphology/(generated)/documentValidationStatus",
+    "morphology/(generated)/documentValidationData"
   ]
 }
