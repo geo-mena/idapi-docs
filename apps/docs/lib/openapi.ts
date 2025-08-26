@@ -85,7 +85,14 @@ export const morphologyapi = createOpenAPI({
 });
 
 export const civilvalidationecapi = createOpenAPI({
-  input: ['./content/docs/services/civil-validation-ec/civil-validation-ec.yml'],
+  input: [
+    './content/docs/services/civil-validation-ec/full-mobile.yml',
+    './content/docs/services/civil-validation-ec/full-web.yml',
+    './content/docs/services/civil-validation-ec/data-mobile.yml',
+    './content/docs/services/civil-validation-ec/data-web.yml',
+    './content/docs/services/civil-validation-ec/facial-mobile.yml',
+    './content/docs/services/civil-validation-ec/facial-web.yml'
+  ],
 
   proxyUrl: '/api/proxy',
   shikiOptions: {
