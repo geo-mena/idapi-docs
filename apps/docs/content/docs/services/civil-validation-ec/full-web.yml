@@ -1,0 +1,295 @@
+openapi: 3.1.1
+info:
+  title: Civil Validation Ecuador - Full Web API
+  description: |
+    Full validation (data validation and facial matching) for Ecuador using web platform.
+    This service performs both data validation against Civil Registry records and facial matching using document images.
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: Civil Validation Ecuador
+    description: Civil Registry validation services for Ecuador
+paths:
+  '/services/civilValidation':
+    post:
+      tags:
+        - Civil Validation Ecuador
+      summary: Full Validation Web
+      description: This service performs facial matching and data validation between the properties sent and the data from the Civil Registry of Ecuador using web platform.
+      operationId: civilValidationFullWeb
+      requestBody:
+        description: Full validation request for web platform
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CivilValidationFullWebRequest'
+            example:
+              operation: "FULL"
+              platform: "WEB"
+              imageFrontDocument: "base64ImageFrontString"
+              imageBackDocument: "base64ImageBackString"
+              templateRaw: "base64TemplateRawString"
+              documentNumber: "0987654321"
+              documentCode: "V5678V"
+              countryCode: "ECU"
+              returnPII: true
+              tracking:
+                extraData: "BQABAQG2gBNjuHN..."
+                operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+      responses:
+        '200':
+          description: Successfully processed full validation - web
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CivilValidationFullResponse'
+              example:
+                serviceResultCode: 0
+                serviceTime: "3200"
+                serviceResultLog: "Negative | Service executed ok"
+                serviceTransactionId: "87654321-4321-4321-4321-210987654321"
+                civilDataValidation: []
+                serviceFacialAuthenticationResult: 1
+                serviceFacialSimilarityResult: 0.15
+                serviceFacialAuthenticationHash: "ZYX987WVU654TSR321PON098MLK765JIH432GFE109DCB876A543"
+                serviceDocument: "{\"DocumentNumber\":\"0987654321\",\"FirstName\":\"MARIA ELENA\",\"LastName\":\"GONZALEZ TORRES\",\"DateOfBirth\":\"28/11/1992\",\"Gender\":\"F\",\"Nationality\":\"ECUATORIANA\"}"
+                civilServiceData: "{\"apellidos\":\"GONZALEZ TORRES\",\"nombres\":\"MARIA ELENA\",\"fechaNacimiento\":\"28/11/1992\",\"sexo\":\"MUJER\",\"nacionalidad\":\"ECUATORIANA\",\"estadoCivil\":\"CASADO\"}"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key for authentication
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              title:
+                type: string
+                example: "Bad Request"
+              detail:
+                type: string
+                example: "Invalid request."
+              type:
+                type: string
+                example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+              errors:
+                type: array
+                example: []
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "User is not authorized to access this resource with an explicit deny"
+    BadGateway:
+      description: Bad Gateway
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 502
+              title:
+                type: string
+                example: "Bad Gateway"
+              detail:
+                type: string
+                example: "Server got an invalid response."
+              type:
+                type: string
+                example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    GatewayTimeout:
+      description: Gateway Timeout
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Endpoint request timed out"
+  schemas:
+    TrackingInfo:
+      type: object
+      description: Object that represents necessary tracking information.
+      properties:
+        extraData:
+          type: string
+          format: byte
+          description: Token generated by Mobile/Web SDK. Contains tokenized tracking information with Platform.
+          example: "BQABAQG2gBNjuHN..."
+        operationId:
+          type: string
+          description: Operation identifier generated by Mobile/Web SDK.
+          example: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+    CivilValidationFullWebRequest:
+      type: object
+      required:
+        - operation
+        - platform
+        - imageFrontDocument
+        - imageBackDocument
+        - templateRaw
+        - documentCode
+        - countryCode
+      properties:
+        operation:
+          type: string
+          description: Validation operation to perform. For this endpoint, must be "FULL".
+          enum: ["FULL"]
+          example: "FULL"
+        platform:
+          type: string
+          description: Platform on which the request is made. For this endpoint, must be "WEB".
+          enum: ["WEB"]
+          example: "WEB"
+        imageFrontDocument:
+          type: string
+          format: byte
+          description: Front capture of the document, base64 image without the mime type header. Required for WEB platform.
+          example: "base64ImageFrontString"
+        imageBackDocument:
+          type: string
+          format: byte
+          description: Back capture of the document, base64 image without the mime type header. Required for WEB platform.
+          example: "base64ImageBackString"
+        templateRaw:
+          type: string
+          format: byte
+          description: Biometric template, property generated by the Selphi widget. Required for FACIAL or FULL operations.
+          example: "base64TemplateRawString"
+        documentNumber:
+          type: string
+          description: User's document number. Optional for FULL operations.
+          example: "0987654321"
+        documentCode:
+          type: string
+          description: Document code (fingerprintCode), necessary for document validation in Ecuador. Required for Ecuador (ECU).
+          example: "V5678V"
+        countryCode:
+          type: string
+          description: Country code in ISO 3166-1 alpha-3 format. Must be "ECU" for Ecuador.
+          enum: ["ECU"]
+          example: "ECU"
+        returnPII:
+          type: boolean
+          description: Indicates if personal data generated by both the OCR service and the Civil Registry response is to be received.
+          example: true
+        documentValidation:
+          type: boolean
+          description: Indicates if document validation is to be initiated, returning scanReference and type.
+          example: true
+        tracking:
+          $ref: '#/components/schemas/TrackingInfo'
+    CivilDataValidationItem:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Field name being validated (e.g., firstName, lastName, dateOfBirth).
+          example: "firstName"
+        code:
+          type: string
+          description: |
+            Validation result code:
+            - "0": Validated ok
+            - "-99": Possibly adulterated
+            - Other codes may indicate specific validation issues
+          example: "0"
+        message:
+          type: string
+          description: Human-readable validation result message.
+          example: "Validated ok"
+    CivilValidationFullResponse:
+      type: object
+      properties:
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
+          example: 0
+        serviceTime:
+          type: string
+          description: Field indicating the processing time in milliseconds.
+          example: "3200"
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the service execution result. Includes details when there is an error or exception in the module.
+          example: "Negative | Service executed ok"
+        serviceTransactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API.
+          example: "87654321-4321-4321-4321-210987654321"
+        civilDataValidation:
+          type: array
+          description: Array representing the OCR validations against the data obtained from the Civil Registry. The presence of this object depends on the consulted Civil Registry.
+          items:
+            $ref: '#/components/schemas/CivilDataValidationItem'
+        serviceFacialAuthenticationResult:
+          type: integer
+          description: Code indicating the result of the facial matching. See [Service Facial Authentication Result](/docs/services/serviceResultCodes#service-facial-authentication-result)
+          example: 1
+        serviceFacialAuthenticationHash:
+          type: string
+          description: Integrity hash of the biometric template used in a positive or uncertain facial authentication.
+          example: "ZYX987WVU654TSR321PON098MLK765JIH432GFE109DCB876A543"
+        serviceFacialSimilarityResult:
+          type: number
+          format: float
+          description: Value indicating the facial similarity between the face in the identity document photo and the selfie taken by the user. 1.0 = 100%.
+          example: 0.15
+        serviceDocument:
+          type: string
+          description: JSON string representing the captured document. Its properties are all the fields extracted by the OCR process.
+          example: "{\"DocumentNumber\":\"0987654321\",\"FirstName\":\"MARIA ELENA\",\"LastName\":\"GONZALEZ TORRES\"}"
+        civilServiceData:
+          type: string
+          description: JSON string representing the personal data obtained from the Civil Registry (returned only if returnPII was sent as true in the request).
+          example: "{\"apellidos\":\"GONZALEZ TORRES\",\"nombres\":\"MARIA ELENA\",\"fechaNacimiento\":\"28/11/1992\"}"

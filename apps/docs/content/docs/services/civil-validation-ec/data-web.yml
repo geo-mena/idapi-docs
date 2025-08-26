@@ -1,0 +1,275 @@
+openapi: 3.1.1
+info:
+  title: Civil Validation Ecuador - Data Web API
+  description: |
+    Data validation for Ecuador using web platform.
+    This service performs data validation against Civil Registry records using document images from web capture.
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: Civil Validation Ecuador
+    description: Civil Registry validation services for Ecuador
+paths:
+  '/services/civilValidation':
+    post:
+      tags:
+        - Civil Validation Ecuador
+      summary: Data Validation Web
+      description: This service performs data validation between the properties sent and the data from the Civil Registry of Ecuador using web platform.
+      operationId: civilValidationDataWeb
+      requestBody:
+        description: Data validation request for web platform
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CivilValidationDataWebRequest'
+            example:
+              operation: "DATA"
+              platform: "WEB"
+              documentCode: "V1357V"
+              imageFrontDocument: "base64ImageFrontString"
+              imageBackDocument: "base64ImageBackString"
+              countryCode: "ECU"
+              returnPII: true
+              tracking:
+                extraData: "BQABAQG2gBNjuHN..."
+                operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+      responses:
+        '200':
+          description: Successfully processed data validation - web
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CivilValidationDataResponse'
+              example:
+                serviceResultCode: 0
+                serviceTime: "2100"
+                serviceResultLog: "Service executed ok"
+                serviceTransactionId: "13579246-1357-9246-8024-135792468024"
+                civilDataValidation:
+                  - field: "firstName"
+                    code: "-99"
+                    message: "Possibly adulterated"
+                  - field: "lastName"
+                    code: "0"
+                    message: "Validated ok"
+                  - field: "dateOfBirth"
+                    code: "0"
+                    message: "Validated ok"
+                serviceDocument: "{\"DocumentNumber\":\"2468135790\",\"FirstName\":\"ANA PATRICIA\",\"LastName\":\"LOPEZ HERRERA\",\"DateOfBirth\":\"22/09/1990\",\"Gender\":\"F\",\"Nationality\":\"ECUATORIANA\"}"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key for authentication
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              title:
+                type: string
+                example: "Bad Request"
+              detail:
+                type: string
+                example: "Invalid request."
+              type:
+                type: string
+                example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+              errors:
+                type: array
+                example: []
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "User is not authorized to access this resource with an explicit deny"
+    BadGateway:
+      description: Bad Gateway
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 502
+              title:
+                type: string
+                example: "Bad Gateway"
+              detail:
+                type: string
+                example: "Server got an invalid response."
+              type:
+                type: string
+                example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    GatewayTimeout:
+      description: Gateway Timeout
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Endpoint request timed out"
+  schemas:
+    TrackingInfo:
+      type: object
+      description: Object that represents necessary tracking information.
+      properties:
+        extraData:
+          type: string
+          format: byte
+          description: Token generated by Mobile/Web SDK. Contains tokenized tracking information with Platform.
+          example: "BQABAQG2gBNjuHN..."
+        operationId:
+          type: string
+          description: Operation identifier generated by Mobile/Web SDK.
+          example: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+    CivilValidationDataWebRequest:
+      type: object
+      required:
+        - operation
+        - platform
+        - imageFrontDocument
+        - imageBackDocument
+        - documentCode
+        - countryCode
+      properties:
+        operation:
+          type: string
+          description: Validation operation to perform. For this endpoint, must be "DATA".
+          enum: ["DATA"]
+          example: "DATA"
+        platform:
+          type: string
+          description: Platform on which the request is made. For this endpoint, must be "WEB".
+          enum: ["WEB"]
+          example: "WEB"
+        imageFrontDocument:
+          type: string
+          format: byte
+          description: Front capture of the document, base64 image without the mime type header. Required for WEB platform.
+          example: "base64ImageFrontString"
+        imageBackDocument:
+          type: string
+          format: byte
+          description: Back capture of the document, base64 image without the mime type header. Required for WEB platform.
+          example: "base64ImageBackString"
+        documentCode:
+          type: string
+          description: Document code (fingerprintCode), necessary for document validation in Ecuador. Required for Ecuador (ECU).
+          example: "V1357V"
+        countryCode:
+          type: string
+          description: Country code in ISO 3166-1 alpha-3 format. Must be "ECU" for Ecuador.
+          enum: ["ECU"]
+          example: "ECU"
+        returnPII:
+          type: boolean
+          description: Indicates if personal data generated by both the OCR service and the Civil Registry response is to be received.
+          example: true
+        documentValidation:
+          type: boolean
+          description: Indicates if document validation is to be initiated, returning scanReference and type.
+          example: true
+        tracking:
+          $ref: '#/components/schemas/TrackingInfo'
+    CivilDataValidationItem:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Field name being validated (e.g., firstName, lastName, dateOfBirth).
+          example: "firstName"
+        code:
+          type: string
+          description: |
+            Validation result code:
+            - "0": Validated ok
+            - "-99": Possibly adulterated
+            - Other codes may indicate specific validation issues
+          example: "0"
+        message:
+          type: string
+          description: Human-readable validation result message.
+          example: "Validated ok"
+    CivilValidationDataResponse:
+      type: object
+      properties:
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
+          example: 0
+        serviceTime:
+          type: string
+          description: Field indicating the processing time in milliseconds.
+          example: "2100"
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the service execution result. Includes details when there is an error or exception in the module.
+          example: "Service executed ok"
+        serviceTransactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API.
+          example: "13579246-1357-9246-8024-135792468024"
+        civilDataValidation:
+          type: array
+          description: Array representing the OCR validations against the data obtained from the Civil Registry. The presence of this object depends on the consulted Civil Registry.
+          items:
+            $ref: '#/components/schemas/CivilDataValidationItem'
+        serviceDocument:
+          type: string
+          description: JSON string representing the captured document. Its properties are all the fields extracted by the OCR process.
+          example: "{\"DocumentNumber\":\"2468135790\",\"FirstName\":\"ANA PATRICIA\",\"LastName\":\"LOPEZ HERRERA\"}"
+        civilServiceData:
+          type: string
+          description: JSON string representing the personal data obtained from the Civil Registry (returned only if returnPII was sent as true in the request).
+          example: "{\"apellidos\":\"LOPEZ HERRERA\",\"nombres\":\"ANA PATRICIA\",\"fechaNacimiento\":\"22/09/1990\"}"
