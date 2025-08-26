@@ -1,11 +1,11 @@
 {
   "title": "Ecuador",
   "pages": [
-    "variants/(generated)/fullMobile",
-    "variants/(generated)/fullWeb",
-    "variants/(generated)/dataMobile",
-    "variants/(generated)/dataWeb",
-    "variants/(generated)/facialMobile",
-    "variants/(generated)/facialWeb"
+    "variant/(generated)/fullMobile",
+    "variant/(generated)/fullWeb",
+    "variant/(generated)/dataMobile",
+    "variant/(generated)/dataWeb",
+    "variant/(generated)/facialMobile",
+    "variant/(generated)/facialWeb"
   ]
 }
