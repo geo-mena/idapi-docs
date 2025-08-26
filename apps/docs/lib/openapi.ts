@@ -83,3 +83,15 @@ export const morphologyapi = createOpenAPI({
     },
   },
 });
+
+export const civilvalidationecapi = createOpenAPI({
+  input: ['./content/docs/services/civil-validation-ec/civil-validation-ec.yml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});

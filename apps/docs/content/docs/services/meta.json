@@ -21,6 +21,8 @@
     "---Morphology---",
     "morphology/(generated)/documentValidationStart",
     "morphology/(generated)/documentValidationStatus",
-    "morphology/(generated)/documentValidationData"
+    "morphology/(generated)/documentValidationData",
+    "---Civil Validation---",
+    "civil-validation-ec"
   ]
 }
