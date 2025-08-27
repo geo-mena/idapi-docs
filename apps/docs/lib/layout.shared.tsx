@@ -66,7 +66,6 @@ export function baseOptions(): BaseLayoutProps {
           </span>
         </>
       ),
-      url: '#',
       transparentMode: 'top',
     },
   };
