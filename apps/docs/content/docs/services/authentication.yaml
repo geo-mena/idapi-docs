@@ -439,6 +439,7 @@ components:
       type: object
       required:
         - userId
+        - registeredTemplateRaw
         - bestImageToken
         - merchantReferenceId
       properties:
@@ -474,6 +475,14 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     AuthenticateUserResponse:
       type: object
+      required:
+        - timestamp
+        - transactionId
+        - serviceResultCode
+        - serviceResultLog
+        - serviceFacialSimilarityResult
+        - merchantReferenceId
+        - registeredTemplateRaw
       properties:
         timestamp:
           type: string
@@ -508,6 +517,18 @@ components:
           example: "BAIBAQGo+puJyHjfRD8n"
     AuthenticateUserV2Response:
       type: object
+      required:
+        - timestamp
+        - transactionId
+        - serviceResultCode
+        - serviceResultLog
+        - serviceFacialSimilarityResult
+        - serviceFacialAuthenticationLog
+        - serviceFacialAuthenticationResult
+        - serviceLivenessResult
+        - serviceLivenessLog
+        - merchantReferenceId
+        - registeredTemplateRaw
       properties:
         timestamp:
           type: string
@@ -569,6 +590,11 @@ components:
           example: ["001"]
     DeleteUsersResponse:
       type: object
+      required:
+        - timestamp
+        - transactionId
+        - serviceResultCode
+        - serviceResultLog
       properties:
         serviceResultCode:
           type: integer
