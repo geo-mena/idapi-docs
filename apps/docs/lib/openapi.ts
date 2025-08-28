@@ -37,7 +37,7 @@ export const servicesapi = createOpenAPI({
 });
 
 export const onboardingapi = createOpenAPI({
-  input: ['./content/docs/services/onboarding.yml'],
+  input: ['./content/docs/services/onboarding.yaml'],
 
   proxyUrl: '/api/proxy',
   shikiOptions: {
@@ -49,7 +49,7 @@ export const onboardingapi = createOpenAPI({
 });
 
 export const authenticationapi = createOpenAPI({
-  input: ['./content/docs/services/authentication.yml'],
+  input: ['./content/docs/services/authentication.yaml'],
 
   proxyUrl: '/api/proxy',
   shikiOptions: {
@@ -61,7 +61,7 @@ export const authenticationapi = createOpenAPI({
 });
 
 export const ocrapi = createOpenAPI({
-  input: ['./content/docs/services/ocr.yml'],
+  input: ['./content/docs/services/ocr.yaml'],
 
   proxyUrl: '/api/proxy',
   shikiOptions: {
@@ -73,7 +73,7 @@ export const ocrapi = createOpenAPI({
 });
 
 export const morphologyapi = createOpenAPI({
-  input: ['./content/docs/services/morphology.yml'],
+  input: ['./content/docs/services/morphology.yaml'],
 
   proxyUrl: '/api/proxy',
   shikiOptions: {
@@ -86,12 +86,12 @@ export const morphologyapi = createOpenAPI({
 
 export const civilvalidationecapi = createOpenAPI({
   input: [
-    './content/docs/services/civil-validation-ec/full-mobile.yml',
-    './content/docs/services/civil-validation-ec/full-web.yml',
-    './content/docs/services/civil-validation-ec/data-mobile.yml',
-    './content/docs/services/civil-validation-ec/data-web.yml',
-    './content/docs/services/civil-validation-ec/facial-mobile.yml',
-    './content/docs/services/civil-validation-ec/facial-web.yml'
+    './content/docs/services/civil-validation-ec/full-mobile.yaml',
+    './content/docs/services/civil-validation-ec/full-web.yaml',
+    './content/docs/services/civil-validation-ec/data-mobile.yaml',
+    './content/docs/services/civil-validation-ec/data-web.yaml',
+    './content/docs/services/civil-validation-ec/facial-mobile.yaml',
+    './content/docs/services/civil-validation-ec/facial-web.yaml'
   ],
 
   proxyUrl: '/api/proxy',
