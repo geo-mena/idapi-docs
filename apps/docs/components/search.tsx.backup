@@ -25,8 +25,8 @@ import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import { cn } from '@/lib/cn';
 
 const client = new OramaClient({
-  endpoint: 'https://cloud.orama.run/v1/indexes/idapi-vercel-app-jrzabd',
-  api_key: 'gRsNJfKMwc49L6m2I0WqZJN2dwVMeUIg',
+  endpoint: 'https://cloud.orama.run/v1/indexes/docs-fk97oe',
+  api_key: 'oPZjdlFbq5BpR54bV5Vj57RYt83Xosk7',
 });
 
 const items = [
@@ -35,9 +35,24 @@ const items = [
     value: undefined,
   },
   {
-    name: 'Identity API',
-    description: 'Search in Identity API',
-    value: 'services',
+    name: 'Framework',
+    description: 'Only results about Fumadocs UI & guides',
+    value: 'ui',
+  },
+  {
+    name: 'Core',
+    description: 'Only results about headless features',
+    value: 'headless',
+  },
+  {
+    name: 'MDX',
+    description: 'Only results about Fumadocs MDX',
+    value: 'mdx',
+  },
+  {
+    name: 'CLI',
+    description: 'Only results about Fumadocs CLI',
+    value: 'cli',
   },
 ];
 
