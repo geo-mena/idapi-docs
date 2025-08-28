@@ -307,7 +307,10 @@ components:
           example: "{TOKEN_BACK_DOCUMENT}"
         countryCode:
           type: string
-          description: Country code in ISO 3166-1 alpha-3 format. If not present in the request body, the service will use the default country defined for the client in the API settings.
+          description: |
+            Country code in ISO 3166-1 alpha-3 format. If not present in the request body, the service will use the default country defined for the client in the API settings.
+
+            For passport cases, only the `tokenFrontDocument` is required with `countryCode` set to "PSP".
           example: "{COUNTRY_CODE}"
         decompose:
           type: boolean
@@ -317,6 +320,12 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     ExtractDocumentDataWebResponse:
       type: object
+      required:
+        - serviceResultCode
+        - serviceResultLog
+        - serviceDocument
+        - serviceTime
+        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
@@ -365,6 +374,12 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     ExtractDocumentDataResponse:
       type: object
+      required:
+        - serviceResultCode
+        - serviceResultLog
+        - serviceDocument
+        - serviceTime
+        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
