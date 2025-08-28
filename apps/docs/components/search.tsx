@@ -1,5 +1,6 @@
 'use client';
 
+import { OramaClient } from '@oramacloud/client';
 import {
   SearchDialog,
   SearchDialogClose,
@@ -23,11 +24,20 @@ import { ChevronDown } from 'lucide-react';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import { cn } from '@/lib/cn';
 
+const client = new OramaClient({
+  endpoint: 'https://cloud.orama.run/v1/indexes/idapi-vercel-app-jrzabd',
+  api_key: 'gRsNJfKMwc49L6m2I0WqZJN2dwVMeUIg',
+});
+
 const items = [
   {
-    name: 'All Components',
-    description: 'Search in Identity API',
+    name: 'All',
     value: undefined,
+  },
+  {
+    name: 'Identity API',
+    description: 'Search in Identity API',
+    value: 'services',
   },
 ];
 
@@ -35,17 +45,10 @@ export default function CustomSearchDialog(props: SharedProps) {
   const [open, setOpen] = useState(false);
   const [tag, setTag] = useState<string | undefined>();
   const { search, setSearch, query } = useDocsSearch({
-    type: 'fetch',
-    api: '/api/search',
+    type: 'orama-cloud',
+    client,
     tag,
   });
-
-  const filteredData = query.data && query.data !== 'empty' && !tag 
-    ? query.data.filter((page) => {
-        const path = page.url;
-        return path.includes('/docs/services') || path.includes('/docs/geocoding');
-      })
-    : query.data;
 
   return (
     <SearchDialog
@@ -61,7 +64,7 @@ export default function CustomSearchDialog(props: SharedProps) {
           <SearchDialogInput />
           <SearchDialogClose />
         </SearchDialogHeader>
-        <SearchDialogList items={filteredData !== 'empty' ? filteredData : null} />
+        <SearchDialogList items={query.data !== 'empty' ? query.data : null} />
         <SearchDialogFooter className="flex flex-row flex-wrap gap-2 items-center">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger
@@ -101,10 +104,11 @@ export default function CustomSearchDialog(props: SharedProps) {
             </PopoverContent>
           </Popover>
           <a
-            href="#"
-            className="text-xs text-nowrap text-fd-muted-foreground pointer-events-none"
+            href="https://orama.com"
+            rel="noreferrer noopener"
+            className="text-xs text-nowrap text-fd-muted-foreground"
           >
-            Search in IDAPI Docs
+            Powered by Orama
           </a>
         </SearchDialogFooter>
       </SearchDialogContent>
