@@ -1,4 +1,5 @@
 'use client';
+
 import { useMemo, useState } from 'react';
 import {
   Check,
@@ -7,6 +8,7 @@ import {
   ExternalLinkIcon,
   MessageCircleIcon,
 } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/cn';
 import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
@@ -238,6 +240,67 @@ export function ViewOptions({
             {item.icon}
             {item.title}
             <ExternalLinkIcon className="text-fd-muted-foreground size-3.5 ms-auto" />
+          </a>
+        ))}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+export function VersionToggle() {
+  const pathname = usePathname();
+  
+  const isMorphologyPage = useMemo(() => {
+    return pathname.includes('/docs/services/morphology/');
+  }, [pathname]);
+  
+  const versions = [
+    { value: 'v1', label: 'Version 1' },
+    { value: 'v2', label: 'Version 2' },
+  ];
+  
+  const currentVersion = useMemo(() => {
+    return pathname.includes('V2') ? 'v2' : 'v1';
+  }, [pathname]);
+  
+  const getVersionUrl = (version: string) => {
+    if (!isMorphologyPage) return pathname;
+    
+    if (version === 'v2') {
+      return pathname.replace(/V2$/, '') + 'V2';
+    } else {
+      return pathname.replace(/V2$/, '');
+    }
+  };
+  
+  if (!isMorphologyPage) return null;
+  
+  return (
+    <Popover>
+      <PopoverTrigger
+        className={cn(
+          buttonVariants({
+            color: 'secondary',
+            size: 'sm',
+            className: 'gap-2',
+          }),
+        )}
+      >
+        {versions.find(v => v.value === currentVersion)?.label || 'Version 1'}
+        <ChevronDown className="size-3.5 text-fd-muted-foreground" />
+      </PopoverTrigger>
+      <PopoverContent className="flex flex-col overflow-auto min-w-0 w-32">
+        {versions.map((version) => (
+          <a
+            key={version.value}
+            href={getVersionUrl(version.value)}
+            className={cn(
+              optionVariants(),
+              currentVersion === version.value && 'bg-fd-accent text-fd-accent-foreground'
+            )}
+          >
+            {version.label}
+            {currentVersion === version.value && <Check className="size-3.5 ms-auto" />}
           </a>
         ))}
       </PopoverContent>
