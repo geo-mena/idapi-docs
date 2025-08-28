@@ -133,3 +133,10 @@ body {
     border: none;
   }
 }
+
+/* Hide V2 morphology pages from sidebar navigation */
+aside a[href*="/docs/services/morphology/documentValidationStartV2"],
+aside a[href*="/docs/services/morphology/documentValidationStatusV2"],
+aside a[href*="/docs/services/morphology/documentValidationDataV2"] {
+  display: none !important;
+}
