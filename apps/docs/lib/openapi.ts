@@ -96,6 +96,18 @@ export const morphologyv2api = createOpenAPI({
   },
 });
 
+export const padapi = createOpenAPI({
+  input: ['./content/docs/services/pad/pad-diagnostic.yaml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
 export const civilvalidationecapi = createOpenAPI({
   input: [
     './content/docs/services/civil-validation-ec/full-mobile.yaml',

@@ -197,6 +197,33 @@ The following table contains detailed reason codes that provide additional conte
 | 2103 | Document type is not supported. |
 | 2104 | Document from provided country is not supported. |
 
+## PAD Diagnostic Validation Results
+
+The PAD (Presentation Attack Detection) diagnostic service returns validation results in the `decision` field:
+
+| decision | Description |
+|---|---|
+| Credible | The document is genuine |
+| Doubtful | It cannot be assured if the document is genuine |
+| Spoof | The document appears not to be genuine |
+| Error | The validation process encountered an error |
+
+## PAD Diagnostic Rejection Reasons
+
+When the validation result is not satisfactory, the `reason` field provides specific details:
+
+| reason | Description |
+|---|---|
+| Screen_Replay_Attack | An attacker presents an image or video of a document in front of the camera |
+| Black_and_White_Printed_Copy_Attack | Detection of documents printed on paper in grayscale or black and white |
+| Photo_Replacement_Attack | The data region appears genuine but the portrait region has a printed photograph over it. Does not detect digital manipulations. |
+| SECURITY_PHOTO_CHECK | The portrait photo on the identity document is manipulated |
+| SECURITY_DATA_CHECK | Data on the document shows alterations in its content |
+| SECURITY_OCR_CHECK | Comparison of common data between the front and back of the identity document fails |
+| NOT_PROCESSED_OCR | OCR data could not be extracted from the identity document |
+| NOT_PROCESSED_PHOTO_CHECK | Could not perform portrait photo check of the identity document |
+| NOT_PROCESSED_DATA_CHECK | Could not perform field value check of the identity document |
+
 ## Error Scenarios and Responses
 
 <Callout type="warn">

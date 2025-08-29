@@ -1,0 +1,311 @@
+openapi: 3.1.1
+info:
+  title: PAD Diagnostic API
+  description: |
+    Document Pad Diagnostic service that allows checking if the support of an identity document is genuine or not by verifying its image, in order to detect presentation attacks aimed at identity theft.
+
+    ## Validation Results
+    
+    The validation result can return the following values:
+    
+    * **Credible**: the document is genuine
+    * **Doubtful**: it cannot be assured if the document is genuine
+    * **Spoof**: the document appears not to be genuine
+    * **Error**: the validation process encountered an error
+    
+    The result is provided in the `decision` field of the service response, along with the `reason` field specifying the cause for unsatisfactory validations.
+
+    ## Image Requirements
+    
+    ### Minimum Requirements
+    * HD images, minimum resolution: 720px
+    * Pixels showing the background around the document at least 5% of its width
+    * Minimum compression level: JPEG 70
+    * The document text must be readable by an OCR
+    
+    ### Recommended Requirements
+    * FullHD images, minimum resolution: 1080px
+    * Document centered in the image and filling more than 5% of the document
+    * No compression, with formats such as PNG
+    * A well-lit photo without blurring or light flares
+    
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: PAD Diagnostic
+    description: Presentation Attack Detection for identity documents
+paths:
+  '/verify/pad/diagnostic':
+    post:
+      tags:
+        - PAD Diagnostic
+      summary: Document PAD Diagnostic
+      description: |
+        Service that allows checking if the support of an identity document is genuine or not by verifying its image, in order to detect presentation attacks aimed at identity theft.
+
+        The validation result can return the following values:
+
+          - **Credible**: the document is genuine
+          - **Doubtful**: it cannot be assured if the document is genuine
+          - **Spoof**: the document appears not to be genuine
+          - **Error**: the validation process encountered an error
+
+        The result is provided in the decision field of the service response, along with the reason field specifying the cause for unsatisfactory validations. This API allows the morphological validation process of identity documents.
+      operationId: documentPadDiagnostic
+      requestBody:
+        description: PAD diagnostic request with document images and metadata
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PadDiagnosticRequest'
+            example:
+              frontSideImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              backSideImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              face: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              tokenized: false
+              countryCode: "ESP"
+              idType: "ID_CARD"
+      responses:
+        '200':
+          description: PAD diagnostic completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PadDiagnosticResponse'
+              examples:
+                success:
+                  summary: Diagnostic Validation
+                  value:
+                    serviceTransactionId: "24f7451f-9bc2-483b-xxxx-a8421d98c664"
+                    serviceResultCode: 0
+                    serviceResultLog: "Executed OK"
+                    timestamp: "2022-12-15T16:00:00.000Z"
+                    serviceResult:
+                      result:
+                        decision: "Credible"
+                        IQA:
+                          FTA: "DOCUMENT_TOO_CLOSE"
+                      api_version: "pad_cards_v1_1_1"
+                      processing_modules_time: ""
+                    serviceDocumentData: "{\"CHECKS\":{\"BIRTH_DATE_SIDE_MATCH\":false,\"SEX_SIDE_MATCH\":true,\"SURNAME_SIDE_MATCH\":true,\"PERSONAL_NUMBER_SIDE_MATCH\":true,\"EXPIRATION_DATE_SIDE_MATCH\":true,\"NAME_SIDE_MATCH\":true,\"NATIONALITY_SIDE_MATCH\":true},\"SUBTYPE\":null,\"BACKSIDE\":{\"FIELD_DATA\":{\"ADDRESS\":[\"\",\"\"],\"CUIL\":\"\"},\"MRZ_DATA\":{\"NATIONALITY\":\"\",\"SERIAL_NUMBER\":\"\",\"SURNAME\":\"\",\"EXPIRATION_DATE\":\"\",\"SEX\":\"\",\"BIRTH_DATE\":\"\",\"ISSUING_COUNTRY\":\"\",\"IDENTITY_NUMBER\":\"\",\"PERSONAL_NUMBER\":\"\",\"NAME\":\"\"}},\"FRONTSIDE\":{\"FIELD_DATA\":{\"NATIONALITY\":\"\",\"SURNAME\":\"\",\"EXPIRATION_DATE\":\"\",\"BARCODES\":[],\"SEX\":\"\",\"BIRTH_DATE\":\"\",\"PERSONAL_NUMBER\":\"\",\"EXPEDITION_DATE\":\"\",\"EXEMPLAR\":\"\",\"NAME\":\"\"}},\"SCORING\":{\"FIELDS_TOTAL\":0,\"FIELDS_RETURNED\":0,\"OVERALL_RATING\":0},\"DOC_MODEL\":\"\"}"
+                    serviceTime: "20784"
+                error:
+                  summary: Diagnostic Rejection
+                  value:
+                    serviceTransactionId: "6b308748-9898-4833-a7d4-85ff8b5d518f"
+                    serviceResultCode: -13
+                    serviceResultLog: "Service Exception"
+                    timestamp: "2025-08-29T03:50:02Z"
+                    serviceResult:
+                      result:
+                        IQA: null
+                        decision: "Error"
+                        reason: "NOT_PROCESSED_OCR"
+                      api_version: ""
+                      processing_modules_time: ""
+                    serviceTime: "4234"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  title:
+                    type: string
+                    example: "Bad Request"
+                  detail:
+                    type: string
+                    example: "Invalid request."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                  errors:
+                    type: array
+                    example: ["countryCode is required"]
+              example:
+                status: 400
+                title: "Bad Request"
+                detail: "Invalid request."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+                errors: ["countryCode is required"]
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+              example:
+                message: "Unauthorized"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Message:
+                    type: string
+                    example: "User is not authorized to access this resource with an explicit deny"
+              example:
+                Message: "User is not authorized to access this resource with an explicit deny"
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 502
+                  title:
+                    type: string
+                    example: "Bad Gateway"
+                  detail:
+                    type: string
+                    example: "Server got an invalid response."
+                  type:
+                    type: string
+                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+              example:
+                status: 502
+                title: "Bad Gateway"
+                detail: "Server got an invalid response."
+                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Endpoint request timed out"
+              example:
+                message: "Endpoint request timed out"
+      security:
+        - apiKey: []
+
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key for authentication
+  schemas:
+    PadDiagnosticRequest:
+      type: object
+      required:
+        - frontSideImage
+        - backSideImage
+        - tokenized
+        - countryCode
+        - idType
+      properties:
+        frontSideImage:
+          type: string
+          format: base64
+          description: Base64 encoded image of the front side of the document to be validated
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        backSideImage:
+          type: string
+          format: base64
+          description: Base64 encoded image of the back side of the document to be validated
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        face:
+          type: string
+          format: base64
+          description: Base64 encoded image of the person's face to be validated (optional)
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        tokenized:
+          type: boolean
+          description: Defines whether the images are sent in tokenized format or in plain format
+          example: false
+        countryCode:
+          type: string
+          description: ISO Alpha-3 code of the country issuing the identity document
+          example: "ESP"
+        idType:
+          type: string
+          description: Type of document to be validated
+          enum: ["PASSPORT", "ID_CARD", "RESIDENCE_PERMIT", "DRIVERS_LICENSE", "DRIVING_LICENSE", "VISA"]
+          example: "ID_CARD"
+
+    PadDiagnosticResponse:
+      type: object
+      properties:
+        serviceTransactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API
+          example: "24f7451f-9bc2-483b-xxxx-a8421d98c664"
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution
+          example: 0
+        serviceResultLog:
+          type: string
+          description: Description of the execution result
+          example: "Executed OK"
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (UTC) of the response in ISO 8601 format
+          example: "2022-12-15T16:00:00.000Z"
+        serviceResult:
+          type: object
+          description: Object containing the validation result with decision and additional data
+          properties:
+            result:
+              type: object
+              properties:
+                decision:
+                  type: string
+                  enum: ["Credible", "Doubtful", "Spoof", "Error"]
+                  description: "The validation decision. See [PAD Diagnostic Validation Results](/docs/services/serviceResultCodes#pad-diagnostic-validation-results)"
+                  example: "Credible"
+                reason:
+                  type: string
+                  nullable: true
+                  description: "Reason for rejection (present when decision is not Credible). See [PAD Diagnostic Rejection Reasons](/docs/services/serviceResultCodes#pad-diagnostic-rejection-reasons)"
+                  example: "NOT_PROCESSED_OCR"
+                IQA:
+                  type: object
+                  nullable: true
+                  description: Image Quality Assessment data
+            api_version:
+              type: string
+              description: API version used for processing
+              example: "pad_cards_v1_1_1"
+            processing_modules_time:
+              type: string
+              description: Processing modules execution time
+              example: ""
+        serviceDocumentData:
+          type: string
+          description: JSON string containing OCR extracted data from the identity document
+          example: "{\"CHECKS\":{\"BIRTH_DATE_SIDE_MATCH\":false,\"SEX_SIDE_MATCH\":true,\"SURNAME_SIDE_MATCH\":true,\"PERSONAL_NUMBER_SIDE_MATCH\":true,\"EXPIRATION_DATE_SIDE_MATCH\":true,\"NAME_SIDE_MATCH\":true,\"NATIONALITY_SIDE_MATCH\":true},\"SUBTYPE\":null,\"BACKSIDE\":{\"FIELD_DATA\":{\"ADDRESS\":[\"\",\"\"],\"CUIL\":\"\"},\"MRZ_DATA\":{\"NATIONALITY\":\"\",\"SERIAL_NUMBER\":\"\",\"SURNAME\":\"\",\"EXPIRATION_DATE\":\"\",\"SEX\":\"\",\"BIRTH_DATE\":\"\",\"ISSUING_COUNTRY\":\"\",\"IDENTITY_NUMBER\":\"\",\"PERSONAL_NUMBER\":\"\",\"NAME\":\"\"}},\"FRONTSIDE\":{\"FIELD_DATA\":{\"NATIONALITY\":\"\",\"SURNAME\":\"\",\"EXPIRATION_DATE\":\"\",\"BARCODES\":[],\"SEX\":\"\",\"BIRTH_DATE\":\"\",\"PERSONAL_NUMBER\":\"\",\"EXPEDITION_DATE\":\"\",\"EXEMPLAR\":\"\",\"NAME\":\"\"}},\"SCORING\":{\"FIELDS_TOTAL\":0,\"FIELDS_RETURNED\":0,\"OVERALL_RATING\":0},\"DOC_MODEL\":\"\"}"
+        serviceTime:
+          type: string
+          description: Processing time in milliseconds
+          example: "20784"
