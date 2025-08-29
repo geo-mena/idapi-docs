@@ -1,7 +1,7 @@
 import { buildRegistry } from '@/scripts/build-registry';
 import * as OpenAPI from 'fumadocs-openapi';
 import { rimraf } from 'rimraf';
-import { openapi, geocodingapi, servicesapi, onboardingapi, authenticationapi, ocrapi, morphologyapi } from '@/lib/openapi';
+import { openapi, geocodingapi, onboardingapi, authenticationapi, ocrapi, morphologyapi, morphologyv2api } from '@/lib/openapi';
 
 export async function generateDocs() {
   await rimraf('./content/docs/openapi/(generated)');
@@ -11,6 +11,7 @@ export async function generateDocs() {
   await rimraf('./content/docs/services/authentication/(generated)');
   await rimraf('./content/docs/services/ocr/(generated)');
   await rimraf('./content/docs/services/morphology/(generated)');
+  await rimraf('./content/docs/services/morphology-v2/(generated)');
 
   await Promise.all([
     OpenAPI.generateFiles({
@@ -46,6 +47,12 @@ export async function generateDocs() {
     OpenAPI.generateFiles({
       input: morphologyapi,
       output: './content/docs/services/morphology/(generated)',
+      per: 'operation',
+      includeDescription: true,
+    }),
+    OpenAPI.generateFiles({
+      input: morphologyv2api,
+      output: './content/docs/services/morphology-v2/(generated)',
       per: 'operation',
       includeDescription: true,
     }),

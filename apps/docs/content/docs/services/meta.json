@@ -19,12 +19,8 @@
     "ocr/(generated)/extractDocumentDataWeb",
     "ocr/(generated)/extractDocumentData",
     "---Morphology---",
-    "morphology/(generated)/documentValidationStart",
-    "morphology/(generated)/documentValidationStartV2",
-    "morphology/(generated)/documentValidationStatus",
-    "morphology/(generated)/documentValidationStatusV2",
-    "morphology/(generated)/documentValidationData",
-    "morphology/(generated)/documentValidationDataV2",
+    "morphology",
+    "morphology-v2",
     "---Civil Validation---",
     "civil-validation-ec"
   ]

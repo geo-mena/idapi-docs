@@ -1,14 +1,8 @@
 openapi: 3.1.1
 info:
-  title: Morphology Services API
+  title: Morphology Services API V1
   description: |
-    The Morphology Services API provides document validation capabilities through morphological analysis of identity documents.
-    
-    ## API Versions
-    
-    This API supports two versions:
-    * **Version 1**: Legacy version using `/verify/documentValidation/`
-    * **Version 2**: Enhanced version using `/verify/documentValidation/v2/`
+    The Morphology Services API V1 provides document validation capabilities through morphological analysis of identity documents.
     
     ## Features
     
@@ -16,9 +10,10 @@ info:
     * **Multi-step Process**: Start, Status, and Data retrieval workflow
     * **Multiple Document Types**: Support for passport, driving license, ID card, and visa
     * **Real-time Processing**: Asynchronous processing with status monitoring
-    * **Version Support**: Backward compatibility with v1 and enhanced features in v2
     
-  version: 2.0.0
+    **Note**: This is the legacy V1 API. For enhanced features, see the V2 API documentation.
+    
+  version: 1.0.0
   contact:
     name: FacePhi Support
     email: support@facephi.com
@@ -31,13 +26,13 @@ servers:
 security:
   - apiKey: []
 tags:
-  - name: Morphology
-    description: Document validation services through morphological analysis
+  - name: Morphology V1
+    description: Legacy document validation services through morphological analysis
 paths:
   '/verify/documentValidation/start':
     post:
       tags:
-        - Morphology
+        - Morphology V1
       summary: Document Validation Start
       description: |
         Start the morphological validation process of identity documents.
@@ -167,7 +162,7 @@ paths:
   '/verify/documentValidation/status':
     post:
       tags:
-        - Morphology
+        - Morphology V1
       summary: Document Validation Status
       description: |
         Query the status of the morphological validation operation.
@@ -289,7 +284,7 @@ paths:
   '/verify/documentValidation/data':
     post:
       tags:
-        - Morphology
+        - Morphology V1
       summary: Document Validation Data
       description: |
         Retrieve the results of the morphological analysis of the document.
@@ -410,229 +405,6 @@ paths:
       security:
         - apiKey: []
 
-  # Version 2 Endpoints
-  '/verify/documentValidation/v2/start':
-    post:
-      tags:
-        - Morphology
-      summary: Document Validation Start V2
-      description: |
-        Start the morphological validation process of identity documents (Version 2).
-        
-        **Enhanced features in v2:**
-        - Additional document types support
-        - Improved request/response format
-        - Enhanced error handling
-        - Better MIME type handling
-        
-        **Process Overview:**
-        
-        The morphological validation consists of 3 steps:
-        1. **Start**: Send document information (images, country, and document type) for analysis
-        2. **Status**: Query operation status until analysis is completed  
-        3. **Data**: Retrieve morphological analysis results
-      operationId: documentValidationStartV2
-      requestBody:
-        description: Document validation start request with images and metadata (v2)
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DocumentValidationStartRequestV2'
-            example:
-              country: "ESP"
-              idType: "ID_CARD"
-              documentRawImageMimeType: "image/jpeg"
-              documentFrontRawImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-              documentBackRawImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-              merchantIdScanReference: "custom-ref-123"
-      responses:
-        '200':
-          description: Validation started successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DocumentValidationStartResponseV2'
-              example:
-                timestamp: "1970-01-01T00:00:00.000Z"
-                scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
-                type: "1"
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request parameters."
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-      security:
-        - apiKey: []
-
-  '/verify/documentValidation/v2/status':
-    post:
-      tags:
-        - Morphology
-      summary: Document Validation Status V2
-      description: |
-        Query the status of the morphological validation process (Version 2).
-        
-        This endpoint should be called periodically until the status is "DONE" or "FAILED".
-      operationId: documentValidationStatusV2
-      requestBody:
-        description: Status request with scan reference (v2)
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DocumentValidationStatusRequestV2'
-            example:
-              scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
-      responses:
-        '200':
-          description: Status retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DocumentValidationStatusResponseV2'
-              example:
-                timestamp: "1970-01-01T00:00:00.000Z"
-                scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
-                status: "DONE"
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request parameters."
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-      security:
-        - apiKey: []
-
-  '/verify/documentValidation/v2/data':
-    post:
-      tags:
-        - Morphology
-      summary: Document Validation Data V2
-      description: |
-        Retrieve the results of the morphological analysis (Version 2).
-        
-        **Enhanced response format in v2:**
-        - More detailed validation results
-        - Enhanced error reporting
-        - Additional metadata fields
-      operationId: documentValidationDataV2
-      requestBody:
-        description: Data request with scan reference (v2)
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DocumentValidationDataRequestV2'
-            example:
-              scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
-      responses:
-        '200':
-          description: Validation data retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DocumentValidationDataResponseV2'
-              example:
-                status: "success"
-                verification:
-                  acceptanceTime: "2019-11-06T07:15:27.000Z"
-                  code: 9001
-                  decisionTime: "2019-11-06T07:18:36.916Z"
-                  merchantScanReference: "12345678"
-                  scanReference: "12df6045-3846-3e45-946a-14fa6136d79a"
-                  status: "approved"
-                  reason: null
-                  reasonCode: null
-                  document:
-                    type: "DRIVERS_LICENSE"
-                    country: "ESP"
-                    number: "PEREZ771116SM1AJ"
-                    validFrom: null
-                    validUntil: "2024-04-20"
-                    placeOfIssue: "MADRID"
-                    firstIssue: "2015-03-21"
-                    issueNumber: "01"
-                    issuedBy: "ISSUER"
-                  person:
-                    firstName: "MATIAS"
-                    lastName: "PEREZ"
-                    idNumber: null
-                    citizenship: null
-                    nationality: null
-                    gender: null
-                    dateOfBirth: "1973-03-30"
-                    yearOfBirth: "1973"
-                    placeOfBirth: "MADRID"
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request parameters."
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-      security:
-        - apiKey: []
 
 components:
   securitySchemes:
@@ -761,245 +533,3 @@ components:
           description: Additional validation details (provider-dependent)
           example: {}
 
-    # Version 2 Schemas
-    DocumentValidationStartRequestV2:
-      type: object
-      required:
-        - country
-        - idType
-        - documentFrontRawImage
-      properties:
-        country:
-          type: string
-          description: ISO 3166-1 alpha-3 country code
-          example: "ESP"
-        idType:
-          type: string
-          description: Type of the provided ID
-          enum: ["PASSPORT", "DRIVING_LICENSE", "ID_CARD", "RESIDENCE_PERMIT", "VISA"]
-          example: "ID_CARD"
-        documentFrontRawImage:
-          type: string
-          format: base64
-          description: Base64 encoded open or tokenized image of ID front side
-          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-        documentBackRawImage:
-          type: string
-          format: base64
-          description: Base64 encoded open or tokenized image of ID back side. Optional for single-sided documents like PASSPORT
-          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-        merchantIdScanReference:
-          type: string
-          description: Custom operation reference. Max. length 100 characters
-          maxLength: 100
-          example: "custom-ref-123"
-        documentRawImageMimeType:
-          type: string
-          description: Mime format of image
-          enum: ["image/png", "image/jpeg"]
-          example: "image/jpeg"
-
-    DocumentValidationStartResponseV2:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          description: Timestamp (UTC) of the response in ISO 8601 format
-          example: "1970-01-01T00:00:00.000Z"
-        scanReference:
-          type: string
-          description: Reference number for each scan
-          example: "fe294c25-17e1-4d98-a958-710edbf00064"
-        type:
-          type: string
-          description: Deprecated value. Will be removed in future versions
-          deprecated: true
-          example: "1"
-
-    DocumentValidationStatusRequestV2:
-      type: object
-      required:
-        - scanReference
-      properties:
-        scanReference:
-          type: string
-          description: Scan reference number
-          example: "fe294c25-17e1-4d98-a958-710edbf00064"
-        type:
-          type: string
-          description: Deprecated value. Will be removed in future versions
-          deprecated: true
-          example: "1"
-
-    DocumentValidationStatusResponseV2:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          description: Timestamp (UTC) of the response in ISO 8601 format
-          example: "1970-01-01T00:00:00.000Z"
-        scanReference:
-          type: string
-          description: Scan reference number
-          example: "fe294c25-17e1-4d98-a958-710edbf00064"
-        status:
-          type: string
-          description: Operation status
-          enum: ["PENDING", "DONE", "FAILED"]
-          example: "DONE"
-
-    DocumentValidationDataRequestV2:
-      type: object
-      required:
-        - scanReference
-      properties:
-        scanReference:
-          type: string
-          description: Scan reference number
-          example: "fe294c25-17e1-4d98-a958-710edbf00064"
-        type:
-          type: string
-          description: Deprecated value. Will be removed in future versions
-          deprecated: true
-          example: "1"
-
-    DocumentValidationDataResponseV2:
-      type: object
-      properties:
-        status:
-          type: string
-          description: State of the service
-          enum: ["success", "fail"]
-          example: "success"
-        verification:
-          type: object
-          properties:
-            acceptanceTime:
-              type: string
-              format: date-time
-              description: Initial timestamp in the format YYYY-MM-DDThh:mm:ss.SSSZ
-              example: "2019-11-06T07:15:27.000Z"
-            code:
-              type: integer
-              description: Corresponding status code. See [Service Result Code](/docs/services/serviceResultCodes#service-document-validation-v2)
-              enum: [7001, 7002, 9001, 9102, 9103, 9104, 9121]
-              example: 9001
-            decisionTime:
-              type: string
-              format: date-time
-              description: Timestamp corresponding to the moment of the final decision
-              example: "2019-11-06T07:18:36.916Z"
-            merchantScanReference:
-              type: string
-              description: Validation reference number
-              example: "12345678"
-            scanReference:
-              type: string
-              description: Internal reference provided in the start status
-              example: "12df6045-3846-3e45-946a-14fa6136d79a"
-            status:
-              type: string
-              description: Status of the document validation process
-              enum: ["Started", "Submitted", "Approved", "Declined", "Resubmission", "Expired/Abandoned", "Review"]
-              example: "approved"
-            reason:
-              type: string
-              nullable: true
-              description: Description of the reason for document rejection (status declined). Null if status approved
-              example: null
-            reasonCode:
-              type: integer
-              nullable: true
-              description: Code associated with the reason for rejection. Null if status approved
-              example: null
-            document:
-              type: object
-              properties:
-                type:
-                  type: string
-                  description: Type of document
-                  enum: ["PASSPORT", "DRIVING_LICENSE", "ID_CARD", "VISA", "UNSUPPORTED"]
-                  example: "DRIVERS_LICENSE"
-                country:
-                  type: string
-                  description: Issuing country code in ISO 3166-1 alpha-3 format
-                  example: "ESP"
-                number:
-                  type: string
-                  description: Document number
-                  example: "PEREZ771116SM1AJ"
-                validFrom:
-                  type: string
-                  nullable: true
-                  description: Document issue date
-                  example: null
-                validUntil:
-                  type: string
-                  description: Document expiry date
-                  example: "2024-04-20"
-                placeOfIssue:
-                  type: string
-                  description: Place of issue
-                  example: "MADRID"
-                firstIssue:
-                  type: string
-                  description: Date of the document's first issue
-                  example: "2015-03-21"
-                issueNumber:
-                  type: string
-                  description: Issue number
-                  example: "01"
-                issuedBy:
-                  type: string
-                  description: Issuing authority
-                  example: "ISSUER"
-            person:
-              type: object
-              properties:
-                firstName:
-                  type: string
-                  nullable: true
-                  description: User's first name
-                  example: "MATIAS"
-                lastName:
-                  type: string
-                  nullable: true
-                  description: User's last name
-                  example: "PEREZ"
-                idNumber:
-                  type: string
-                  nullable: true
-                  description: User's document number
-                  example: null
-                citizenship:
-                  type: string
-                  nullable: true
-                  description: Citizenship
-                  example: null
-                nationality:
-                  type: string
-                  nullable: true
-                  description: Nationality
-                  example: null
-                gender:
-                  type: string
-                  nullable: true
-                  description: Gender
-                  example: null
-                dateOfBirth:
-                  type: string
-                  nullable: true
-                  description: Date of birth in the format YYYY-MM-DD
-                  example: "1973-03-30"
-                yearOfBirth:
-                  type: string
-                  nullable: true
-                  description: Year of birth YYYY
-                  example: "1973"
-                placeOfBirth:
-                  type: string
-                  nullable: true
-                  description: Place of birth
-                  example: "MADRID"
