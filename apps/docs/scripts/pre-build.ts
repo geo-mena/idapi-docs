@@ -26,12 +26,6 @@ export async function generateDocs() {
       includeDescription: true,
     }),
     OpenAPI.generateFiles({
-      input: servicesapi,
-      output: './content/docs/services/(generated)',
-      per: 'operation',
-      includeDescription: true,
-    }),
-    OpenAPI.generateFiles({
       input: onboardingapi,
       output: './content/docs/services/onboarding/(generated)',
       per: 'operation',
