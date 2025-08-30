@@ -2,7 +2,7 @@ import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { baseOptions, linkItems, logo } from '@/lib/layout.shared';
 import { source } from '@/lib/source';
 import { LargeSearchToggle } from 'fumadocs-ui/components/layout/search-toggle';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, MessageCircle } from 'lucide-react';
 import { AISearchTrigger } from '@/components/ai';
 import { cn } from '@/lib/cn';
 import { buttonVariants } from '@/components/ui/button';
@@ -33,7 +33,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
                   }),
                 )}
               >
-                <Sparkles className="size-4" />
+                <MessageCircle className="size-4" />
               </AISearchTrigger>
             </div>
           ),
