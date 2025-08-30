@@ -74,89 +74,31 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                  errors:
-                    type: array
-                    example: []
-              example:
-                status: 400
-                title: "Bad Request"
-                detail: "Invalid request."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                errors: []
+                $ref: '#/components/schemas/BadRequestError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Unauthorized"
-              example:
-                message: "Unauthorized"
+                $ref: '#/components/schemas/UnauthorizedError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Message:
-                    type: string
-                    example: "User is not authorized to access this resource with an explicit deny"
-              example:
-                Message: "User is not authorized to access this resource with an explicit deny"
+                $ref: '#/components/schemas/ForbiddenError'
         '502':
           description: Bad Gateway
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 502
-                  title:
-                    type: string
-                    example: "Bad Gateway"
-                  detail:
-                    type: string
-                    example: "Server got an invalid response."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
-              example:
-                status: 502
-                title: "Bad Gateway"
-                detail: "Server got an invalid response."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+                $ref: '#/components/schemas/BadGatewayError'
         '504':
           description: Gateway Timeout
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-              example:
-                message: "Endpoint request timed out"
+                $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
   '/services/authenticateFacial':
@@ -200,89 +142,31 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                  errors:
-                    type: array
-                    example: []
-              example:
-                status: 400
-                title: "Bad Request"
-                detail: "Invalid request."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                errors: []
+                $ref: '#/components/schemas/BadRequestError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Unauthorized"
-              example:
-                message: "Unauthorized"
+                $ref: '#/components/schemas/UnauthorizedError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Message:
-                    type: string
-                    example: "User is not authorized to access this resource with an explicit deny"
-              example:
-                Message: "User is not authorized to access this resource with an explicit deny"
+                $ref: '#/components/schemas/ForbiddenError'
         '502':
           description: Bad Gateway
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 502
-                  title:
-                    type: string
-                    example: "Bad Gateway"
-                  detail:
-                    type: string
-                    example: "Server got an invalid response."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
-              example:
-                status: 502
-                title: "Bad Gateway"
-                detail: "Server got an invalid response."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+                $ref: '#/components/schemas/BadGatewayError'
         '504':
           description: Gateway Timeout
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-              example:
-                message: "Endpoint request timed out"
+                $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
   '/services/finishTracking':
@@ -321,89 +205,107 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                  errors:
-                    type: array
-                    example: []
-              example:
-                status: 400
-                title: "Bad Request"
-                detail: "Invalid request."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                errors: []
+                $ref: '#/components/schemas/BadRequestError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Unauthorized"
-              example:
-                message: "Unauthorized"
+                $ref: '#/components/schemas/UnauthorizedError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Message:
-                    type: string
-                    example: "User is not authorized to access this resource with an explicit deny"
-              example:
-                Message: "User is not authorized to access this resource with an explicit deny"
+                $ref: '#/components/schemas/ForbiddenError'
         '502':
           description: Bad Gateway
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 502
-                  title:
-                    type: string
-                    example: "Bad Gateway"
-                  detail:
-                    type: string
-                    example: "Server got an invalid response."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
-              example:
-                status: 502
-                title: "Bad Gateway"
-                detail: "Server got an invalid response."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+                $ref: '#/components/schemas/BadGatewayError'
         '504':
           description: Gateway Timeout
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
+                $ref: '#/components/schemas/GatewayTimeoutError'
+      security:
+        - apiKey: []
+  '/onboarding/v2/identity':
+    post:
+      tags:
+        - Onboarding
+      summary: Identity Validation V2
+      description: |
+        This service performs both the liveness validation and the facial comparison between two faces, whether provided as open images or as tokenized parameters. It supports two types of facial validations, depending on the integrated widget:
+
+        **Integration**
+
+        - For validation type 3, an open-format image of the front of the ID card, where the face is located, is required.
+        - For validation type 5, it is necessary to implement the SelphID Mobile widget to generate the TokenFaceImage property.
+      operationId: identityValidationV2
+      requestBody:
+        description: Identity validation data with tokens and method specification
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityV2Request'
+            example:
+              token1: "/9j/4AAQSkZJRgABAQAASAB..."
+              bestImageToken: "BAMBAQLNHJoWGPj..."
+              method: "3"
+              tracking:
+                extraData: "BQABAQG2gBNjuHN..."
+                operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+      responses:
+        '200':
+          description: Successfully processed identity validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentityV2Response'
               example:
-                message: "Endpoint request timed out"
+                serviceTransactionId: "2db602ee-3564-4304-af95-92a52eaae12d"
+                serviceResultCode: 0
+                serviceResultLog: "[identity] Service executed ok"
+                serviceTime: "2235"
+                facialAuthenticationResult: 3
+                facialAuthenticationLog: "Positive"
+                facialAuthenticationSimilarity: 0.99214232
+                passiveLivenessResult: 3
+                passiveLivenessLog: "Live"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadGatewayError'
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
 components:
@@ -414,6 +316,74 @@ components:
       name: x-api-key
       description: API key for authentication
   schemas:
+    BadRequestError:
+      type: object
+      required:
+        - status
+        - title
+        - detail
+        - type
+        - errors
+      properties:
+        status:
+          type: integer
+          example: 400
+        title:
+          type: string
+          example: "Bad Request"
+        detail:
+          type: string
+          example: "Invalid request."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+        errors:
+          type: array
+          example: []
+    UnauthorizedError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Unauthorized"
+    ForbiddenError:
+      type: object
+      required:
+        - Message
+      properties:
+        Message:
+          type: string
+          example: "User is not authorized to access this resource with an explicit deny"
+    BadGatewayError:
+      type: object
+      required:
+        - status
+        - title
+        - detail
+        - type
+      properties:
+        status:
+          type: integer
+          example: 502
+        title:
+          type: string
+          example: "Bad Gateway"
+        detail:
+          type: string
+          example: "Server got an invalid response."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    GatewayTimeoutError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Endpoint request timed out"
     PassiveLivenessTokenRequest:
       type: object
       required:
@@ -474,6 +444,13 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     FacialAuthenticationResponse:
       type: object
+      required:
+        - serviceResultCode
+        - serviceTime
+        - serviceFacialAuthenticationResult
+        - serviceResultLog
+        - serviceFacialSimilarityResult
+        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
@@ -506,6 +483,12 @@ components:
           example: "47D0ACDCF08C348469C2F512BB59216B46DCD9B253822ED0E4EEAFCEB76AADD5AEF20CA31EC52D03EB290EBC91A6AD65FB0416F9EB2164D3854932153074289E"
     PassiveLivenessResponse:
       type: object
+      required:
+        - serviceResultCode
+        - serviceTime
+        - serviceLivenessResult
+        - serviceResultLog
+        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
@@ -556,6 +539,11 @@ components:
           example: "string"
     FinishTrackingResponse:
       type: object
+      required:
+        - trackingStatus
+        - trackingMessage
+        - transactionId
+        - timestamp
       properties:
         trackingStatus:
           type: integer
@@ -574,3 +562,83 @@ components:
           format: date-time
           description: Timestamp (UTC) of the response in the format YYYY-MM-DDThh:mm:ss.SSSZ.
           example: "2023-05-01T12:34:56.789Z"
+    IdentityV2Request:
+      type: object
+      required:
+        - token1
+        - bestImageToken
+        - method
+      properties:
+        token1:
+          type: string
+          format: byte
+          description: Image used as a reference for facial comparison. It can be a base64 image or TokenFaceImage, depending on the method.
+          example: "/9j/4AAQSkZJRgABAQAASAB..."
+        bestImageToken:
+          type: string
+          format: byte
+          description: Tokenized bestImage property generated by the Selphi widget and tokenized using native function.
+          example: "BAMBAQLNHJoWGPj..."
+        method:
+          type: string
+          description: |
+            Indicates the invoked comparison method according to the following specification:
+            
+            | Method | Description |
+            |--------|-------------|
+            | "3" | Facial authentication using an open image and tokenized bestImage (Base64 & bestImageToken) |
+            | "5" | Facial authentication using the token generated by the document photo crop and tokenized bestImage (tokenFaceImage & bestImageToken) |
+          enum: ["3", "5"]
+          example: "3"
+        tracking:
+          $ref: '#/components/schemas/TrackingInfo'
+    IdentityV2Response:
+      type: object
+      required:
+        - serviceTransactionId
+        - serviceResultCode
+        - serviceResultLog
+        - serviceTime
+        - facialAuthenticationResult
+        - facialAuthenticationLog
+        - facialAuthenticationSimilarity
+        - passiveLivenessResult
+        - passiveLivenessLog
+      properties:
+        serviceTransactionId:
+          type: string
+          description: Transaction identifier associated with the API request.
+          example: "2db602ee-3564-4304-af95-92a52eaae12d"
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
+          example: 0
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the service execution result. Provides details of errors or exceptions when they occur.
+          example: "[identity] Service executed ok"
+        serviceTime:
+          type: string
+          description: Field indicating the processing time (milliseconds).
+          example: "2235"
+        facialAuthenticationResult:
+          type: integer
+          description: Code indicating the result of the facial matching. See [Service Facial Authentication Result](/docs/services/serviceResultCodes#service-facial-authentication-result)
+          example: 3
+        facialAuthenticationLog:
+          type: string
+          description: Descriptive field of the facial matching result.
+          example: "Positive"
+        facialAuthenticationSimilarity:
+          type: number
+          format: float
+          description: Value indicating the facial similarity between the document photo and the user-taken selfie. 1.0 = 100%
+          example: 0.99214232
+        passiveLivenessResult:
+          type: integer
+          description: Code indicating the result of the passive liveness test. See [Service Liveness Result](/docs/services/serviceResultCodes#service-liveness-result)
+          example: 3
+        passiveLivenessLog:
+          type: string
+          description: Descriptive field of the passive liveness result.
+          example: "Live"
