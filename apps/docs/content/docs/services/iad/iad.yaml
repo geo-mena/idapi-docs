@@ -96,6 +96,7 @@ paths:
                     type: array
                     items:
                       type: string
+                    description: Array of specific error codes and messages. See [IAD Error Codes](/docs/services/serviceResultCodes#iad-error-codes)
                     example: ["FACE_ANGLE_TOO_LARGE: Facial out-of-plane rotation angle is extremely large"]
               examples:
                 FaceNotFound:
