@@ -120,89 +120,31 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                  errors:
-                    type: array
-                    example: ["countryCode is required"]
-              example:
-                status: 400
-                title: "Bad Request"
-                detail: "Invalid request."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                errors: ["countryCode is required"]
+                $ref: '#/components/schemas/BadRequestError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Unauthorized"
-              example:
-                message: "Unauthorized"
+                $ref: '#/components/schemas/UnauthorizedError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Message:
-                    type: string
-                    example: "User is not authorized to access this resource with an explicit deny"
-              example:
-                Message: "User is not authorized to access this resource with an explicit deny"
+                $ref: '#/components/schemas/ForbiddenError'
         '502':
           description: Bad Gateway
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 502
-                  title:
-                    type: string
-                    example: "Bad Gateway"
-                  detail:
-                    type: string
-                    example: "Server got an invalid response."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
-              example:
-                status: 502
-                title: "Bad Gateway"
-                detail: "Server got an invalid response."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+                $ref: '#/components/schemas/BadGatewayError'
         '504':
           description: Gateway Timeout
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-              example:
-                message: "Endpoint request timed out"
+                $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
 
@@ -214,6 +156,74 @@ components:
       name: x-api-key
       description: API key for authentication
   schemas:
+    BadRequestError:
+      type: object
+      required:
+        - status
+        - title
+        - detail
+        - type
+        - errors
+      properties:
+        status:
+          type: integer
+          example: 400
+        title:
+          type: string
+          example: "Bad Request"
+        detail:
+          type: string
+          example: "Invalid request."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+        errors:
+          type: array
+          example: []
+    UnauthorizedError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Unauthorized"
+    ForbiddenError:
+      type: object
+      required:
+        - Message
+      properties:
+        Message:
+          type: string
+          example: "User is not authorized to access this resource with an explicit deny"
+    BadGatewayError:
+      type: object
+      required:
+        - status
+        - title
+        - detail
+        - type
+      properties:
+        status:
+          type: integer
+          example: 502
+        title:
+          type: string
+          example: "Bad Gateway"
+        detail:
+          type: string
+          example: "Server got an invalid response."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    GatewayTimeoutError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Endpoint request timed out"
     PadDiagnosticRequest:
       type: object
       required:
@@ -254,6 +264,15 @@ components:
 
     PadDiagnosticResponse:
       type: object
+      required:
+        - serviceTransactionId
+        - serviceResultCode
+        - serviceResultLog
+        - serviceTime
+        - decision
+        - reason
+        - confidence
+        - timestamp
       properties:
         serviceTransactionId:
           type: string

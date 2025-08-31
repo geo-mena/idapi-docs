@@ -41,20 +41,13 @@ paths:
         - Morphology V2
       summary: Document Validation Start
       description: |
-        Start the morphological validation process of identity documents (Version 2).
-        
-        **Enhanced features in v2:**
-        - Additional document types support
-        - Improved request/response format
-        - Enhanced error handling
-        - Better MIME type handling
-        
-        **Process Overview:**
-        
-        The morphological validation consists of 3 steps:
-        1. **Start**: Send document information (images, country, and document type) for analysis
-        2. **Status**: Query operation status until analysis is completed  
-        3. **Data**: Retrieve morphological analysis results
+        This API allows the morphological validation process of identity documents.
+
+        **The process consists of 3 steps:**
+
+        1. **Start**: The information of the document (images, country and type of document) to be analyzed is sent.
+        2. [Status](/docs/services/morphology-v2/documentValidationStatusV2): The status of the operation is queried to see if it is possible to proceed to obtain the result of the operation. this query must be made n times until the analysis operation has been completed.
+        3. [Data](/docs/services/morphology-v2/documentValidationDataV2): The results of the morphological analysis of the document are obtained.
       operationId: documentValidationStartV2
       requestBody:
         description: Document validation start request with images and metadata (v2)
@@ -86,99 +79,31 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                  errors:
-                    type: array
-                    example: []
-              example:
-                status: 400
-                title: "Bad Request"
-                detail: "Invalid request."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                errors: []
+                $ref: '#/components/schemas/BadRequestError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Unauthorized"
-              example:
-                message: "Unauthorized"
+                $ref: '#/components/schemas/UnauthorizedError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Message:
-                    type: string
-                    example: "User is not authorized to access this resource with an explicit deny"
-              example:
-                Message: "User is not authorized to access this resource with an explicit deny"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
+                $ref: '#/components/schemas/ForbiddenError'
         '502':
           description: Bad Gateway
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 502
-                  title:
-                    type: string
-                    example: "Bad Gateway"
-                  detail:
-                    type: string
-                    example: "Server got an invalid response."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
-              example:
-                status: 502
-                title: "Bad Gateway"
-                detail: "Server got an invalid response."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+                $ref: '#/components/schemas/BadGatewayError'
         '504':
           description: Gateway Timeout
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-              example:
-                message: "Endpoint request timed out"
+                $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
 
@@ -188,9 +113,9 @@ paths:
         - Morphology V2
       summary: Document Validation Status
       description: |
-        Query the status of the morphological validation process (Version 2).
-        
-        This endpoint should be called periodically until the status is "DONE" or "FAILED".
+        Query the status of the morphological validation operation.
+
+        This endpoint should be called repeatedly until the analysis operation is completed (status becomes "DONE" or "FAILED").
       operationId: documentValidationStatusV2
       requestBody:
         description: Status request with scan reference (v2)
@@ -217,99 +142,31 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                  errors:
-                    type: array
-                    example: []
-              example:
-                status: 400
-                title: "Bad Request"
-                detail: "Invalid request."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                errors: []
+                $ref: '#/components/schemas/BadRequestError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Unauthorized"
-              example:
-                message: "Unauthorized"
+                $ref: '#/components/schemas/UnauthorizedError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Message:
-                    type: string
-                    example: "User is not authorized to access this resource with an explicit deny"
-              example:
-                Message: "User is not authorized to access this resource with an explicit deny"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
+                $ref: '#/components/schemas/ForbiddenError'
         '502':
           description: Bad Gateway
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 502
-                  title:
-                    type: string
-                    example: "Bad Gateway"
-                  detail:
-                    type: string
-                    example: "Server got an invalid response."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
-              example:
-                status: 502
-                title: "Bad Gateway"
-                detail: "Server got an invalid response."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+                $ref: '#/components/schemas/BadGatewayError'
         '504':
           description: Gateway Timeout
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-              example:
-                message: "Endpoint request timed out"
+                $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
 
@@ -319,12 +176,9 @@ paths:
         - Morphology V2
       summary: Document Validation Data
       description: |
-        Retrieve the results of the morphological analysis (Version 2).
-        
-        **Enhanced response format in v2:**
-        - More detailed validation results
-        - Enhanced error reporting
-        - Additional metadata fields
+        Retrieve the results of the morphological analysis of the document.
+
+        **Note:** The response fields will depend on the configured morphology provider.
       operationId: documentValidationDataV2
       requestBody:
         description: Data request with scan reference (v2)
@@ -378,99 +232,31 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  title:
-                    type: string
-                    example: "Bad Request"
-                  detail:
-                    type: string
-                    example: "Invalid request."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                  errors:
-                    type: array
-                    example: []
-              example:
-                status: 400
-                title: "Bad Request"
-                detail: "Invalid request."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
-                errors: []
+                $ref: '#/components/schemas/BadRequestError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Unauthorized"
-              example:
-                message: "Unauthorized"
+                $ref: '#/components/schemas/UnauthorizedError'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Message:
-                    type: string
-                    example: "User is not authorized to access this resource with an explicit deny"
-              example:
-                Message: "User is not authorized to access this resource with an explicit deny"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
+                $ref: '#/components/schemas/ForbiddenError'
         '502':
           description: Bad Gateway
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 502
-                  title:
-                    type: string
-                    example: "Bad Gateway"
-                  detail:
-                    type: string
-                    example: "Server got an invalid response."
-                  type:
-                    type: string
-                    example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
-              example:
-                status: 502
-                title: "Bad Gateway"
-                detail: "Server got an invalid response."
-                type: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+                $ref: '#/components/schemas/BadGatewayError'
         '504':
           description: Gateway Timeout
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Endpoint request timed out"
-              example:
-                message: "Endpoint request timed out"
+                $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
 
@@ -482,6 +268,74 @@ components:
       name: x-api-key
       description: API key for authentication
   schemas:
+    BadRequestError:
+      type: object
+      required:
+        - status
+        - title
+        - detail
+        - type
+        - errors
+      properties:
+        status:
+          type: integer
+          example: 400
+        title:
+          type: string
+          example: "Bad Request"
+        detail:
+          type: string
+          example: "Invalid request."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+        errors:
+          type: array
+          example: []
+    UnauthorizedError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Unauthorized"
+    ForbiddenError:
+      type: object
+      required:
+        - Message
+      properties:
+        Message:
+          type: string
+          example: "User is not authorized to access this resource with an explicit deny"
+    BadGatewayError:
+      type: object
+      required:
+        - status
+        - title
+        - detail
+        - type
+      properties:
+        status:
+          type: integer
+          example: 502
+        title:
+          type: string
+          example: "Bad Gateway"
+        detail:
+          type: string
+          example: "Server got an invalid response."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    GatewayTimeoutError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Endpoint request timed out"
     DocumentValidationStartRequestV2:
       type: object
       required:
@@ -521,6 +375,9 @@ components:
 
     DocumentValidationStartResponseV2:
       type: object
+      required:
+        - timestamp
+        - scanReference
       properties:
         timestamp:
           type: string
@@ -554,6 +411,10 @@ components:
 
     DocumentValidationStatusResponseV2:
       type: object
+      required:
+        - timestamp
+        - scanReference
+        - status
       properties:
         timestamp:
           type: string
@@ -587,6 +448,13 @@ components:
 
     DocumentValidationDataResponseV2:
       type: object
+      required:
+        - timestamp
+        - scanReference
+        - result
+        - confidence
+        - document
+        - person
       properties:
         status:
           type: string
