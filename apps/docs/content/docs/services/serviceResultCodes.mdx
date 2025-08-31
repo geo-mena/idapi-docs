@@ -224,6 +224,24 @@ When the validation result is not satisfactory, the `reason` field provides spec
 | NOT_PROCESSED_PHOTO_CHECK | Could not perform portrait photo check of the identity document |
 | NOT_PROCESSED_DATA_CHECK | Could not perform field value check of the identity document |
 
+## IAD Error Codes
+
+The IAD (Injection Attack Detection) service returns specific error codes for various validation scenarios. These errors are returned as HTTP 400 Bad Request with detailed error information:
+
+| HTTP Code | Message | Error Code | Description |
+|---|---|---|---|
+| 400 | Face not found | FACE_NOT_FOUND | No faces have been detected in the image. |
+| 400 | Face is cropped | FACE_CROPPED | Face is only partially inside the image. |
+| 400 | Face is occluded | FACE_IS_OCCLUDED | Face is being partially hidden behind an object. |
+| 400 | Too many faces detected | TOO_MANY_FACES | More than one face is visible in the image. |
+| 400 | Facial out-of-plane rotation angle is extremely large | FACE_ANGLE_TOO_LARGE | Angle of the face corresponding to camera view point is too large. |
+| 400 | Absolute face size is too small | FACE_TOO_SMALL | Face pixel density is too small, it should be closer to the camera view point or image should be higher resolution. |
+| 400 | Relative face size is too small | FACE_TOO_SMALL | Face is too small, it should be closer to the camera view point, so it occupies a higher portion of the image. |
+| 400 | Face is too close to one or more borders | FACE_CLOSE_TO_BORDER | Face is too close to the limit of the camera's view point, it should be centered corresponding with camera view. |
+| 400 | Failed to parse file | UNKNOWN | File is not a correct encrypted blob payload or is corrupted. |
+| 400 | Failed to read metadata | UNKNOWN | Encrypted blob data is not generated with the correct format. |
+| 400 | Failed to decrypt message | UNKNOWN | Wrong public-private key pair is set on server and capture library. |
+
 ## Error Scenarios and Responses
 
 <Callout type="warn">

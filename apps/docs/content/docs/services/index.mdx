@@ -5,4 +5,44 @@ index: true
 icon: Album
 ---
 
+## Introduction
+
+This document includes the specification of the services exposed in SaaS mode through the FacePhi REST APIs for SelphID and Selphi products.
+
+## API Access
+
+| Parameter | Value |
+|-----------|--------|
+| Host | https://api.identity-platform.io |
+| BasePath | /services |
+
+## Authorizations
+
+All calls to the Endpoints must include the following keys in the request header:
+
+| Key | Value | Required |
+|-----|-------|----------|
+| client-id | [Client ID] | Not Required |
+| token-app | [Client authorization token] | Not Required |
+| x-api-key | [API access authorization] | Required |
+| app-name | [App identifier] | ** |
+
+<small>** If the request is made directly from a mobile app, the app-name header is Required; otherwise, this header is Optional.</small>
+
+If the required keys mentioned above are not included, all Endpoints will return the following response:
+
+| serviceResultCode | Description |
+|-------------------|-------------|
+| 401 | "message": "Unauthorized" |
+
+## Integration with Identity Platform
+
+<Callout type="warn">
+All calls to the Endpoints for tracking with Identity Platform must contain the following header:
+
+| Key | Value |
+|-----|-------|
+| family | "OnBoarding" = For all calls related to Digital Onboarding processes<br/>"Authentication" = For all calls related to Authentication processes |
+</Callout>
+
 View the Services API for identity verification and biometric services.
