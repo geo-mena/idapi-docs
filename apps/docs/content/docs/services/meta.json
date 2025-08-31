@@ -15,6 +15,7 @@
     "---Authentication---",
     "authentication/(generated)/authenticateUser",
     "authentication/(generated)/authenticateUserV2",
+    "authentication/(generated)/updateUserTemplate",
     "authentication/(generated)/deleteUsers",
     "---OCR---",
     "ocr/(generated)/extractDocumentDataWeb",
