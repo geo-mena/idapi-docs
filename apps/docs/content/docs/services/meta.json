@@ -7,6 +7,8 @@
     "---Introduction---",
     "index",
     "serviceResultCodes",
+    "---IAD---",
+    "iad/(generated)/injectionAttackDetection",
     "---Onboarding---",
     "onboarding/(generated)/identityValidationV2",
     "onboarding/(generated)/authenticateFacial",

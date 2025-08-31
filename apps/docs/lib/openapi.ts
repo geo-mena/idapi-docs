@@ -108,6 +108,18 @@ export const padapi = createOpenAPI({
   },
 });
 
+export const iadapi = createOpenAPI({
+  input: ['./content/docs/services/iad/iad.yaml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
 export const civilvalidationecapi = createOpenAPI({
   input: [
     './content/docs/services/civil-validation-ec/full-mobile.yaml',
