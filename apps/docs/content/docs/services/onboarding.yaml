@@ -254,8 +254,8 @@ paths:
 
         **Integration**
 
-        - For validation type 3, an open-format image of the front of the ID card, where the face is located, is required.
-        - For validation type 5, it is necessary to implement the SelphID Mobile widget to generate the TokenFaceImage property.
+        - For **validation type 3**, an open-format image of the front of the ID card, where the face is located, is required.
+        - For **validation type 5**, it is necessary to implement the SelphID Mobile widget to generate the TokenFaceImage property.
       operationId: identityValidationV2
       requestBody:
         description: Identity validation data with tokens and method specification
