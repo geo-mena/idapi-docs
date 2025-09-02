@@ -78,6 +78,24 @@ body {
   background-color: var(--color-fd-background);
 }
 
+/* 🎨 Apply same scrollbar styling as sidebar to main page */
+html, body, * {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: var(--color-fd-border);
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-corner {
+    display: none;
+  }
+}
+
 .dark {
   --headless-color: hsl(250 100% 80%);
   --ui-color: hsl(217 92% 76%);
