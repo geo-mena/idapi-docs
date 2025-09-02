@@ -109,13 +109,13 @@ body {
   }
 }
 
-/* Fix: collapsed sidebar control positioning */
+/* 🎨 Fix: collapsed sidebar control positioning */
 .fixed.flex.shadow-lg.transition-opacity.rounded-xl.p-0\.5.border.bg-fd-muted {
   left: 1rem !important;
   right: auto !important;
 }
 
-/* Fix: floating sidebar */
+/* 🎨 Fix: floating sidebar */
 .floating-sidebar-layout aside {
   margin: 0.5rem;
   border-radius: 0.75rem;
@@ -134,9 +134,22 @@ body {
   }
 }
 
-/* Hide V2 morphology pages from sidebar navigation */
+/* 🎨 Hide V2 morphology pages from sidebar navigation */
 aside a[href*="/docs/services/morphology/documentValidationStartV2"],
 aside a[href*="/docs/services/morphology/documentValidationStatusV2"],
 aside a[href*="/docs/services/morphology/documentValidationDataV2"] {
   display: none !important;
+}
+
+/* 🎨 Fix: Adjust main content when sidebar is collapsed */
+.floating-sidebar-layout main {
+  transition: margin-left 0.3s ease, max-width 0.3s ease;
+}
+
+.floating-sidebar-layout:has(aside[data-collapsed="true"]) main,
+aside[data-collapsed="true"] ~ main,
+body:has(aside[data-collapsed="true"]) main {
+  margin-left: 0 !important;
+  padding-left: 1rem !important;
+  max-width: calc(100% - 1rem) !important;
 }

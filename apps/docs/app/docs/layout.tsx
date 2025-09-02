@@ -66,7 +66,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
         ),
       }}
       sidebar={{
-        collapsible: false,
+        collapsible: true,
         tabs: {
           transform(option, node) {
             const meta = source.getNodeMeta(node);
