@@ -46,6 +46,9 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
             {logo}
             <span className="font-medium [.uwu_&]:hidden max-md:hidden">
               IDAPI Docs
+              <span className="ml-2 px-2 py-0.5 text-xs bg-emerald-100/80 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 rounded-full font-medium border border-emerald-200/50 dark:border-emerald-700/50">
+                intern
+              </span>
             </span>
           </>
         ),
