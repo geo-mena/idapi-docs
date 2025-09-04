@@ -65,12 +65,13 @@
 
 /* Add styles for the services category */
 .services {
-  --color-fd-primary: var(--headless-color);
+  --color-fd-primary: var(--services-color);
 }
 
 :root {
   --headless-color: hsl(250, 80%, 54%);
   --ui-color: hsl(220, 91%, 54%);
+  --services-color: hsl(250, 80%, 54%);
 }
 
 body {
@@ -99,6 +100,7 @@ html, body, * {
 .dark {
   --headless-color: hsl(250 100% 80%);
   --ui-color: hsl(217 92% 76%);
+  --services-color: hsl(250 100% 80%);
 }
 
 @keyframes circuit_1 {
