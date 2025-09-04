@@ -45,7 +45,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from 'fumadocs-ui/components/ui/collapsible';
-import { ChevronDown, LoaderCircle } from 'lucide-react';
+import { ChevronDown, Loader } from 'lucide-react';
 import { encodeRequestData, type RequestData } from '@/requests/_shared';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import { cn } from 'fumadocs-ui/utils/cn';
@@ -307,7 +307,7 @@ export default function Client({
               disabled={testQuery.isLoading}
             >
               {testQuery.isLoading ? (
-                <LoaderCircle className="size-4 animate-spin" />
+                <Loader className="size-4 animate-spin" />
               ) : (
                 'Send'
               )}
