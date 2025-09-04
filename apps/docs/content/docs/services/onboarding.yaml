@@ -54,7 +54,7 @@ paths:
                 $ref: '#/components/schemas/PassiveLivenessResponse'
               examples:
                 Live:
-                  summary: Live detection result
+                  summary: Live Result
                   value:
                     serviceResultCode: 0
                     serviceResultLog: "Live"
@@ -62,7 +62,7 @@ paths:
                     serviceTransactionId: "35d93da8-b843-4033-8e78-c0aabedcef8b"
                     serviceLivenessResult: 3
                 NoLive:
-                  summary: No live detection result
+                  summary: No Live Result
                   value:
                     serviceResultCode: 0
                     serviceResultLog: "NoLive"
@@ -141,14 +141,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FacialAuthenticationResponse'
-              example:
-                serviceResultCode: 0
-                serviceResultLog: "Positive"
-                serviceTime: "516"
-                serviceTransactionId: "a29cbe15-2b68-495f-b7eb-be985b21c486"
-                serviceFacialAuthenticationHash: "47D0ACDCF08C348469C2F512BB59216B46DCD9B253822ED0E4EEAFCEB76AADD5AEF20CA31EC52D03EB290EBC91A6AD65FB0416F9EB2164D3854932153074289E"
-                serviceFacialAuthenticationResult: 3
-                serviceFacialSimilarityResult: 0.99153554
+              examples:
+                Positive:
+                  summary: Positive Result
+                  value:
+                    serviceResultCode: 0
+                    serviceResultLog: "Positive"
+                    serviceTime: "516"
+                    serviceTransactionId: "a29cbe15-2b68-495f-b7eb-be985b21c486"
+                    serviceFacialAuthenticationHash: "47D0ACDCF08C348469C2F512BB59216B46DCD9B253822ED0E4EEAFCEB76AADD5AEF20CA31EC52D03EB290EBC91A6AD65FB0416F9EB2164D3854932153074289E"
+                    serviceFacialAuthenticationResult: 3
+                    serviceFacialSimilarityResult: 0.99153554
+                Negative:
+                  summary: Negative Result
+                  value:
+                    serviceResultCode: 0
+                    serviceResultLog: "Negative"
+                    serviceTime: "502"
+                    serviceTransactionId: "e96e85a4-3f94-4000-b639-15c4f18c345b"
+                    serviceFacialAuthenticationHash: "09B9A4097E3642ADEDB665BA2E15B096FFB65A039E0D7137D0AD38666F90A010624C26867E6A7DB8346385610CC9FEDE435C3CC6A2AC9B008DD98C6EFE8C42E7"
+                    serviceFacialAuthenticationResult: 1
+                    serviceFacialSimilarityResult: 0.01190000
         '400':
           description: Bad Request
           content:
@@ -468,23 +481,14 @@ components:
           type: integer
           description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
           example: 0
-        serviceTime:
-          type: string
-          description: Total processing time (milliseconds).
-          example: "516"
-        serviceFacialAuthenticationResult:
-          type: integer
-          description: Code indicating the result of the facial matching. See [Service Facial Authentication Result](/docs/services/serviceResultCodes#service-facial-authentication-result)
-          example: 3
         serviceResultLog:
           type: string
           description: Descriptive field of the service execution result. Includes details when there is an error or exception in the module.
           example: "Positive"
-        serviceFacialSimilarityResult:
-          type: number
-          format: float
-          description: Value indicating the facial similarity between the face in the identity document photo and the selfie taken by the user. 1.0 = 100%
-          example: 0.99153554
+        serviceTime:
+          type: string
+          description: Total processing time (milliseconds).
+          example: "516"
         serviceTransactionId:
           type: string
           description: Transaction identifier associated with the request processed by the API.
@@ -493,6 +497,15 @@ components:
           type: string
           description: Integrity hash of the biometric template used in a positive or uncertain facial authentication. Only applicable in methods 2, 3, and 5.
           example: "47D0ACDCF08C348469C2F512BB59216B46DCD9B253822ED0E4EEAFCEB76AADD5AEF20CA31EC52D03EB290EBC91A6AD65FB0416F9EB2164D3854932153074289E"
+        serviceFacialAuthenticationResult:
+          type: integer
+          description: Code indicating the result of the facial matching. See [Service Facial Authentication Result](/docs/services/serviceResultCodes#service-facial-authentication-result)
+          example: 3
+        serviceFacialSimilarityResult:
+          type: number
+          format: float
+          description: Value indicating the facial similarity between the face in the identity document photo and the selfie taken by the user. 1.0 = 100%
+          example: 0.99153554
     PassiveLivenessResponse:
       type: object
       required:
@@ -506,22 +519,22 @@ components:
           type: integer
           description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
           example: 0
-        serviceTime:
-          type: string
-          description: Total response time (milliseconds).
-          example: "799"
-        serviceLivenessResult:
-          type: integer
-          description: Code indicating the result of the passive liveness test evaluation. See [Service Liveness Result](/docs/services/serviceResultCodes#service-liveness-result)
-          example: 3
         serviceResultLog:
           type: string
           description: Descriptive field of the service execution result. Includes details when there is an error or exception.
           example: "Live"
+        serviceTime:
+          type: string
+          description: Total response time (milliseconds).
+          example: "799"
         serviceTransactionId:
           type: string
           description: Transaction identifier associated with the request processed by the API.
           example: "35d93da8-b843-4033-8e78-c0aabedcef8b"
+        serviceLivenessResult:
+          type: integer
+          description: Code indicating the result of the passive liveness test evaluation. See [Service Liveness Result](/docs/services/serviceResultCodes#service-liveness-result)
+          example: 3
     FinishTrackingRequest:
       type: object
       required:
