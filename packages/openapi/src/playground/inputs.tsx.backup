@@ -333,13 +333,11 @@ export function FieldInput({
 
   if (field.type === 'null') return;
 
-  const isSensitiveField = fieldName.includes('x-api-key') || fieldName.includes('api-key');
-  
   return (
     <Input
       id={fieldName}
       placeholder="Enter value"
-      type={field.type === 'string' ? (isSensitiveField ? 'password' : 'text') : 'number'}
+      type={field.type === 'string' ? 'text' : 'number'}
       step={field.type === 'number' ? 'any' : undefined}
       {...register(fieldName, {
         valueAsNumber: field.type === 'number' || field.type === 'integer',
