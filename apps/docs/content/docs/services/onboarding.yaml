@@ -124,9 +124,8 @@ paths:
 
         **Integration**
 
-        For **validations type 4 and 5**, SelphID Mobile widget implementation is required to generate the TokenFaceImage property.
-        
-        For **validations type 2, 3, and 5**, Selphi Mobile or Web widget implementation is required to generate the biometric template property (TemplateRaw).
+        - For **validations type 4 and 5**, SelphID Mobile widget implementation is required to generate the TokenFaceImage property.
+        - For **validations type 2, 3, and 5**, Selphi Mobile or Web widget implementation is required to generate the biometric template property (TemplateRaw).
       operationId: authenticateFacial
       requestBody:
         description: Facial authentication data with images/tokens and method specification
