@@ -27,6 +27,7 @@
     "morphology-v2",
     "pad/(generated)/documentPadDiagnostic",
     "---Civil Validation---",
-    "civil-validation-ec"
+    "civil-validation-ec",
+    "civil-validation-cr"
   ]
 }

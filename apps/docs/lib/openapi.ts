@@ -138,3 +138,22 @@ export const civilvalidationecapi = createOpenAPI({
     },
   },
 });
+
+export const civilvalidationcrapi = createOpenAPI({
+  input: [
+    './content/docs/services/civil-validation-cr/full-mobile.yaml',
+    './content/docs/services/civil-validation-cr/full-web.yaml',
+    './content/docs/services/civil-validation-cr/data-mobile.yaml',
+    './content/docs/services/civil-validation-cr/data-web.yaml',
+    './content/docs/services/civil-validation-cr/facial-mobile.yaml',
+    './content/docs/services/civil-validation-cr/facial-web.yaml'
+  ],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
