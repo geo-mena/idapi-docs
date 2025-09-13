@@ -67,7 +67,7 @@ import org.json.JSONObject;
 public class JsonParser {
 
     public static void main(String[] args) {
-        String jsonString = "{ \"resultJSON\": { \"imageFront\": \"IMAGE1\", \"imageBack\": \"IMAGE2\", \"imageSelfie\": \"IMAGE3\" } }";
+        String jsonString = "{ \"resultJSON\": { \"imageFront\": \"IMAGE1\", \"imageBack\": \"IMAGE2\", \"imageSelfie\": \"IMAGE3\" } }"; // [!code highlight]
         JSONObject jsonObject = new JSONObject(jsonString);
 
         JSONObject resultJSON = jsonObject.getJSONObject("resultJSON");
@@ -620,6 +620,8 @@ Stores the measure of similarity or matching level obtained during the authentic
 **Example:**
 ```json
 0.9923387765884399
+```
+```json
 0.6823991719034381
 ```
 
