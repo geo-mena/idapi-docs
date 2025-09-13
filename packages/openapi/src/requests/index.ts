@@ -5,6 +5,8 @@ import * as Go from '@/requests/go';
 import * as Python from '@/requests/python';
 import * as Java from '@/requests/java';
 import * as CSharp from '@/requests/csharp';
+// import * as PHP from '@/requests/php';
+// import * as Dart from '@/requests/dart';
 
 export const defaultSamples: CodeSample[] = [
   {
@@ -37,4 +39,14 @@ export const defaultSamples: CodeSample[] = [
     source: CSharp.generator,
     lang: 'csharp',
   },
+  // {
+  //   label: 'PHP',
+  //   source: PHP.generator,
+  //   lang: 'php',
+  // },
+  // {
+  //   label: 'Dart',
+  //   source: Dart.generator,
+  //   lang: 'dart',
+  // },
 ];
