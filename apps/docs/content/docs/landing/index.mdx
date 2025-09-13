@@ -1,11 +1,10 @@
 ---
 title: How it works
-description: Biometric onboarding gateway with No-Code integration
 ---
 
-Our biometric onboarding gateway is very easy to use, and we frame it within the No-Code concept, which means that you do not need to know about programming or have complex development teams to introduce it into your business processes.
+Our biometric onboarding gateway is **very easy to use**, and we frame it within the **No-Code concept**, which means that you do **not need to know about programming** or have complex development teams to introduce it into your business processes.
 
-To use our gateway you have two methods that differ from each other in whether you need to send extra information that you want our system to process or if your gateway will not send such extra information.
+To use our gateway you have **two methods** that differ from each other in whether you need to **send extra information** that you want our system to process or if your gateway will **not send such extra information**.
 
 ## Method with extra information (sdk client)
 
@@ -66,7 +65,7 @@ For example:
 
 The callLanding method allows you to add the following optional parameters:
 
-| FIELD | DESCRIPTION |
+| Field | Description |
 |-------|-------------|
 | customerId | This identifier will allow you to associate the biometric operation generated in our processes with your customer, it can be your email or an identifier that you have of your users. |
 | documentNumber | This parameter is optional, you can send your customer's ID number if you have one so that we can compare it with the biometric data obtained by our process. |
@@ -95,17 +94,17 @@ const landingSDK = new LandingSDKClient('YOUR_APIKEY',  {
 ```
 
 <Callout type="warn">
-To enable the iframe mode of the SDK, the Facephi support team must configure the allowed URLs for embedding the iframe. This is a critical security measure designed to protect your application and your users.
+To enable the iframe mode of the SDK, the **Facephi support team must configure the allowed URLs** for embedding the iframe. This is a critical security measure designed to protect your application and your users.
 
-If the allowed URLs are not properly configured, attackers could embed the iframe on unauthorized websites to impersonate your brand. This could lead to phishing attacks targeting your customers, potentially compromising sensitive information.
+If the allowed URLs are not properly configured, attackers could embed the iframe on unauthorized websites to impersonate your brand. This could lead to **phishing attacks** targeting your customers, potentially compromising sensitive information.
 
 By enforcing URL restrictions, only trusted and pre-configured domains will be allowed to use the iframe, significantly reducing the risk of such attacks.
 
-If you require iframe mode for your integration, please contact the Facephi support team to provide a list of the URLs where the iframe will be embedded.
+If you require iframe mode for your integration, please **contact the Facephi support team** to provide a list of the URLs where the iframe will be embedded.
 </Callout>
 
 <Callout type="error">
-With this method activated when the callLanding method is called the Landing will be added inside the client page with an iframe, it must be taken into account that this iframe is placed occupying 100% of the page in a layer in zIndex 100000. That is to say, if something with a higher zIndex is placed, it will be superimposed over the landing.
+With this method activated when the callLanding method is called the Landing will be added inside the client page with an iframe, it must be taken into account that this iframe is placed occupying 100% of the page in a layer in **zIndex 100000**. That is to say, if something with a higher zIndex is placed, it will be **superimposed over the landing**.
 </Callout>
 
 Once the landing process is finished the iframe will be closed. If you want to execute some functionality after the landing process is finished you have a method that is executed afterwards:
@@ -124,7 +123,7 @@ landingSDK.callLanding({
 This method is only available as of version 0.4.0
 </Callout>
 
-The SDK allows to generate a unique url for the landings, this URL will have a validation time of 15 minutes, after that time the url will be invalidated and a new one will need to be generated. It is important to configure in the Builder the parameter that allows you to disable public access to the landings.
+The SDK allows to generate a **unique url** for the landings, this URL will have a validation time of **15 minutes**, after that time the url will be **invalidated** and a new one will need to be generated. It is important to configure in the Builder the parameter that allows you to **disable public access** to the landings.
 
 To activate this method, the following configuration must be used:
 
