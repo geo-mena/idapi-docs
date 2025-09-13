@@ -4,7 +4,7 @@ title: Customization
 
 Landing is easily customizable by the theme property or through CSS variables:
 
-## Generic Styling configuration
+## Generic styling configuration
 
 The theme can be configured with the following attributes in the landing page:
 
@@ -12,29 +12,34 @@ The theme can be configured with the following attributes in the landing page:
 
 ### Typography
 
-**Font:** Font family applied to the page.
+| Property | Description |
+|----------|-------------|
+| **Font** | Font family applied to the page |
 
 ### Colors
 
-**Primary:** Color applied in the header.
-
-**Secondary:** Color applied to the primary elements of the widgets.
-
-**Tertiary:** Color applied to the secondary elements of the widgets.
-
-**Background:** Component background color.
+| Color | Description |
+|-------|-------------|
+| **Primary** | Color applied in the header |
+| **Secondary** | Color applied to the primary elements of the widgets |
+| **Tertiary** | Color applied to the secondary elements of the widgets |
+| **Background** | Component background color |
 
 ## Custom styling
 
-**Custom CSS:** Additional custom CSS configuration.
+<Callout type="info">
+**Custom CSS:** Additional custom CSS configuration for advanced customization.
+</Callout>
 
 ### Custom CSS configuration
 
 The entire landing page can be customized using the CSS variables provided by the SDK Provider tag `facephi-sdk-provider`, allowing for a higher level of customization.
 
-Simple add the desired CSS variables in the Custom CSS text area.
+Simply add the desired CSS variables in the Custom CSS text area.
 
-Check the complete css variable list to see all the available CSS variables provided by the SDK Provider and widgets.
+<Callout>
+Check the complete CSS variable list to see all the available CSS variables provided by the SDK Provider and widgets.
+</Callout>
 
 **Example:**
 
@@ -49,12 +54,14 @@ facephi-sdk-provider {
 If you override CSS variables set by the theme, you must use the `!important` flag for your changes to take effect.
 </Callout>
 
-### CSS variables affected by the theme:
+### CSS variables affected by theme
 
-- **Font:** `--wrapper-primary-font`, `--wrapper-secondary-font`.
-- **Secondary:** `--wrapper-color-primary`, `--wrapper-color-progress-bar`, `--wrapper-color-tutorial-background`.
-- **Tertiary:** `--wrapper-color-hover`, `--wrapper-color-tutorial-shirt`.
-- **Background:** `--wrapper-color-background`.
+| Theme Property | CSS Variables |
+|----------------|---------------|
+| **Font** | `--wrapper-primary-font`, `--wrapper-secondary-font` |
+| **Secondary** | `--wrapper-color-primary`, `--wrapper-color-progress-bar`, `--wrapper-color-tutorial-background` |
+| **Tertiary** | `--wrapper-color-hover`, `--wrapper-color-tutorial-shirt` |
+| **Background** | `--wrapper-color-background` |
 
 **Example:**
 
