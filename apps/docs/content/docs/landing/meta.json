@@ -1,0 +1,13 @@
+{
+  "title": "Landing",
+  "description": "Biometric onboarding gateway with No-Code SDK",
+  "root": true,
+  "icon": "Fingerprint",
+  "pages": [
+    "---Guide---",
+    "index",
+    "api",
+    "callback-response",
+    "customization"
+  ]
+}

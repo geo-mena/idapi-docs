@@ -1,0 +1,877 @@
+---
+title: Callback Response
+description: Implementation for receiving biometric and user identification responses
+---
+
+This implementation allows to receive the response of our biometrics and user identification from the customer for further processing.
+
+The data is sent through a POST call on the CallbackUrl that the client defines at the beginning of the process.
+
+## Implementation
+
+The implementation from the client side is quite simple, you must implement a POST call in your API or Service with the following requirements:
+
+A post method that supports a maximum of 10 megabytes of body parser
+
+## Examples of implementation
+
+### In Javascript:
+
+```javascript
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+
+app.use(bodyParser.json({ limit: '10mb' }));
+
+app.post('/example', (req, res) => {
+  // Access the request data through the body
+  console.log(req.body);
+  res.send('POST request received successfully');
+});
+```
+
+### In Java:
+
+Import the necessary libraries, such as `org.springframework.web.bind.annotation.PostMapping` and `org.springframework.web.bind.annotation.RequestBody`.
+
+```java
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+```
+
+Create a route for the POST request and use the `@RequestBody` annotation to parse the request body.
+
+```java
+@PostMapping("/example")
+public String example(@RequestBody String body) {
+  // Access the request data through the body
+  System.out.println(body);
+  return "POST request received successfully";
+}
+```
+
+Set the `spring.servlet.multipart.max-request-size` property in your application's configuration file (such as `application.properties`) to set the maximum request size limit.
+
+```properties
+spring.servlet.multipart.max-request-size=10MB
+```
+
+With these steps, you have created a POST request in Java that supports a 10MB body parser. Note that the maximum request size limit can also be set through other options, such as `@RequestPart` and `MultipartConfigElement`.
+
+<Callout>
+Please note that the JSON objects sent by our service **may not follow the same order** as shown in the documentation, and **some fields may be null**. It is **essential to perform proper parsing** of the received JSON objects. Below is an example of parsing a JSON string, similar to one that might be found in the response of an POST request, into a JSON object for consumption:
+
+```java
+import org.json.JSONObject;
+
+public class JsonParser {
+
+    public static void main(String[] args) {
+        String jsonString = "{ \"resultJSON\": { \"imageFront\": \"IMAGE1\", \"imageBack\": \"IMAGE2\", \"imageSelfie\": \"IMAGE3\" } }";
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        JSONObject resultJSON = jsonObject.getJSONObject("resultJSON");
+
+        String imageFront = resultJSON.getString("imageFront");
+        String imageBack = resultJSON.getString("imageBack");
+        String imageSelfie = resultJSON.getString("imageSelfie");
+
+        System.out.println("Image Front: " + imageFront);
+        System.out.println("Image Back: " + imageBack);
+        System.out.println("Image Selfie: " + imageSelfie);
+    }
+}
+```
+</Callout>
+
+## Structure of callback
+
+Below is a detailed description of the data structure used in our system and the specific details about each data field, including its type, purpose, and constraints.
+
+### Example:
+
+```json
+{
+  "transactionId": "00000000-0000-0000-0000-000000000000",
+  "dni": "00000000A",
+  "clientData": { ... },
+  "deviceInfo": { ... },
+  "resultJSON": {
+    "DocumentData": {
+      "serviceTransactionId": "00000000-0000-0000-0000-000000000000",
+      "serviceDocument": {
+        "DOC_MODEL": "CHILE - ID CARD (2013)",
+        "BACKSIDE": { ... },
+        "FRONTSIDE": { ... },
+        "DECOMPOSED": { ... },
+        "CHECKS": { ... },
+        "SCORING": { ... },
+      }
+    },
+    "DocumentValidation": { ... },
+    "FacialAuthentication": { ... },
+    "PassiveLiveness": { ... },
+    "imageFront": "/9j/4AAQSkZJRgAB...",
+    "imageBack": "/9j/4AAQSkZJRgAB...",
+    "imageSelfie": "/9j/4AAQSkZJRgAB...",
+    "imageFrontRaw": "/9j/4AAQSkZJRgAB...",
+    "imageBackRaw": "/9j/4AAQSkZJRgAB...",
+    "rawTemplateSelfie": "BAEBAQJi/8ZtRtF/UV+p4Ued+Z...",
+    "rawTemplateFacialCapture": "BAEBAQJQ/8ZtRtF/UV+p4Ued+Z..."
+  }
+}
+```
+
+### Morphology:
+
+```json
+{
+  "transactionId": "TRANSACTION_ID",
+  "dni": "DOCUMENT_NUMBER",
+  "clientData": "CLIENT_DATA",
+  "deviceInfo": "DEVICE_INFO",
+  "resultJSON": {
+    "DocumentData": {
+      "serviceTransactionId": "TRANSACTION_ID",
+      "serviceDocument": {
+        "DOC_MODEL": "DOCUMENT_MODEL",
+        "BACKSIDE": "DOCUMENT_BACKSIDE",
+        "FRONTSIDE": "DOCUMENT_FRONTSIDE",
+        "DECOMPOSED": "DOCUMENT_DECOMPOSE",
+        "CHECKS": "DOCUMENT_CHECKS",
+        "SCORING": "DOCUMENT_SCORING",
+      }
+    },
+    "DocumentValidation": "DOCUMENT_VALIDATION",
+    "imageFront": "FRONT_BASE64_IMAGE",
+    "imageBack": "BACK_BASE64_IMAGE",
+    "FacialAuthentication": "AUTHENTICATION_DATA",
+    "PassiveLiveness": "PASSIVE_LIVENESS_DATA",
+    "imageSelfie": "SELFIE_BASE64_IMAGE",
+    "imageFrontRaw": "/9j/4AAQSkZJRgAB...",
+    "imageBackRaw": "/9j/4AAQSkZJRgAB...",
+    "rawTemplateSelfie": "BAEBAQJi/8ZtRtF/UV+p4Ued+Z...",
+    "rawTemplateFacialCapture": "BAEBAQJQ/8ZtRtF/UV+p4Ued+Z..."
+  }
+}
+```
+
+## Field reference:
+
+| Field | Type |
+|-------|------|
+| TRANSACTION_ID | string |
+| DOCUMENT_NUMBER | string |
+| CLIENT_DATA | object |
+| DEVICE_INFO | object |
+| DOCUMENT_MODEL | string |
+| DOCUMENT_BACKSIDE | object |
+| DOCUMENT_FRONTSIDE | object |
+| DOCUMENT_DECOMPOSE | object |
+| DOCUMENT_CHECKS | object |
+| DOCUMENT_SCORING | object |
+| DOCUMENT_VALIDATION | object |
+| FRONT_BASE64_IMAGE | string |
+| BACK_BASE64_IMAGE | string |
+| AUTHENTICATION_DATA | object |
+| PASSIVE_LIVENESS_DATA | object |
+| SELFIE_BASE64_IMAGE | string |
+| FRONT_RAW_BASE64_IMAGE | string |
+| BACK_RAW_BASE64_IMAGE | string |
+| RAW_TEMPLATE_SELFIE | string |
+| RAW_TEMPLATE_FACIAL_CAPTURE | string |
+
+## 1. TRANSACTION_ID
+
+Transaction unique id.
+
+**Presence:**
+- **Could be empty:** No.
+
+**Example:**
+```json
+"00000000-0000-0000-0000-000000000000"
+```
+
+## 2. DOCUMENT_NUMBER
+
+Stores the document number associated with a client.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no document number; this could be because the service could not extract the document number or there was an issue during the data extraction process.
+
+**Example:**
+```json
+"00000000A"
+```
+```json
+"0000000"
+```
+```json
+undefined
+```
+
+## 3. CLIENT_DATA
+
+Stores the information of a client who has completed the onboarding process.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no client data; this could be because a session has not been initiated or there was an issue during the session process.
+
+**Example:**
+```json
+{
+  "customerId": "0d8d7059"
+}
+```
+```json
+{}
+```
+
+**Morphology:**
+```json
+{
+  "customerId": "CUSTOMER_ID"
+}
+```
+
+**Field reference:**
+
+| Field | Type |
+|-------|------|
+| CUSTOMER_ID | string |
+
+### 3.1. CUSTOMER_ID
+
+This identifier is used to distinguish each user in the system, This identifier can be provided by the contracting company or generated internally.
+
+**Example:**
+```json
+"0d8d7059"
+```
+```json
+"0034666666666"
+```
+```json
+"00000000-0000-0000-0000-000000000000"
+```
+## 4. DEVICE_INFO
+
+Stores information about the device used by the client during the onboarding process.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no device info; this could be because the device info has not been sent or there was an issue during the event process.
+
+**Example:**
+```json
+{
+  "osVersion": "114.0.0.0",
+  "model": "114.0.0.0",
+  "brand": "Chrome",
+  "browser": "Chrome",
+  "osName": "Mac OS"
+}
+```
+```json
+{}
+```
+
+**Morphology:**
+```json
+{
+  "osName": "OS_NAME",
+  "osVersion": "OS_VERSION",
+  "model": "DEVICE_MODEL",
+  "brand": "DEVICE_BRAND",
+  "browser": "DEVICE_BROWSER"
+}
+```
+
+**Field reference:**
+
+| Field | Type |
+|-------|------|
+| OS_NAME | string |
+| OS_VERSION | string |
+| DEVICE_MODEL | string |
+| DEVICE_BRAND | string |
+| DEVICE_BROWSER | string |
+
+### 4.1. OS_NAME
+Stores information about the operative system name.
+
+**Example:**
+```json
+"114.0.0.0"
+```
+
+### 4.2. OS_VERSION
+Stores information about the operative system version.
+
+**Example:**
+```json
+"114.0.0.0"
+```
+
+### 4.3. DEVICE_MODEL
+Stores information about the device model.
+
+**Example:**
+```json
+"Chrome"
+```
+
+### 4.4. DEVICE_BRAND
+Stores information about the device brand.
+
+**Example:**
+```json
+"Chrome"
+```
+
+### 4.5. DEVICE_BROWSER
+Stores information about the device browser.
+
+**Example:**
+```json
+"Mac OS"
+```
+
+## 5. DOCUMENT_MODEL
+
+Stores the model or type of document.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no document model detected; this could be because the service could not detect the document model or there was an issue during the data extraction process.
+
+**Example:**
+```json
+"CHILE - ID CARD (2013)"
+```
+```json
+undefined
+```
+
+## 6. DOCUMENT_BACKSIDE
+
+Stores the specific information and details related to the backside or reverse side of a document.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no back document image; this could be because it is a passport document, the identification does not require a document image, the image has not been sent, or there was an issue during the data extraction process.
+
+**Example:**
+```json
+{
+  "FIELD_DATA": { ... },
+  "MRZ_DATA": { ... }
+}
+```
+```json
+undefined
+```
+
+## 7. DOCUMENT_FRONTSIDE
+
+Stores the specific information and details related to the frontside of a document.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no front document image; this could be because the identification does not require a document image, the image has not been sent, or there was an issue during the data extraction process.
+
+**Example:**
+```json
+{
+  "FIELD_DATA": { ... },
+  "MRZ_DATA": { ... }
+}
+```
+```json
+undefined
+```
+
+## 8. DOCUMENT_DECOMPOSE
+
+Stores fragments or cutouts of the document images.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no device info; this could be because the device info has not been sent or there was an issue during the event process.
+
+**Example:**
+```json
+{
+  "FACE": "/9j/4AAQSkZJRgAB..."
+}
+```
+```json
+undefined
+```
+
+**Morphology:**
+```json
+{
+  "FACE": "DOCUMENT_PORTRAIT_BASE64_IMAGE"
+}
+```
+
+**Field reference:**
+
+| Field | Type |
+|-------|------|
+| DOCUMENT_PORTRAIT_BASE64_IMAGE | string |
+
+### 8.1. DOCUMENT_PORTRAIT_BASE64_IMAGE
+
+Stores the crop or cutout of the document photo that exclusively shows the user's face.
+
+**Example:**
+```json
+"/9j/4AAQSkZJRgAB..."
+```
+
+## 9. DOCUMENT_CHECKS
+
+Stores a collection of fields of the steps that have been verified or checked during the data extraction process.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There are no data checks; this could be because the service does not generate data checks or there was an issue during the data extraction process.
+
+**Example:**
+```json
+{
+  "PERSONAL_NUMBER_SIDE_MATCH": false,
+  "NATIONALITY_SIDE_MATCH": true
+}
+```
+```json
+undefined
+```
+
+## 10. DOCUMENT_SCORING
+
+Stores a collection of scores that assess the reliability of the data extracted from a document.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no scoring data; this could be because the service does not generate scoring data or there was an issue during the data extraction process.
+
+**Example:**
+```json
+{
+  "FIELDS_RETURNED": 20,
+  "FIELDS_TOTAL": 20,
+  "OVERALL_RATING": 100,
+  "BACK_SHA256": "SHA_CODE",
+  "FRONT_SHA256": "SHA_CODE"
+}
+```
+```json
+undefined
+```
+## 11. DOCUMENT_VALIDATION
+
+Stores information related to document validation.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no document validation data; this could be because the service is not enabled or there was an issue during the document validation process.
+
+**Example:**
+```json
+{
+  "scanReference": "00000000-0000-0000-0000-000000000000",
+  "type": "3",
+  "timestamp": "1970-01-01T00:00:00.000Z",
+}
+```
+```json
+{}
+```
+
+**Morphology:**
+```json
+{
+  "scanReference": "DOCUMENT_VALIDATION_REFERENCE",
+  "type": "DOCUMENT_VALIDATION_TYPE",
+  "timestamp": "DOCUMENT_VALIDATION_TIME",
+}
+```
+
+**Field reference:**
+
+| Field | Type |
+|-------|------|
+| DOCUMENT_VALIDATION_REFERENCE | string |
+| DOCUMENT_VALIDATION_TYPE | string |
+| DOCUMENT_VALIDATION_TIME | string |
+
+### 11.1. DOCUMENT_VALIDATION_REFERENCE
+
+Stores information related to document validation reference.
+
+**Example:**
+```json
+"00000000-0000-0000-0000-000000000000"
+```
+
+### 11.2. DOCUMENT_VALIDATION_TYPE
+
+Stores information related to document validation status.
+
+**Example:**
+```json
+"3"
+```
+
+### 11.3. DOCUMENT_VALIDATION_TIME
+
+Stores information related to document validation date.
+
+**Example:**
+```json
+"1970-01-01T00:00:00.000Z"
+```
+
+## 12. FRONT_BASE64_IMAGE
+
+Stores the image of the frontside of a document.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no front document image; this could be because the image has not been sent or there was an issue during the saving.
+
+**Example:**
+```json
+"/9j/4AAQSkZJRgAB..."
+```
+```json
+undefined
+```
+
+## 13. BACK_BASE64_IMAGE
+
+Stores the image of the backside of a document.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no back document image; this could be because the image has not been sent or there was an issue during the saving.
+
+**Example:**
+```json
+"/9j/4AAQSkZJRgAB..."
+```
+```json
+undefined
+```
+
+## 14. AUTHENTICATION_DATA
+
+Stores information related to the authentication of the person.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no facial authentication data; this could be because there was an issue during the facial authentication process.
+
+**Example:**
+```json
+{
+  "serviceResultLog": "POSITIVE",
+  "serviceFacialSimilarityResult": 0.9923387765884399
+}
+```
+```json
+{}
+```
+
+**Morphology:**
+```json
+{
+  "serviceResultLog": "AUTHENTICATION_STATUS",
+  "serviceFacialSimilarityResult": "AUTHENTICATION_SIMILARITY"
+}
+```
+
+**Field reference:**
+
+| Field | Type |
+|-------|------|
+| AUTHENTICATION_STATUS | string |
+| AUTHENTICATION_SIMILARITY | number |
+
+### 14.1. AUTHENTICATION_STATUS
+
+Stores the authentication status.
+
+**Example:**
+```json
+"POSITIVE"
+```
+
+### 14.2. AUTHENTICATION_SIMILARITY
+
+Stores the measure of similarity or matching level obtained during the authentication process of a person.
+
+**Example:**
+```json
+0.9923387765884399
+0.6823991719034381
+```
+
+## 15. PASSIVE_LIVENESS_DATA
+
+Stores information related to the passive liveness of the person.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no passive liveness data; this could be because there was an issue during the passive liveness process.
+
+**Example:**
+```json
+{
+  "serviceResultLog": "NO_LIVE"
+}
+```
+```json
+{}
+```
+
+**Morphology:**
+```json
+{
+  "serviceResultLog": "PASSIVE_LIVENESS_RESULT"
+}
+```
+
+**Field reference:**
+
+| Field | Type |
+|-------|------|
+| PASSIVE_LIVENESS_RESULT | string |
+
+### 15.1. PASSIVE_LIVENESS_RESULT
+
+Stores the passive liveness result.
+
+**Example:**
+```json
+"NO_LIVE"
+```
+
+## 16. SELFIE_BASE64_IMAGE
+
+Stores the image of a person's selfie.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** There is no selfie image; this could be because the image has not been sent or there was an issue during the saving.
+
+**Example:**
+```json
+"/9j/4AAQSkZJRgAB..."
+```
+```json
+undefined
+```
+
+## 17. FRONT_RAW_BASE64_IMAGE
+
+Stores the full frame of the front side of the document in base64 format.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** The front document image might not be sent, or there was an issue during the extraction process.
+
+**Example:**
+```json
+"/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1..."
+```
+```json
+undefined
+```
+
+## 18. BACK_RAW_BASE64_IMAGE
+
+Stores the full frame of the back side of the document in base64 format.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** The back document image might not be sent, or there was an issue during the extraction process.
+
+**Example:**
+```json
+"/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1..."
+```
+```json
+undefined
+```
+
+## 19. RAW_TEMPLATE_SELFIE (templateRaw)
+
+Stores the biometric raw template of the selfie (templateRaw) in base64 format.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** The selfie template might not be sent, or there was an issue during the biometric extraction process.
+
+**Example:**
+```json
+"BAEBAQJi/8ZtRtF/UV+p4Ued+Z..."
+```
+```json
+undefined
+```
+
+## 20. RAW_TEMPLATE_FACIAL_CAPTURE (rawTemplateFacialCapture)
+
+Stores the raw template of the facial capture from the document (rawTemplateFacialCapture) in base64 format.
+
+**Presence:**
+- **Could be empty:** Yes.
+- **Reason:** The facial capture template might not be sent, or there was an issue during the biometric extraction process.
+
+**Example:**
+```json
+"BAEBAQJQ/8ZtRtF/UV+p4Ued+Z..."
+```
+```json
+undefined
+```
+
+## Example of callback
+
+This is a collection of examples of the data being sent:
+
+### Successful Callback Response
+
+This use case describes the scenario where a client successfully completes the onboarding process in a platform or service
+
+```json
+{
+  "transactionId": "213d0fd9-57fb-4a87-8237-2778015c94d5",
+  "dni": "00000000",
+  "clientData": {
+    "customerId": "0d8d7059"
+  },
+  "resultJSON": {
+    "DocumentData": {
+      "serviceTransactionId": "3442d94c-9610-41ea-b228-5c4823020153",
+      "serviceResultCode": 0,
+      "serviceResultLog": "Service request successfully processed",
+      "serviceDocument": {
+        "CHECKS": {
+          "BIRTH_DATE_SIDE_MATCH": true,
+          "RUN_SIDE_MATCH": true,
+          "IDENTITY_NUMBER_SIDE_MATCH": true,
+          "SURNAME_SIDE_MATCH": true,
+          "EXPIRATION_DATE_SIDE_MATCH": true,
+          "NAME_SIDE_MATCH": true,
+          "NATIONALITY_SIDE_MATCH": false
+        },
+        "BACKSIDE": {
+          "FIELD_DATA": {},
+          "MRZ_DATA": {
+            "NATIONALITY": "XXX",
+            "SERIAL_NUMBER": "000000000",
+            "SURNAME": "DOE",
+            "EXPIRATION_DATE": "01/01/1970",
+            "SEX": "F",
+            "BIRTH_DATE": "01/01/1970",
+            "ISSUING_COUNTRY": "XXX",
+            "IDENTITY_NUMBER": "000000000",
+            "PERSONAL_NUMBER": "000",
+            "RUN": "00000000-0",
+            "NAME": "SUSAN"
+          }
+        },
+        "FRONTSIDE": {
+          "FIELD_DATA": {
+            "NATIONALITY": "UNKNOWN",
+            "SURNAME": [
+              "DOE"
+            ],
+            "EXPIRATION_DATE": "01/01/1970",
+            "BIRTH_DATE": "01/01/1970",
+            "IDENTITY_NUMBER": "000.000.000",
+            "RUN": "00.000.000-0",
+            "EXPEDITION_DATE": "01/01/1970",
+            "NAME": "SUSAN"
+          }
+        },
+        "DECOMPOSED": {
+          "SIGNATURE": "{Base64}",
+          "FACE": "{Base64}"
+        },
+        "SCORING": {
+          "FIELDS_TOTAL": 27,
+          "FIELDS_RETURNED": 27,
+          "OVERALL_RATING": 100
+        },
+        "DOC_MODEL": "NEW"
+      },
+      "serviceTime": "250"
+    },
+    "DocumentValidation": {
+      "scanReference": "572c05a2-faf7-42c2-a583-c0e85a73a263",
+      "type": "3",
+      "timestamp": "1970-01-01T00:00:00.000Z"
+    },
+    "FacialAuthentication": {
+      "serviceTransactionId": "eb61872d-381f-4759-8cfd-799071c759ae",
+      "serviceResultCode": 0,
+      "serviceFacialAuthenticationResult": 3,
+      "serviceResultLog": "Positive",
+      "serviceFacialAuthenticationHash": "{SHA}",
+      "serviceFacialSimilarityResult": 0.9917689,
+      "serviceTime": "250"
+    },
+    "PassiveLiveness": {
+      "serviceResultCode": 0,
+      "serviceResultLog": "Spoof",
+      "serviceTime": "250",
+      "serviceTransactionId": "752fa584-dfce-498c-a6c3-4ec79394e722",
+      "serviceLivenessResult": 1
+    },
+    "imageFront": "{Base64}",
+    "imageBack": "{Base64}",
+    "imageSelfie": "{Base64}",
+    "imageFrontRaw": "{Base64}",
+    "imageBackRaw": "{Base64}",
+    "rawTemplateSelfie": "{Base64}",
+    "rawTemplateFacialCapture": "{Base64}"
+  },
+  "deviceInfo": {
+    "osVersion": "16.3",
+    "model": "16.3",
+    "brand": "Mobile Safari",
+    "browser": "Mobile Safari",
+    "osName": "iOS"
+  },
+}
+```
+
+### Empty Callback Response
+
+This use case addresses the scenario where all possible options or alternatives lack content or are empty:
+
+```json
+{
+  "transactionId": "213d0fd9-57fb-4a87-8237-2778015c94d5",
+  "clientData": {},
+  "deviceInfo": {},
+  "resultJSON": {
+    "DocumentData": {
+      "serviceTransactionId": "3442d94c-9610-41ea-b228-5c4823020153",
+      "serviceDocument": {},
+    "DocumentValidation": {},
+    "FacialAuthentication": {},
+    "PassiveLiveness": {},
+  },
+}
+```

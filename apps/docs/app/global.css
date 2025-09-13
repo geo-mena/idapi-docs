@@ -68,10 +68,16 @@
   --color-fd-primary: var(--services-color);
 }
 
+/* Add styles for the landing category */
+.landing {
+  --color-fd-primary: var(--landing-color);
+}
+
 :root {
   --headless-color: hsl(250, 80%, 54%);
   --ui-color: hsl(220, 91%, 54%);
   --services-color: hsl(250, 80%, 54%);
+  --landing-color: hsl(250, 80%, 54%);
 }
 
 body {
@@ -101,6 +107,7 @@ html, body, * {
   --headless-color: hsl(250 100% 80%);
   --ui-color: hsl(217 92% 76%);
   --services-color: hsl(250 100% 80%);
+  --landing-color: hsl(250 100% 80%);
 }
 
 @keyframes circuit_1 {
