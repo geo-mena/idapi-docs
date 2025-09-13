@@ -1,0 +1,66 @@
+---
+title: Customization
+description: Landing customization through theme properties and CSS variables
+---
+
+Landing is easily customizable by the theme property or through CSS variables:
+
+## Generic Styling configuration
+
+The theme can be configured with the following attributes in the landing page:
+
+![Landing customization example](/docs/landing_customization.png)
+
+### Typography
+
+**Font:** Font family applied to the page.
+
+### Colors
+
+**Primary:** Color applied in the header.
+
+**Secondary:** Color applied to the primary elements of the widgets.
+
+**Tertiary:** Color applied to the secondary elements of the widgets.
+
+**Background:** Component background color.
+
+## Custom styling
+
+**Custom CSS:** Additional custom CSS configuration.
+
+### Custom CSS configuration
+
+The entire landing page can be customized using the CSS variables provided by the SDK Provider tag `facephi-sdk-provider`, allowing for a higher level of customization.
+
+Simple add the desired CSS variables in the Custom CSS text area.
+
+Check the complete css variable list to see all the available CSS variables provided by the SDK Provider and widgets.
+
+**Example:**
+
+```css
+facephi-sdk-provider {
+  --wrapper-color-capture-fail: red;
+  --wrapper-color-primary: green !important;
+}
+```
+
+<Callout type="warn">
+If you override CSS variables set by the theme, you must use the `!important` flag for your changes to take effect.
+</Callout>
+
+### CSS variables affected by the theme:
+
+- **Font:** `--wrapper-primary-font`, `--wrapper-secondary-font`.
+- **Secondary:** `--wrapper-color-primary`, `--wrapper-color-progress-bar`, `--wrapper-color-tutorial-background`.
+- **Tertiary:** `--wrapper-color-hover`, `--wrapper-color-tutorial-shirt`.
+- **Background:** `--wrapper-color-background`.
+
+**Example:**
+
+```css
+facephi-sdk-provider {
+  --wrapper-color-background: #000000 !important;
+}
+```
