@@ -37,7 +37,6 @@ export const generator: SampleGenerator = (url, data, { mediaAdapters }) => {
   const headers: Record<string, string> = {};
   let body: string | undefined;
 
-  // Handle body
   if (data.body && data.bodyMediaType && data.bodyMediaType in mediaAdapters) {
     headers['Content-Type'] = data.bodyMediaType;
 
@@ -48,10 +47,8 @@ export const generator: SampleGenerator = (url, data, { mediaAdapters }) => {
       },
     );
 
-    // Fallback if no body was generated but we have data.body
     if (!body && data.body) {
       if (data.bodyMediaType === 'application/json') {
-        // Convert JSON to Dart Map syntax
         const dartMap = convertJsonToDartMap(data.body, 2);
         body = `jsonEncode(${dartMap})`;
       } else {
@@ -60,12 +57,10 @@ export const generator: SampleGenerator = (url, data, { mediaAdapters }) => {
     }
   }
 
-  // Handle headers
   for (const [k, v] of Object.entries(data.header)) {
     headers[k] = v.value as string;
   }
 
-  // Handle cookies
   const cookies = Object.entries(data.cookie);
   if (cookies.length > 0) {
     const cookieString = cookies
@@ -74,7 +69,6 @@ export const generator: SampleGenerator = (url, data, { mediaAdapters }) => {
     headers['Cookie'] = cookieString;
   }
 
-  // Build headers map
   const headersEntries = Object.entries(headers)
     .map(([key, value]) => `    '${key}': '${value}'`)
     .join(',\n');
@@ -89,12 +83,11 @@ ${body ? `  var body = ${body};\n\n` : ''}  var url = Uri.parse('${url}');
 
   var request = await HttpClient().${data.method.toLowerCase()}Uri(url);
 
-  // Set headers
   var headers = ${headersMap};
   headers.forEach((key, value) {
     request.headers.set(key, value);
   });
-${body ? '\n  // Set body\n  request.write(body);\n' : ''}
+${body ? '\n  request.write(body);\n' : ''}
   var response = await request.close();
 
   var statusCode = response.statusCode;

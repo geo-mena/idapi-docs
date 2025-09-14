@@ -38,12 +38,10 @@ export const generator: SampleGenerator = (url, data, { mediaAdapters }) => {
   const curlOptions: string[] = [];
   let body: string | undefined;
 
-  // Essential curl options only
   curlOptions.push(`CURLOPT_URL => "${url}"`);
   curlOptions.push(`CURLOPT_RETURNTRANSFER => true`);
   curlOptions.push(`CURLOPT_CUSTOMREQUEST => "${data.method}"`);
 
-  // Handle body
   if (data.body && data.bodyMediaType && data.bodyMediaType in mediaAdapters) {
     headers['Content-Type'] = data.bodyMediaType;
 
@@ -54,10 +52,8 @@ export const generator: SampleGenerator = (url, data, { mediaAdapters }) => {
       },
     );
 
-    // Fallback if no body was generated but we have data.body
     if (!body && data.body) {
       if (data.bodyMediaType === 'application/json') {
-        // Convert JSON to PHP array syntax
         const phpArray = convertJsonToPhpArray(data.body, 2);
         body = `json_encode(${phpArray})`;
       } else {
@@ -70,12 +66,10 @@ export const generator: SampleGenerator = (url, data, { mediaAdapters }) => {
     }
   }
 
-  // Handle headers
   for (const [k, v] of Object.entries(data.header)) {
     headers[k] = v.value as string;
   }
 
-  // Handle cookies
   const cookies = Object.entries(data.cookie);
   if (cookies.length > 0) {
     const cookieString = cookies
@@ -84,7 +78,6 @@ export const generator: SampleGenerator = (url, data, { mediaAdapters }) => {
     headers['Cookie'] = cookieString;
   }
 
-  // Add headers to curl options
   if (Object.keys(headers).length > 0) {
     const headerArray = Object.entries(headers)
       .map(([key, value]) => `  "${key}: ${value}"`)
