@@ -83,7 +83,7 @@ components:
       type: apiKey
       in: header
       name: x-api-key
-      description: API key for authentication
+      description: API access authorization
   responses:
     BadRequest:
       description: Bad Request
