@@ -34,8 +34,7 @@ paths:
       tags:
         - Morphology V1
       summary: Document Validation Start
-      description: |
-        Start the morphological validation process of identity documents by sending the **document images, country and type** of document to be analyzed.
+      description: Start the morphological validation process of identity documents by sending the **document images, country and type** of document to be analyzed.
       operationId: documentValidationStart
       requestBody:
         description: Document validation start request with images and metadata
@@ -99,8 +98,7 @@ paths:
       tags:
         - Morphology V1
       summary: Document Validation Status
-      description: |
-        Query the status of the morphological validation operation. Call this endpoint **repeatedly** until the analysis operation is completed. See [Document Validation Status Values](/docs/services/morphology#document-validation-status-values) for reference on the different status values.
+      description: Query the status of the morphological validation operation. Call this endpoint **repeatedly** until the analysis operation is completed. See [Document Validation Status Values](/docs/services/morphology#document-validation-status-values) for reference on the different status values.
       operationId: documentValidationStatus
       requestBody:
         description: Status request with scan reference
