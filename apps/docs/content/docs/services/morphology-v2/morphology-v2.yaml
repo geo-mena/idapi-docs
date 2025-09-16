@@ -40,14 +40,7 @@ paths:
       tags:
         - Morphology V2
       summary: Document Validation Start
-      description: |
-        This API allows the morphological validation process of identity documents.
-
-        **The process consists of 3 steps:**
-
-        1. **Start**: The information of the document (images, country and type of document) to be analyzed is sent.
-        2. [Status](/docs/services/morphology-v2/documentValidationStatusV2): The status of the operation is queried to see if it is possible to proceed to obtain the result of the operation. this query must be made n times until the analysis operation has been completed.
-        3. [Data](/docs/services/morphology-v2/documentValidationDataV2): The results of the morphological analysis of the document are obtained.
+      description: Start the morphological validation process of identity documents by sending the **document images, country and type** of document to be analyzed.
       operationId: documentValidationStartV2
       requestBody:
         description: Document validation start request with images and metadata (v2)
@@ -60,8 +53,8 @@ paths:
               country: "ESP"
               idType: "ID_CARD"
               documentRawImageMimeType: "image/jpeg"
-              documentFrontRawImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-              documentBackRawImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              documentFrontRawImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC..."
+              documentBackRawImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC..."
               merchantIdScanReference: "custom-ref-123"
       responses:
         '200':
@@ -112,10 +105,7 @@ paths:
       tags:
         - Morphology V2
       summary: Document Validation Status
-      description: |
-        Query the status of the morphological validation operation.
-
-        This endpoint should be called repeatedly until the analysis operation is completed (status becomes "DONE" or "FAILED").
+      description: Query the status of the morphological validation operation. Call this endpoint **repeatedly** until the analysis operation is completed. See [Document Validation Status Values](/docs/services/morphology#document-validation-status-values) for reference on the different status values.
       operationId: documentValidationStatusV2
       requestBody:
         description: Status request with scan reference (v2)
@@ -176,7 +166,7 @@ paths:
         - Morphology V2
       summary: Document Validation Data
       description: |
-        Retrieve the results of the morphological analysis of the document.
+        Retrieve the results of the morphological analysis of the document **once the validation process has completed successfully**.
 
         **Note:** The response fields will depend on the configured morphology provider.
       operationId: documentValidationDataV2
@@ -270,12 +260,6 @@ components:
   schemas:
     BadRequestError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
-        - errors
       properties:
         status:
           type: integer
@@ -294,27 +278,18 @@ components:
           example: []
     UnauthorizedError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
           example: "Unauthorized"
     ForbiddenError:
       type: object
-      required:
-        - Message
       properties:
         Message:
           type: string
           example: "User is not authorized to access this resource with an explicit deny"
     BadGatewayError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
       properties:
         status:
           type: integer
@@ -330,8 +305,6 @@ components:
           example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
     GatewayTimeoutError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
@@ -356,12 +329,12 @@ components:
           type: string
           format: base64
           description: Base64 encoded open or tokenized image of ID front side
-          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC..."
         documentBackRawImage:
           type: string
           format: base64
           description: Base64 encoded open or tokenized image of ID back side. Optional for single-sided documents like PASSPORT
-          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC..."
         merchantIdScanReference:
           type: string
           description: Custom operation reference. Max. length 100 characters
@@ -375,9 +348,6 @@ components:
 
     DocumentValidationStartResponseV2:
       type: object
-      required:
-        - timestamp
-        - scanReference
       properties:
         timestamp:
           type: string
@@ -411,10 +381,6 @@ components:
 
     DocumentValidationStatusResponseV2:
       type: object
-      required:
-        - timestamp
-        - scanReference
-        - status
       properties:
         timestamp:
           type: string
@@ -448,13 +414,6 @@ components:
 
     DocumentValidationDataResponseV2:
       type: object
-      required:
-        - timestamp
-        - scanReference
-        - result
-        - confidence
-        - document
-        - person
       properties:
         status:
           type: string
@@ -471,7 +430,7 @@ components:
               example: "2019-11-06T07:15:27.000Z"
             code:
               type: integer
-              description: Corresponding status code. See [Service Result Code](/docs/services/serviceResultCodes#service-document-validation-v2)
+              description: Corresponding status code. See [Document Status and Code Results](/docs/services/morphology-v2#document-status-and-codes-results) for reference on the different codes values. 
               enum: [7001, 7002, 9001, 9102, 9103, 9104, 9121]
               example: 9001
             decisionTime:
@@ -489,13 +448,13 @@ components:
               example: "12df6045-3846-3e45-946a-14fa6136d79a"
             status:
               type: string
-              description: Status of the document validation process
+              description: Status of the document validation process. See [Document Status and Codes Results](/docs/services/morphology-v2#document-status-and-codes-results) for reference on the different status values. 
               enum: ["Started", "Submitted", "Approved", "Declined", "Resubmission", "Expired/Abandoned", "Review"]
               example: "approved"
             reason:
               type: string
               nullable: true
-              description: Description of the reason for document rejection (status declined). Null if status approved
+              description: Description of the reason for document rejection (status declined). Null if status approved. See [Service Result Code](/docs/services/serviceResultCodes#service-document-validation-v2)
               example: null
             reasonCode:
               type: integer

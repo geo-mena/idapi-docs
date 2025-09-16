@@ -32,6 +32,30 @@ import {
   downloadPostmanCollection as downloadOnboardingCollection
 } from '@/utils/onboarding';
 import {
+  isSupportedMorphologyService,
+  getCurrentMorphologyService,
+  generateMorphologyPostmanCollection,
+  downloadPostmanCollection as downloadMorphologyCollection
+} from '@/utils/morphology';
+import {
+  isSupportedMorphologyV2Service,
+  getCurrentMorphologyV2Service,
+  generateMorphologyV2PostmanCollection,
+  downloadPostmanCollection as downloadMorphologyV2Collection
+} from '@/utils/morphology-v2';
+import {
+  isSupportedIADService,
+  getCurrentIADService,
+  generateIADPostmanCollection,
+  downloadPostmanCollection as downloadIADCollection
+} from '@/utils/iad';
+import {
+  isSupportedPADService,
+  getCurrentPADService,
+  generatePADPostmanCollection,
+  downloadPostmanCollection as downloadPADCollection
+} from '@/utils/pad';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -95,8 +119,12 @@ export function PostmanButton() {
   const isOcrService = isSupportedService(pathname);
   const isAuthService = isSupportedAuthenticationService(pathname);
   const isOnboardingService = isSupportedOnboardingService(pathname);
+  const isMorphologyService = isSupportedMorphologyService(pathname);
+  const isMorphologyV2Service = isSupportedMorphologyV2Service(pathname);
+  const isIADService = isSupportedIADService(pathname);
+  const isPADService = isSupportedPADService(pathname);
 
-  if (!isOcrService && !isAuthService && !isOnboardingService) {
+  if (!isOcrService && !isAuthService && !isOnboardingService && !isMorphologyService && !isMorphologyV2Service && !isIADService && !isPADService) {
     return null;
   }
 
@@ -125,6 +153,38 @@ export function PostmanButton() {
       if (!collection) return;
 
       downloadOnboardingCollection(collection);
+    } else if (isMorphologyService) {
+      const serviceName = getCurrentMorphologyService(pathname);
+      if (!serviceName) return;
+
+      const collection = generateMorphologyPostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadMorphologyCollection(collection);
+    } else if (isMorphologyV2Service) {
+      const serviceName = getCurrentMorphologyV2Service(pathname);
+      if (!serviceName) return;
+
+      const collection = generateMorphologyV2PostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadMorphologyV2Collection(collection);
+    } else if (isIADService) {
+      const serviceName = getCurrentIADService(pathname);
+      if (!serviceName) return;
+
+      const collection = generateIADPostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadIADCollection(collection);
+    } else if (isPADService) {
+      const serviceName = getCurrentPADService(pathname);
+      if (!serviceName) return;
+
+      const collection = generatePADPostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadPADCollection(collection);
     }
   };
 
