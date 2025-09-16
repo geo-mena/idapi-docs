@@ -44,6 +44,18 @@ import {
   downloadPostmanCollection as downloadMorphologyV2Collection
 } from '@/utils/morphology-v2';
 import {
+  isSupportedIADService,
+  getCurrentIADService,
+  generateIADPostmanCollection,
+  downloadPostmanCollection as downloadIADCollection
+} from '@/utils/iad';
+import {
+  isSupportedPADService,
+  getCurrentPADService,
+  generatePADPostmanCollection,
+  downloadPostmanCollection as downloadPADCollection
+} from '@/utils/pad';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -109,8 +121,10 @@ export function PostmanButton() {
   const isOnboardingService = isSupportedOnboardingService(pathname);
   const isMorphologyService = isSupportedMorphologyService(pathname);
   const isMorphologyV2Service = isSupportedMorphologyV2Service(pathname);
+  const isIADService = isSupportedIADService(pathname);
+  const isPADService = isSupportedPADService(pathname);
 
-  if (!isOcrService && !isAuthService && !isOnboardingService && !isMorphologyService && !isMorphologyV2Service) {
+  if (!isOcrService && !isAuthService && !isOnboardingService && !isMorphologyService && !isMorphologyV2Service && !isIADService && !isPADService) {
     return null;
   }
 
@@ -155,6 +169,22 @@ export function PostmanButton() {
       if (!collection) return;
 
       downloadMorphologyV2Collection(collection);
+    } else if (isIADService) {
+      const serviceName = getCurrentIADService(pathname);
+      if (!serviceName) return;
+
+      const collection = generateIADPostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadIADCollection(collection);
+    } else if (isPADService) {
+      const serviceName = getCurrentPADService(pathname);
+      if (!serviceName) return;
+
+      const collection = generatePADPostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadPADCollection(collection);
     }
   };
 
