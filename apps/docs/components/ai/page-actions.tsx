@@ -38,6 +38,12 @@ import {
   downloadPostmanCollection as downloadMorphologyCollection
 } from '@/utils/morphology';
 import {
+  isSupportedMorphologyV2Service,
+  getCurrentMorphologyV2Service,
+  generateMorphologyV2PostmanCollection,
+  downloadPostmanCollection as downloadMorphologyV2Collection
+} from '@/utils/morphology-v2';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -102,8 +108,9 @@ export function PostmanButton() {
   const isAuthService = isSupportedAuthenticationService(pathname);
   const isOnboardingService = isSupportedOnboardingService(pathname);
   const isMorphologyService = isSupportedMorphologyService(pathname);
+  const isMorphologyV2Service = isSupportedMorphologyV2Service(pathname);
 
-  if (!isOcrService && !isAuthService && !isOnboardingService && !isMorphologyService) {
+  if (!isOcrService && !isAuthService && !isOnboardingService && !isMorphologyService && !isMorphologyV2Service) {
     return null;
   }
 
@@ -140,6 +147,14 @@ export function PostmanButton() {
       if (!collection) return;
 
       downloadMorphologyCollection(collection);
+    } else if (isMorphologyV2Service) {
+      const serviceName = getCurrentMorphologyV2Service(pathname);
+      if (!serviceName) return;
+
+      const collection = generateMorphologyV2PostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadMorphologyV2Collection(collection);
     }
   };
 
