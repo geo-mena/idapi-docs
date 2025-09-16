@@ -7,11 +7,30 @@ import {
   Copy,
   ExternalLinkIcon,
   MessageCircleIcon,
+  Download,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/cn';
 import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
+import {
+  isSupportedService,
+  getCurrentService,
+  generatePostmanCollection,
+  downloadPostmanCollection
+} from '@/utils/ocr';
+import {
+  isSupportedAuthenticationService,
+  getCurrentAuthenticationService,
+  generateAuthenticationPostmanCollection,
+  downloadPostmanCollection as downloadAuthenticationCollection
+} from '@/utils/authentication';
+import {
+  isSupportedOnboardingService,
+  getCurrentOnboardingService,
+  generateOnboardingPostmanCollection,
+  downloadPostmanCollection as downloadOnboardingCollection
+} from '@/utils/onboarding';
 import {
   Popover,
   PopoverContent,
@@ -66,6 +85,62 @@ export function LLMCopyButton({
     >
       {checked ? <Check /> : <Copy />}
       Copy Markdown
+    </button>
+  );
+}
+
+export function PostmanButton() {
+  const pathname = usePathname();
+
+  const isOcrService = isSupportedService(pathname);
+  const isAuthService = isSupportedAuthenticationService(pathname);
+  const isOnboardingService = isSupportedOnboardingService(pathname);
+
+  if (!isOcrService && !isAuthService && !isOnboardingService) {
+    return null;
+  }
+
+  const handleDownload = () => {
+    if (isOcrService) {
+      const serviceName = getCurrentService(pathname);
+      if (!serviceName) return;
+
+      const collection = generatePostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadPostmanCollection(collection);
+    } else if (isAuthService) {
+      const serviceName = getCurrentAuthenticationService(pathname);
+      if (!serviceName) return;
+
+      const collection = generateAuthenticationPostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadAuthenticationCollection(collection);
+    } else if (isOnboardingService) {
+      const serviceName = getCurrentOnboardingService(pathname);
+      if (!serviceName) return;
+
+      const collection = generateOnboardingPostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadOnboardingCollection(collection);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleDownload}
+      className={cn(
+        buttonVariants({
+          color: 'secondary',
+          size: 'sm',
+          className: 'gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground',
+        }),
+      )}
+    >
+      <Download />
+      Postman
     </button>
   );
 }
