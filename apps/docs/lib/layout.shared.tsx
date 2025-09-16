@@ -11,6 +11,11 @@ export const linkItems: LinkItemType[] = [
     url: '/docs/services',
     icon: <AlbumIcon />,
   },
+  {
+    text: 'Landing',
+    url: '/docs/landing',
+    icon: <AlbumIcon />,
+  },
   // {
   //   icon: <AlbumIcon />,
   //   text: 'Blog',
