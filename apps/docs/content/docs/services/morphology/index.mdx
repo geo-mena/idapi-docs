@@ -1,0 +1,37 @@
+---
+title: Document Validation
+index: true
+---
+
+This API allows the morphological validation process of identity documents.
+
+**The process consists of 3 steps:**
+
+1. [Start](/docs/services/morphology/documentValidationStart): The information of the document (images, country and type of document) to be analyzed is sent.
+2. [Status](/docs/services/morphology/documentValidationStatus): The status of the operation is queried to see if it is possible to proceed to obtain the result of the operation. this query must be made n times until the analysis operation has been completed.
+3. [Data](/docs/services/morphology/documentValidationData): The results of the morphological analysis of the document are obtained.
+
+## Document Validation Status Values
+
+The status endpoint returns one of the following values to indicate the current state of the validation process:
+
+| Status | Description |
+|---|---|
+| **PENDING** | Analysis in progress. **Recommended** polling every 5 seconds until completion. |
+| **DONE** | Validation completed successfully. Execute the Document Validation Data service to retrieve the analysis results. |
+| **FAILED** | Validation process encountered an error and could not be completed. |
+
+## Document Status Results
+
+The `document.status` field in the Document Validation Data response indicates the verification result:
+
+| Status | Description |
+|---|---|
+| **APPROVED_VERIFIED** | Successfully verified and approved for use. |
+| **DENIED_FRAUD** | Verification failed due to suspected fraudulent content or tampering. |
+| **DENIED_UNSUPPORTED_ID_TYPE** | Type is not supported by the validation system. |
+| **DENIED_UNSUPPORTED_ID_COUNTRY** | Country is not supported by the validation system. |
+| **ERROR_NOT_READABLE** | Could not be processed due to poor image quality or readability issues. |
+
+View the Services API for document validation
+
