@@ -192,11 +192,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/DocumentValidationDataResponse'
               example:
-                timestamp: "1970-01-01T00:00:00.000Z"
-                scanReference: "fe294c25-17e1-4d98-a958-710edbf00064"
-                result: "VALID"
-                confidence: 0.95
-                details: {}
+                document:
+                  dateOfBirthParts:
+                    year: "1995"
+                    month: "10"
+                    day: "16"
+                  dob: "XXXX-10-16"
+                  expiry: "XXXX-10-16"
+                  expiryDateParts:
+                    year: "XXXX"
+                    month: "XX"
+                    day: "XX"
+                  firstName: "XXX XXXXX"
+                  gender: null
+                  idSubtype: null
+                  issuingCountry: "CHL"
+                  lastName: "XXXX XXXXXX"
+                  nationality: null
+                  number: "XXXXXXXXX"
+                  optionalData2: "XXXXXX K"
+                  status: "APPROVED_VERIFIED"
+                  type: "ID_CARD"
+                  issuingDate: null
+                  issuingDateParts: null
+                  issuingPlace: null
+                  issuingAuthority: null
+                transaction:
+                  date: "2024-01-18T17:48:49.598029Z"
+                  merchantScanReference: "680f8ef8-3ff5-XXXXX-XXXX-97182d998dfb"
+                  source: "API"
+                  status: "DONE"
+                  updatedAt: "2024-01-18T17:49:15.310078Z"
+                verification:
+                  additionalChecks: null
+                  mrzCheck: null
         '400':
           description: Bad Request
           content:
