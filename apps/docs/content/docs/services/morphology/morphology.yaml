@@ -47,8 +47,8 @@ paths:
             example:
               country: "ESP"
               idType: "ID_CARD"
-              frontsideImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-              backsideImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              frontsideImage: "BAMBAQLNHJoWGPjfeuDIzDXdZuP..."
+              backsideImage: "BAMBAQLNHJoWGPjfeuDIzDXdZuP..."
               merchantIdScanReference: "my-scan-ref-001"
       responses:
         '200':
@@ -261,12 +261,6 @@ components:
   schemas:
     BadRequestError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
-        - errors
       properties:
         status:
           type: integer
@@ -285,27 +279,18 @@ components:
           example: []
     UnauthorizedError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
           example: "Unauthorized"
     ForbiddenError:
       type: object
-      required:
-        - Message
       properties:
         Message:
           type: string
           example: "User is not authorized to access this resource with an explicit deny"
     BadGatewayError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
       properties:
         status:
           type: integer
@@ -321,8 +306,6 @@ components:
           example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
     GatewayTimeoutError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
@@ -347,12 +330,12 @@ components:
           type: string
           format: byte
           description: Base64 encoded open or tokenized image of ID front side
-          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+          example: "BAMBAQLNHJoWGPjfeuDIzDXdZuP..."
         backsideImage:
           type: string
           format: byte
           description: Base64 encoded open or tokenized image of ID back side. Optional for single-sided documents like PASSPORT
-          example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+          example: "BAMBAQLNHJoWGPjfeuDIzDXdZuP..."
         merchantIdScanReference:
           type: string
           description: Custom operation reference. Max. length 100 characters
@@ -360,9 +343,6 @@ components:
           example: "my-scan-ref-001"
     DocumentValidationStartResponse:
       type: object
-      required:
-        - timestamp
-        - scanReference
       properties:
         timestamp:
           type: string
@@ -394,10 +374,6 @@ components:
           deprecated: true
     DocumentValidationStatusResponse:
       type: object
-      required:
-        - timestamp
-        - scanReference
-        - status
       properties:
         timestamp:
           type: string
@@ -429,33 +405,144 @@ components:
           deprecated: true
     DocumentValidationDataResponse:
       type: object
-      required:
-        - timestamp
-        - scanReference
-        - result
-        - confidence
-        - details
       properties:
-        timestamp:
-          type: string
-          format: date-time
-          description: Timestamp (UTC) of the response in ISO 8601 format
-          example: "1970-01-01T00:00:00.000Z"
-        scanReference:
-          type: string
-          description: Scan reference number
-          example: "fe294c25-17e1-4d98-a958-710edbf00064"
-        result:
-          type: string
-          description: Validation result
-          example: "VALID"
-        confidence:
-          type: number
-          format: float
-          description: Confidence score of the validation
-          example: 0.95
-        details:
+        document:
           type: object
-          description: Additional validation details (provider-dependent)
-          example: {}
+          description: Document validation details and extracted information
+          properties:
+            dateOfBirthParts:
+              type: object
+              nullable: true
+              properties:
+                year:
+                  type: string
+                  nullable: true
+                month:
+                  type: string
+                  nullable: true
+                day:
+                  type: string
+                  nullable: true
+            dob:
+              type: string
+              nullable: true
+              description: Date of birth in YYYY-MM-DD format
+            expiry:
+              type: string
+              nullable: true
+              description: Document expiry date in YYYY-MM-DD format
+            expiryDateParts:
+              type: object
+              nullable: true
+              properties:
+                year:
+                  type: string
+                  nullable: true
+                month:
+                  type: string
+                  nullable: true
+                day:
+                  type: string
+                  nullable: true
+            firstName:
+              type: string
+              nullable: true
+              description: First name of the document holder
+            lastName:
+              type: string
+              nullable: true
+              description: Last name of the document holder
+            gender:
+              type: string
+              nullable: true
+              description: Gender of the document holder
+            idSubtype:
+              type: string
+              nullable: true
+              description: Document subtype
+            issuingCountry:
+              type: string
+              nullable: true
+              description: Country that issued the document
+            nationality:
+              type: string
+              nullable: true
+              description: Nationality of the document holder
+            number:
+              type: string
+              nullable: true
+              description: Document number
+            optionalData2:
+              type: string
+              nullable: true
+              description: Additional optional data field
+            status:
+              type: string
+              description: Document verification status. See [Document Status Results](/docs/services/morphology#document-status-results) for reference on the different status values. 
+              enum: ["APPROVED_VERIFIED", "DENIED_FRAUD", "DENIED_UNSUPPORTED_ID_TYPE", "DENIED_UNSUPPORTED_ID_COUNTRY", "ERROR_NOT_READABLE"]
+            type:
+              type: string
+              nullable: true
+              description: Document type
+              enum: ["PASSPORT", "DRIVING_LICENSE", "ID_CARD", "VISA"]
+            issuingDate:
+              type: string
+              nullable: true
+              description: Document issuing date
+            issuingDateParts:
+              type: object
+              nullable: true
+              properties:
+                year:
+                  type: string
+                  nullable: true
+                month:
+                  type: string
+                  nullable: true
+                day:
+                  type: string
+                  nullable: true
+            issuingPlace:
+              type: string
+              nullable: true
+              description: Place where the document was issued
+            issuingAuthority:
+              type: string
+              nullable: true
+              description: Authority that issued the document
+        transaction:
+          type: object
+          description: Transaction metadata and processing information
+          properties:
+            date:
+              type: string
+              format: date-time
+              description: Transaction creation date in ISO 8601 format
+            merchantScanReference:
+              type: string
+              description: Merchant-provided scan reference
+            source:
+              type: string
+              description: Source of the transaction
+              example: "API"
+            status:
+              type: string
+              description: Transaction processing status
+              enum: ["DONE"]
+            updatedAt:
+              type: string
+              format: date-time
+              description: Last update timestamp in ISO 8601 format
+        verification:
+          type: object
+          description: Verification results and additional checks performed
+          properties:
+            additionalChecks:
+              type: object
+              nullable: true
+              description: Additional verification checks performed
+            mrzCheck:
+              type: object
+              nullable: true
+              description: Machine Readable Zone verification results
 
