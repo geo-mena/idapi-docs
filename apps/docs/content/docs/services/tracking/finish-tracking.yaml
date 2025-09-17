@@ -31,7 +31,7 @@ paths:
       tags:
         - Tracking
       summary: Finish Tracking
-      description: This service completes the tracking process and should be invoked upon completing all validations in the Onboarding or Authentication flows. When this service is integrated, invoking the closeSession method from the Mobile/Web SDK is not required.
+      description: This service completes the tracking process and should be invoked upon completing all validations in the Onboarding or Authentication flows. **When this service is integrated, invoking the closeSession method from the Mobile/Web SDK is not required.**
       operationId: finishTracking
       requestBody:
         description: Tracking completion data with family type, status, and reason
@@ -158,17 +158,17 @@ components:
       properties:
         family:
           type: string
-          description: Possible values for the tracking family type.
+          description: "Possible values:"
           enum: ["Authentication", "OnBoarding"]
           example: "OnBoarding"
         status:
           type: string
-          description: Status of the tracking process completion.
+          description: "Possible values:"
           enum: ["SUCCEEDED", "DENIED", "ERROR", "CANCELLED", "BLACKLISTED"]
           example: "SUCCEEDED"
         reason:
           type: string
-          description: Reason code for the tracking status.
+          description: "Possible values:"
           enum: ["", "DOCUMENT_VALIDATION_NOT_PASSED", "DOCUMENT_VALIDATION_ERROR", "FACIAL_AUTHENTICATION_NOT_PASSED", "FACIAL_LIVENESS_NOT_PASSED", "FACIAL_AUTHENTICATION_ERROR", "FACIAL_LIVENESS_ERROR", "BLACKLISTED_FACE_TEMPLATE", "ALREADY_REGISTERED", "MANUAL_STATUS_CHANGE", "SECURITY_SERVICE_ERROR", "SELPHID_INTERNAL_ERROR", "SELPHID_TIMEOUT", "SELPHI_TIMEOUT"]
           example: "MANUAL_STATUS_CHANGE"
         extraData:
@@ -180,7 +180,7 @@ components:
       properties:
         trackingStatus:
           type: integer
-          description: Code indicating the result of the tracking service execution. Value 201 indicates service processed without exceptions.
+          description: Code indicating the result of the tracking service execution. Value **201** indicates service processed without exceptions.
           example: 201
         trackingMessage:
           type: string
