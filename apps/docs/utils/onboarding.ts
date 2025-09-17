@@ -35,7 +35,7 @@ export interface PostmanCollection {
 export const SUPPORTED_ONBOARDING_SERVICES = {
   '/docs/services/onboarding/evaluatePassiveLivenessToken': 'evaluatePassiveLivenessToken',
   '/docs/services/onboarding/authenticateFacial': 'authenticateFacial',
-  '/docs/services/onboarding/finishTracking': 'finishTracking',
+  '/docs/services/tracking/finishTracking': 'finishTracking',
   '/docs/services/onboarding/identityValidationV2': 'identityV2',
 } as const;
 
