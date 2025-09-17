@@ -231,7 +231,6 @@ components:
       type: object
       required:
         - tokenFrontDocument
-        - tokenBackDocument
         - countryCode
       properties:
         tokenFrontDocument:
