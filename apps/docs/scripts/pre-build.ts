@@ -13,7 +13,7 @@ export async function generateDocs() {
   await rimraf('./content/docs/services/morphology/(generated)');
   await rimraf('./content/docs/services/morphology-v2/(generated)');
   await rimraf('./content/docs/services/pad/(generated)');
-  await rimraf('./content/docs/services/iad/(generated)');
+  await rimraf('./content/docs/services/security/(generated)');
   await rimraf('./content/docs/services/tracking/(generated)');
 
   await Promise.all([
@@ -67,7 +67,7 @@ export async function generateDocs() {
     }),
     OpenAPI.generateFiles({
       input: iadapi,
-      output: './content/docs/services/iad/(generated)',
+      output: './content/docs/services/security/(generated)',
       per: 'operation',
       includeDescription: true,
     }),

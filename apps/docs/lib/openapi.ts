@@ -109,7 +109,7 @@ export const padapi = createOpenAPI({
 });
 
 export const iadapi = createOpenAPI({
-  input: ['./content/docs/services/iad/iad.yaml'],
+  input: ['./content/docs/services/security/iad.yaml'],
 
   proxyUrl: '/api/proxy',
   shikiOptions: {
