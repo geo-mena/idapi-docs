@@ -7,8 +7,6 @@
     "---Introduction---",
     "index",
     "serviceResultCodes",
-    "---Security---",
-    "security/(generated)/injectionAttackDetection",
     "---Onboarding---",
     "onboarding/(generated)/identityValidationV2",
     "onboarding/(generated)/authenticateFacial",
@@ -18,8 +16,6 @@
     "authentication/(generated)/authenticateUserV2",
     "authentication/(generated)/updateUserTemplate",
     "authentication/(generated)/deleteUsers",
-    "---Tracking---",
-    "tracking/(generated)/finishTracking",
     "---OCR---",
     "ocr/(generated)/extractDocumentDataWeb",
     "ocr/(generated)/extractDocumentData",
@@ -29,6 +25,10 @@
     "pad/(generated)/documentPadDiagnostic",
     "---Civil Validation---",
     "civil-validation-ec",
-    "civil-validation-cr"
+    "civil-validation-cr",
+    "---Tracking---",
+    "tracking/(generated)/finishTracking",
+    "---Security---",
+    "security/(generated)/injectionAttackDetection"
   ]
 }
