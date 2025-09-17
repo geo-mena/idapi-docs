@@ -287,12 +287,6 @@ components:
   schemas:
     BadRequestError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
-        - errors
       properties:
         status:
           type: integer
@@ -311,27 +305,18 @@ components:
           example: []
     UnauthorizedError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
           example: "Unauthorized"
     ForbiddenError:
       type: object
-      required:
-        - Message
       properties:
         Message:
           type: string
           example: "User is not authorized to access this resource with an explicit deny"
     BadGatewayError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
       properties:
         status:
           type: integer
@@ -347,8 +332,6 @@ components:
           example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
     GatewayTimeoutError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
@@ -413,13 +396,6 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     FacialAuthenticationResponse:
       type: object
-      required:
-        - serviceResultCode
-        - serviceTime
-        - serviceFacialAuthenticationResult
-        - serviceResultLog
-        - serviceFacialSimilarityResult
-        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
@@ -452,12 +428,6 @@ components:
           example: 0.99153554
     PassiveLivenessResponse:
       type: object
-      required:
-        - serviceResultCode
-        - serviceTime
-        - serviceLivenessResult
-        - serviceResultLog
-        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
@@ -511,16 +481,6 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     IdentityV2Response:
       type: object
-      required:
-        - serviceTransactionId
-        - serviceResultCode
-        - serviceResultLog
-        - serviceTime
-        - facialAuthenticationResult
-        - facialAuthenticationLog
-        - facialAuthenticationSimilarity
-        - passiveLivenessResult
-        - passiveLivenessLog
       properties:
         serviceTransactionId:
           type: string
