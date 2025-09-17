@@ -178,12 +178,6 @@ components:
   schemas:
     BadRequestError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
-        - errors
       properties:
         status:
           type: integer
@@ -202,27 +196,18 @@ components:
           example: []
     UnauthorizedError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
           example: "Unauthorized"
     ForbiddenError:
       type: object
-      required:
-        - Message
       properties:
         Message:
           type: string
           example: "User is not authorized to access this resource with an explicit deny"
     BadGatewayError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
       properties:
         status:
           type: integer
@@ -238,8 +223,6 @@ components:
           example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
     GatewayTimeoutError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
@@ -248,7 +231,6 @@ components:
       type: object
       required:
         - tokenFrontDocument
-        - tokenBackDocument
         - countryCode
       properties:
         tokenFrontDocument:
@@ -276,12 +258,6 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     ExtractDocumentDataWebResponse:
       type: object
-      required:
-        - serviceResultCode
-        - serviceResultLog
-        - serviceTime
-        - serviceDocument
-        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
@@ -330,12 +306,6 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     ExtractDocumentDataResponse:
       type: object
-      required:
-        - serviceResultCode
-        - serviceResultLog
-        - serviceDocument
-        - serviceTime
-        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer

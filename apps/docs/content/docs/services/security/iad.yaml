@@ -58,8 +58,6 @@ paths:
             application/json:
               schema:
                 type: object
-                required:
-                  - attack
                 properties:
                   attack:
                     type: boolean
@@ -73,12 +71,6 @@ paths:
             application/json:
               schema:
                 type: object
-                required:
-                  - status
-                  - title
-                  - detail
-                  - type
-                  - errors
                 properties:
                   status:
                     type: integer
@@ -223,27 +215,18 @@ components:
   schemas:
     UnauthorizedError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
           example: "Unauthorized"
     ForbiddenError:
       type: object
-      required:
-        - Message
       properties:
         Message:
           type: string
           example: "User is not authorized to access this resource with an explicit deny"
     BadGatewayError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
       properties:
         status:
           type: integer
@@ -259,8 +242,6 @@ components:
           example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
     GatewayTimeoutError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string

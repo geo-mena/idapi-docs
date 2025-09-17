@@ -201,69 +201,6 @@ paths:
                 $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
-  '/services/finishTracking':
-    post:
-      tags:
-        - Onboarding
-      summary: Finish Tracking
-      description: This service completes the tracking process and should be invoked upon completing all validations in the Onboarding or Authentication flows. When this service is integrated, invoking the closeSession method from the Mobile/Web SDK is not required.
-      operationId: finishTracking
-      requestBody:
-        description: Tracking completion data with family type, status, and reason
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FinishTrackingRequest'
-            example:
-              family: "OnBoarding"
-              status: "SUCCEEDED"
-              reason: "MANUAL_STATUS_CHANGE"
-              extraData: "BQABAQG2gBNjuHN4kLmPqYf7R..."
-      responses:
-        '200':
-          description: Tracking process completed successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FinishTrackingResponse'
-              example:
-                trackingStatus: 201
-                trackingMessage: "FinishTrackingEvent: Ok"
-                transactionId: "123e4567-e89b-12d3-a456-426614174000"
-                timestamp: "2023-05-01T12:34:56.789Z"
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestError'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedError'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenError'
-        '502':
-          description: Bad Gateway
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadGatewayError'
-        '504':
-          description: Gateway Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GatewayTimeoutError'
-      security:
-        - apiKey: []
   '/onboarding/v2/identity':
     post:
       tags:
@@ -350,12 +287,6 @@ components:
   schemas:
     BadRequestError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
-        - errors
       properties:
         status:
           type: integer
@@ -374,27 +305,18 @@ components:
           example: []
     UnauthorizedError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
           example: "Unauthorized"
     ForbiddenError:
       type: object
-      required:
-        - Message
       properties:
         Message:
           type: string
           example: "User is not authorized to access this resource with an explicit deny"
     BadGatewayError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
       properties:
         status:
           type: integer
@@ -410,8 +332,6 @@ components:
           example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
     GatewayTimeoutError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
@@ -476,13 +396,6 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     FacialAuthenticationResponse:
       type: object
-      required:
-        - serviceResultCode
-        - serviceTime
-        - serviceFacialAuthenticationResult
-        - serviceResultLog
-        - serviceFacialSimilarityResult
-        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
@@ -515,12 +428,6 @@ components:
           example: 0.99153554
     PassiveLivenessResponse:
       type: object
-      required:
-        - serviceResultCode
-        - serviceTime
-        - serviceLivenessResult
-        - serviceResultLog
-        - serviceTransactionId
       properties:
         serviceResultCode:
           type: integer
@@ -542,58 +449,6 @@ components:
           type: integer
           description: Code indicating the result of the passive liveness test evaluation. See [Service Liveness Result](/docs/services/serviceResultCodes#service-liveness-result)
           example: 3
-    FinishTrackingRequest:
-      type: object
-      required:
-        - family
-        - status
-        - reason
-        - extraData
-      properties:
-        family:
-          type: string
-          description: Possible values for the tracking family type.
-          enum: ["Authentication", "OnBoarding"]
-          example: "OnBoarding"
-        status:
-          type: string
-          description: Status of the tracking process completion.
-          enum: ["SUCCEEDED", "DENIED", "ERROR", "CANCELLED", "BLACKLISTED"]
-          example: "SUCCEEDED"
-        reason:
-          type: string
-          description: Reason code for the tracking status.
-          enum: ["", "DOCUMENT_VALIDATION_NOT_PASSED", "DOCUMENT_VALIDATION_ERROR", "FACIAL_AUTHENTICATION_NOT_PASSED", "FACIAL_LIVENESS_NOT_PASSED", "FACIAL_AUTHENTICATION_ERROR", "FACIAL_LIVENESS_ERROR", "BLACKLISTED_FACE_TEMPLATE", "ALREADY_REGISTERED", "MANUAL_STATUS_CHANGE", "SECURITY_SERVICE_ERROR", "SELPHID_INTERNAL_ERROR", "SELPHID_TIMEOUT", "SELPHI_TIMEOUT"]
-          example: "MANUAL_STATUS_CHANGE"
-        extraData:
-          type: string
-          description: Token generated by Mobile/Web SDK. Contains tokenized tracking information.
-          example: "BQABAQG2gBNjuHN4kLmPqYf7R..."
-    FinishTrackingResponse:
-      type: object
-      required:
-        - trackingStatus
-        - trackingMessage
-        - transactionId
-        - timestamp
-      properties:
-        trackingStatus:
-          type: integer
-          description: Code indicating the result of the tracking service execution. Value 201 indicates service processed without exceptions.
-          example: 201
-        trackingMessage:
-          type: string
-          description: 'Message indicating the result of the tracking service execution. Value **"FinishTrackingEvent: Ok"**: Service processing without exceptions.'
-          example: "FinishTrackingEvent: Ok"
-        transactionId:
-          type: string
-          description: Transaction identifier associated with the request processed by the API.
-          example: "123e4567-e89b-12d3-a456-426614174000"
-        timestamp:
-          type: string
-          format: date-time
-          description: Timestamp (UTC) of the response in the format YYYY-MM-DDThh:mm:ss.SSSZ.
-          example: "2023-05-01T12:34:56.789Z"
     IdentityV2Request:
       type: object
       required:
@@ -626,16 +481,6 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     IdentityV2Response:
       type: object
-      required:
-        - serviceTransactionId
-        - serviceResultCode
-        - serviceResultLog
-        - serviceTime
-        - facialAuthenticationResult
-        - facialAuthenticationLog
-        - facialAuthenticationSimilarity
-        - passiveLivenessResult
-        - passiveLivenessLog
       properties:
         serviceTransactionId:
           type: string

@@ -348,12 +348,6 @@ components:
   schemas:
     BadRequestError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
-        - errors
       properties:
         status:
           type: integer
@@ -372,27 +366,18 @@ components:
           example: []
     UnauthorizedError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
           example: "Unauthorized"
     ForbiddenError:
       type: object
-      required:
-        - Message
       properties:
         Message:
           type: string
           example: "User is not authorized to access this resource with an explicit deny"
     BadGatewayError:
       type: object
-      required:
-        - status
-        - title
-        - detail
-        - type
       properties:
         status:
           type: integer
@@ -408,8 +393,6 @@ components:
           example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
     GatewayTimeoutError:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
@@ -454,14 +437,6 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     AuthenticateUserResponse:
       type: object
-      required:
-        - timestamp
-        - transactionId
-        - serviceResultCode
-        - serviceResultLog
-        - serviceFacialSimilarityResult
-        - merchantReferenceId
-        - registeredTemplateRaw
       properties:
         timestamp:
           type: string
@@ -496,18 +471,6 @@ components:
           example: "BAIBAQGo+puJyHjfRD8n"
     AuthenticateUserV2Response:
       type: object
-      required:
-        - timestamp
-        - transactionId
-        - serviceResultCode
-        - serviceResultLog
-        - serviceFacialSimilarityResult
-        - serviceFacialAuthenticationLog
-        - serviceFacialAuthenticationResult
-        - serviceLivenessResult
-        - serviceLivenessLog
-        - merchantReferenceId
-        - registeredTemplateRaw
       properties:
         timestamp:
           type: string
@@ -569,11 +532,6 @@ components:
           example: ["001"]
     DeleteUsersResponse:
       type: object
-      required:
-        - timestamp
-        - transactionId
-        - serviceResultCode
-        - serviceResultLog
       properties:
         serviceResultCode:
           type: integer
@@ -635,11 +593,6 @@ components:
           $ref: '#/components/schemas/TrackingInfo'
     UpdateUserTemplateResponse:
       type: object
-      required:
-        - timestamp
-        - transactionId
-        - serviceResultCode
-        - serviceResultLog
       properties:
         timestamp:
           type: string

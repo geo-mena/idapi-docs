@@ -36,7 +36,7 @@ export interface PostmanCollection {
 }
 
 export const SUPPORTED_IAD_SERVICES = {
-  '/docs/services/iad/injectionAttackDetection': 'injectionAttackDetection',
+  '/docs/services/security/injectionAttackDetection': 'injectionAttackDetection',
 } as const;
 
 export function isSupportedIADService(pathname: string): boolean {

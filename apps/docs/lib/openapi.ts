@@ -109,7 +109,19 @@ export const padapi = createOpenAPI({
 });
 
 export const iadapi = createOpenAPI({
-  input: ['./content/docs/services/iad/iad.yaml'],
+  input: ['./content/docs/services/security/iad.yaml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
+export const trackingapi = createOpenAPI({
+  input: ['./content/docs/services/tracking/finish-tracking.yaml'],
 
   proxyUrl: '/api/proxy',
   shikiOptions: {
