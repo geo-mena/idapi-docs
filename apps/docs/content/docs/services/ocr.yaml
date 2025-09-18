@@ -168,6 +168,74 @@ paths:
                 $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
+  '/extractFacial':
+    post:
+      tags:
+        - OCR
+      summary: Facial Extraction
+      description: |
+        Service that performs facial detection and validation from an open or tokenized image.
+
+        <Callout type="warn">
+
+        Please note that all returned values are estimates based on the provided facial image. Actual accuracy and reliability may vary depending on the quality and characteristics of the input image.
+        
+        </Callout>
+      operationId: extractFacial
+      requestBody:
+        description: Tokenized image buffer for facial extraction
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtractFacialRequest'
+            example:
+              tokenBuffer: "BAMBAQLNHJoWGPjfeuDIzDXdZuP..."
+      responses:
+        '200':
+          description: Facial extraction completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractFacialResponse'
+              example:
+                serviceResultCode: 0
+                serviceResultLog: "Service request successfully processed"
+                serviceTime: "864"
+                serviceFacialExtractionResult: "{\"faceConfidence\":0.9999948143959045,\"age\":30,\"glasses\":\"None\",\"gender\":\"Male\",\"iod\":154}"
+                serviceTransactionId: "b2f6297b-01ca-4aa3-afd7-6cb3c9d74141"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadGatewayError'
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayTimeoutError'
+      security:
+        - apiKey: []
 components:
   securitySchemes:
     apiKey:
@@ -327,3 +395,45 @@ components:
           type: string
           description: Transaction identifier associated with the request processed by the API.
           example: "123e4567-e89b-12d3-a456-426614174000"
+    ExtractFacialRequest:
+      type: object
+      required:
+        - tokenBuffer
+      properties:
+        tokenBuffer:
+          type: string
+          format: byte
+          description: Base64 encoded or tokenized image for facial detection.
+          example: "BAMBAQLNHJoWGPjfeuDIzDXdZuP..."
+    ExtractFacialResponse:
+      type: object
+      properties:
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution.
+          example: 0
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the result or error message, if applicable.
+          example: "Service request successfully processed"
+        serviceTime:
+          type: string
+          description: Request processing time.
+          example: "864"
+        serviceFacialExtractionResult:
+          type: string
+          description: |
+            JSON object representing facial detection and validation results.
+
+            | Field           | Type    | Description                                                                                                 |
+            | --------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
+            | `age`           | Integer | Indicates the possible detected age.                                                                        |
+            | `glasses`       | String  | Indicates glasses detection. Possible values: `Eye` (Eyeglasses), `None` (None), `Sun` (Sunglasses)        |
+            | `gender`        | String  | Returns the detected gender. Possible values: `Male`, `Female`, `None` (Undetermined)                      |
+            | `iod`           | Integer | Indicates the interpupillary distance.                                                                      |
+            | `faceConfidence`| Float   | Indicates the confidence level of the evaluated face.                                                       |
+          example: "{\"faceConfidence\":0.9999948143959045,\"age\":30,\"glasses\":\"None\",\"gender\":\"Male\",\"iod\":154}"
+        serviceTransactionId:
+          type: string
+          description: Transaction ID associated with the request processed by the API.
+          example: "b2f6297b-01ca-4aa3-afd7-6cb3c9d74141"
