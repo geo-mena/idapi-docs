@@ -568,7 +568,7 @@ export function generateIdentityV2Collection(): PostmanCollection {
     ],
     item: [
       {
-        name: "Identity V2 - Method 3 (Open Image)",
+        name: "Method 3 - Open Image + Best Image Token",
         request: {
           method: "POST",
           header: [
@@ -604,7 +604,7 @@ export function generateIdentityV2Collection(): PostmanCollection {
         }
       },
       {
-        name: "Identity V2 - Method 5 (Document Photo)",
+        name: "Method 5 - Token Face Image + Best Image Token",
         request: {
           method: "POST",
           header: [
