@@ -89,6 +89,34 @@ export const registry: Registry = {
           type: 'components',
           path: 'components/ai/page-actions.tsx',
         },
+        {
+          type: 'lib',
+          path: 'utils/ocr.ts',
+        },
+        {
+          type: 'lib',
+          path: 'utils/authentication.ts',
+        },
+        {
+          type: 'lib',
+          path: 'utils/onboarding.ts',
+        },
+        {
+          type: 'lib',
+          path: 'utils/morphology.ts',
+        },
+        {
+          type: 'lib',
+          path: 'utils/morphology-v2.ts',
+        },
+        {
+          type: 'lib',
+          path: 'utils/iad.ts',
+        },
+        {
+          type: 'lib',
+          path: 'utils/pad.ts',
+        },
       ],
     },
   ],
