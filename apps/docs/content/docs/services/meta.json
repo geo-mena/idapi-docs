@@ -19,6 +19,7 @@
     "---OCR---",
     "ocr/(generated)/extractDocumentDataWeb",
     "ocr/(generated)/extractDocumentData",
+    "ocr/(generated)/extractFacial",
     "---Morphology---",
     "morphology",
     "morphology-v2",
