@@ -11,7 +11,7 @@ This API allows the morphological validation process of identity documents.
 2. [Status](/docs/services/morphology/documentValidationStatus): The status of the operation is queried to see if it is possible to proceed to obtain the result of the operation. this query must be made n times until the analysis operation has been completed.
 3. [Data](/docs/services/morphology/documentValidationData): The results of the morphological analysis of the document are obtained.
 
-## Document Validation Status Values
+## Process Status
 
 The status endpoint returns one of the following values to indicate the current state of the validation process:
 
@@ -21,7 +21,7 @@ The status endpoint returns one of the following values to indicate the current 
 | **DONE** | Validation completed successfully. Execute the Document Validation Data service to retrieve the analysis results. |
 | **FAILED** | Validation process encountered an error and could not be completed. |
 
-## Document Status Results
+## Verification Results
 
 The `document.status` field in the Document Validation Data response indicates the verification result:
 
@@ -32,6 +32,52 @@ The `document.status` field in the Document Validation Data response indicates t
 | **DENIED_UNSUPPORTED_ID_TYPE** | Type is not supported by the validation system. |
 | **DENIED_UNSUPPORTED_ID_COUNTRY** | Country is not supported by the validation system. |
 | **ERROR_NOT_READABLE** | Could not be processed due to poor image quality or readability issues. |
+
+### Example Response
+
+```json
+{
+  "document": {
+    "dateOfBirthParts": {
+      "year": "1995",
+      "month": "10",
+      "day": "16"
+    },
+    "dob": "XXXX-10-16",
+    "expiry": "XXXX-10-16",
+    "expiryDateParts": {
+      "year": "XXXX",
+      "month": "XX",
+      "day": "XX"
+    },
+    "firstName": "XXX XXXXX",
+    "gender": null,
+    "idSubtype": null,
+    "issuingCountry": "CHL",
+    "lastName": "XXXX XXXXXX",
+    "nationality": null,
+    "number": "XXXXXXXXX",
+    "optionalData2": "XXXXXX K",
+    "status": "APPROVED_VERIFIED", // [!code highlight]
+    "type": "ID_CARD",
+    "issuingDate": null,
+    "issuingDateParts": null,
+    "issuingPlace": null,
+    "issuingAuthority": null
+  },
+  "transaction": {
+    "date": "2024-01-18T17:48:49.598029Z",
+    "merchantScanReference": "680f8ef8-3ff5-XXXXX-XXXX-97182d998dfb",
+    "source": "API",
+    "status": "DONE",
+    "updatedAt": "2024-01-18T17:49:15.310078Z"
+  },
+  "verification": {
+    "additionalChecks": null,
+    "mrzCheck": null
+  }
+}
+```
 
 View the Services API for document validation
 

@@ -105,7 +105,7 @@ paths:
       tags:
         - Morphology V2
       summary: Document Validation Status
-      description: Query the status of the morphological validation operation. Call this endpoint **repeatedly** until the analysis operation is completed. See [Document Validation Status Values](/docs/services/morphology#document-validation-status-values) for reference on the different status values.
+      description: Query the status of the morphological validation operation. Call this endpoint **repeatedly** until the analysis operation is completed. See [Process Status](/docs/services/morphology-v2#process-status) for reference on the different status values.
       operationId: documentValidationStatusV2
       requestBody:
         description: Status request with scan reference (v2)
@@ -448,7 +448,7 @@ components:
               example: "12df6045-3846-3e45-946a-14fa6136d79a"
             status:
               type: string
-              description: Status of the document validation process. See [Document Status and Codes Results](/docs/services/morphology-v2#document-status-and-codes-results) for reference on the different status values. 
+              description: Status of the document validation process. See [Verification Results](/docs/services/morphology-v2#verification-results) for reference on the different status values. 
               enum: ["Started", "Submitted", "Approved", "Declined", "Resubmission", "Expired/Abandoned", "Review"]
               example: "approved"
             reason:
