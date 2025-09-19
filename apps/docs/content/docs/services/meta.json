@@ -11,6 +11,7 @@
     "onboarding/(generated)/identityValidationV2",
     "onboarding/(generated)/authenticateFacial",
     "onboarding/(generated)/evaluatePassiveLivenessToken",
+    "onboarding/(generated)/evaluatePassiveLiveness",
     "---Authentication---",
     "authentication/(generated)/authenticateUser",
     "authentication/(generated)/authenticateUserV2",
