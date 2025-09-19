@@ -430,7 +430,7 @@ components:
               example: "2019-11-06T07:15:27.000Z"
             code:
               type: integer
-              description: Corresponding status code. See [Document Status and Code Results](/docs/services/morphology-v2#document-status-and-codes-results) for reference on the different codes values. 
+              description: Corresponding status code. See [Verification Results](/docs/services/morphology-v2#verification-results) for reference on the different codes values. 
               enum: [7001, 7002, 9001, 9102, 9103, 9104, 9121]
               example: 9001
             decisionTime:
