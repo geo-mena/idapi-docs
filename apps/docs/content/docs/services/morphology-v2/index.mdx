@@ -11,7 +11,7 @@ This API allows the morphological validation process of identity documents.
 2. [Status](/docs/services/morphology/documentValidationStatus): The status of the operation is queried to see if it is possible to proceed to obtain the result of the operation. this query must be made n times until the analysis operation has been completed.
 3. [Data](/docs/services/morphology/documentValidationData): The results of the morphological analysis of the document are obtained.
 
-## Document Validation Status Values
+## Process Status
 
 The status endpoint returns one of the following values to indicate the current state of the validation process:
 
@@ -21,9 +21,9 @@ The status endpoint returns one of the following values to indicate the current 
 | **DONE** | Validation completed successfully. Execute the Document Validation Data service to retrieve the analysis results. |
 | **FAILED** | Validation process encountered an error and could not be completed. |
 
-## Document Status and Codes Results
+## Verification Results
 
-The `document.status` field in the Document Validation Data response indicates the verification result:
+The `verification.status` field in the Document Validation Data response indicates the verification result:
 
 | Status | Code | Description |
 |---|---|---|
@@ -34,6 +34,46 @@ The `document.status` field in the Document Validation Data response indicates t
 | **Resubmission** | 9103 | Requires resubmission with corrections or additional information. |
 | **Expired/Abandoned** | 9104 | Validation process has expired or been abandoned. |
 | **Review** | 9121 | Under manual review for further verification. |
+
+### Example Response
+
+```json
+{
+  "status": "success",
+  "verification": {
+    "acceptanceTime": "2019-11-06T07:15:27.000Z",
+    "code": 9001, // [!code highlight]
+    "decisionTime": "2019-11-06T07:18:36.916Z",
+    "merchantScanReference": "12345678",
+    "scanReference": "12df6045-3846-3e45-946a-14fa6136d79a",
+    "status": "approved", // [!code highlight]
+    "reason": null,
+    "reasonCode": null,
+    "document": {
+      "type": "DRIVERS_LICENSE",
+      "country": "ESP",
+      "number": "PEREZ771116SM1AJ",
+      "validFrom": null,
+      "validUntil": "2024-04-20",
+      "placeOfIssue": "MADRID",
+      "firstIssue": "2015-03-21",
+      "issueNumber": "01",
+      "issuedBy": "ISSUER"
+    },
+    "person": {
+      "firstName": "MATIAS",
+      "lastName": "PEREZ",
+      "idNumber": null,
+      "citizenship": null,
+      "nationality": null,
+      "gender": null,
+      "dateOfBirth": "1973-03-30",
+      "yearOfBirth": "1973",
+      "placeOfBirth": "MADRID"
+    }
+  }
+}
+```
 
 View the Services API for document validation
 

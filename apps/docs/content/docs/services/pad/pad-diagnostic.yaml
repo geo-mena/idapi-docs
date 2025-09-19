@@ -60,7 +60,7 @@ paths:
           - **Spoof**: the document appears not to be genuine
           - **Error**: the validation process encountered an error
 
-        The result is provided in the decision field of the service response, along with the reason field specifying the cause for unsatisfactory validations. This API allows the morphological validation process of identity documents.
+        The result is provided in the **decision** field of the service response, along with the **reason** field specifying the cause for unsatisfactory validations. This API allows the morphological validation process of identity documents.
       operationId: documentPadDiagnostic
       requestBody:
         description: PAD diagnostic request with document images and metadata

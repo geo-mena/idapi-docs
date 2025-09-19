@@ -15,6 +15,7 @@ info:
     name: FacePhi Support
     email: support@facephi.com
 servers:
+  # - url: https://api.identity-platform.io
   - url: '{IDENTITY_API_BASE_URL}'
     description: Identity API Base URL
     variables:

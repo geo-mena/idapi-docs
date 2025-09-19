@@ -98,7 +98,7 @@ paths:
       tags:
         - Morphology V1
       summary: Document Validation Status
-      description: Query the status of the morphological validation operation. Call this endpoint **repeatedly** until the analysis operation is completed. See [Document Validation Status Values](/docs/services/morphology#document-validation-status-values) for reference on the different status values.
+      description: Query the status of the morphological validation operation. Call this endpoint **repeatedly** until the analysis operation is completed. See [Process Status](/docs/services/morphology#process-status) for reference on the different status values.
       operationId: documentValidationStatus
       requestBody:
         description: Status request with scan reference
@@ -476,7 +476,7 @@ components:
               description: Additional optional data field
             status:
               type: string
-              description: Document verification status. See [Document Status Results](/docs/services/morphology#document-status-results) for reference on the different status values. 
+              description: Document verification status. See [Verification Results](/docs/services/morphology#verification-results) for reference on the different status values. 
               enum: ["APPROVED_VERIFIED", "DENIED_FRAUD", "DENIED_UNSUPPORTED_ID_TYPE", "DENIED_UNSUPPORTED_ID_COUNTRY", "ERROR_NOT_READABLE"]
             type:
               type: string
