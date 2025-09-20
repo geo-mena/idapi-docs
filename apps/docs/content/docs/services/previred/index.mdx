@@ -31,6 +31,14 @@ sequenceDiagram
     Note over IV: Biometric validation<br/>Liveness detection<br/>Face comparison
     IV-->>U: serviceTransactionId + results
 
+    U->>DV: POST /verify/documentValidation/v2/status
+    Note over DV: Check processing status
+    DV-->>U: status (DONE)
+
+    U->>DV: POST /verify/documentValidation/v2/data
+    Note over DV: Retrieve extracted data<br/>from document
+    DV-->>U: document data + transaction info
+
     U->>PV: POST /services/previred
     Note over PV: Process with Previred<br/>Generate evidence
     PV-->>U: transactionId + hash
@@ -65,7 +73,7 @@ This service performs morphological validation of the identity document:
 - `country`: Document country (e.g., "CHL")
 - `idType`: Document type ("ID_CARD", "RESIDENCE_PERMIT", etc.)
 - `documentFrontRawImage`: Base64 encoded open or tokenized image of ID front side
-- `documentBackRawImage`: Base64 encoded open or tokenized image of ID back side.
+- `documentBackRawImage`: Base64 encoded open or tokenized image of ID back side
 
 ### 2. Identity Validation V2
 
@@ -82,6 +90,10 @@ This service performs biometric identity validation:
 - `token1`: Reference image (from document or Base64)
 - `bestImageToken`: Tokenized image token from Selphi widget
 - `method`: Comparison method ("3" or "5")
+- `tracking`: Optional tracking object with `extraData` and `operationId`
+
+**Optional headers:**
+- `family`: Customer family identifier. Required value **"OnBoarding"** when using tracking fields
 
 ### 3. Previred Services
 
@@ -104,13 +116,14 @@ This final service integrates with Previred using the previous results:
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
 --header 'x-api-key: {API_KEY}' \
+--header 'family: {FAMILY}' \
 --header 'Content-Type: application/json' \
 --data '{
     "country": "CHL",
     "idType": "ID_CARD",
     "documentRawImageMimeType": "image/jpeg",
     "documentFrontRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE...",
-    "documentBackRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE..."
+    "documentBackRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE...",
     "merchantIdScanReference": "custom-ref-123"
 }'
 ```
@@ -130,11 +143,16 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
 --header 'x-api-key: {API_KEY}' \
+--header 'family: OnBoarding' \
 --header 'Content-Type: application/json' \
 --data '{
     "token1": "/9j/4AAQSkZJRgABAQAASAB...",
     "bestImageToken": "BAMBAQLNHJoWGPj...",
-    "method": "3"
+    "method": "3",
+    "tracking": {
+        "extraData": "{extraData}",
+        "operationId": "{operationId}"
+    }
 }'
 ```
 
@@ -154,7 +172,92 @@ curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
 }
 ```
 
-### Step 3: Create Previred Transaction
+### Step 3: Check Document Validation Status
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/status' \
+--header 'x-api-key: {API_KEY}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+    "type": "1"
+}'
+```
+
+**Response:**
+
+```json
+{
+  "timestamp": "2025-04-29T15:07:39Z",
+  "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+  "status": "DONE"
+}
+```
+
+### Step 4: Get Document Validation Data
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/data' \
+--header 'x-api-key: {API_KEY}' \
+--header 'family: OnBoarding' \
+--header 'Content-Type: application/json' \
+--data '{
+    "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+    "type": "1",
+    "tracking": {
+        "extraData": "{extraData}",
+        "operationId": "{operationId}"
+    }
+}'
+```
+
+**Response:**
+
+```json
+{
+  "document": {
+    "dateOfBirthParts": {
+      "year": "1989",
+      "month": "06",
+      "day": "22"
+    },
+    "dob": "1989-06-22",
+    "expiry": "2029-06-22",
+    "expiryDateParts": {
+      "year": "2029",
+      "month": "06",
+      "day": "22"
+    },
+    "firstName": "JUAN PABLO",
+    "gender": null,
+    "idSubtype": null,
+    "issuingCountry": "CHL",
+    "lastName": "TORRES IRIARTE",
+    "nationality": null,
+    "number": "516048876",
+    "optionalData2": "17088942 8",
+    "status": "APPROVED_VERIFIED",
+    "type": "ID_CARD",
+    "issuingDate": null,
+    "issuingDateParts": null,
+    "issuingPlace": null,
+    "issuingAuthority": null
+  },
+  "transaction": {
+    "date": "2025-04-29T15:04:29.889679Z",
+    "merchantScanReference": "custom-ref-123",
+    "source": "API",
+    "status": "DONE",
+    "updatedAt": "2025-04-29T15:04:38.036799Z"
+  },
+  "verification": {
+    "additionalChecks": null,
+    "mrzCheck": null
+  }
+}
+```
+
+### Step 5: Create Previred Transaction
 
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
@@ -179,7 +282,7 @@ curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
 }
 ```
 
-### Step 4: Get TVI Token
+### Step 6: Get TVI Token
 
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/services/previred/0fec0e8d-3ef3-477f-ae9e-e350cda74b33' \
@@ -222,6 +325,7 @@ If a callback URL's specified, a notification will be sent when the process fini
 3. **Timeouts**: Processes can take several seconds
 4. **Callbacks**: Recommended for async processes
 5. **Security**: All calls require a valid API key
+6. **Tracking fields**: When using `tracking` object with `extraData` and `operationId`, the `family` header must be set to "OnBoarding"
 
 ## Related Links
 
