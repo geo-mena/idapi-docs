@@ -39,8 +39,8 @@ paths:
         **Prerequisites**
 
         Before calling this service, you must have:
-        - A valid `identityTransactionId` from calling `/v2/identity`
-        - A valid `documentValidationScanReference` from calling `/verify/documentValidation/v2/start`
+        - A valid `serviceTransactionId` from calling [`/onboarding/v2/identity`](/docs/services/onboarding/identityValidationV2)
+        - A valid `scanReference` from calling [`/verify/documentValidation/v2/start`](/docs/services/morphology-v2/documentValidationStartV2)
       operationId: createPreviredTransaction
       requestBody:
         description: Transaction creation request with customer and verification data
