@@ -1,0 +1,215 @@
+---
+title: Previred Integration (Chile)
+index: true
+---
+
+This API allows you to perform the integration flow with Previred.
+
+The supported operations are:
+
+* **Create Transaction:** performs the complete flow and returns the corresponding identifier.
+* **Get Token:** returns the token associated with an identifier.
+
+## Integration Flow
+
+Previred integration requires completing several steps that involve different platform services:
+
+<Mermaid
+  chart="
+sequenceDiagram
+    participant U as User/Client
+    participant DV as Document Validation API
+    participant IV as Identity Validation API
+    participant PV as Previred API
+    participant CB as Callback URL
+
+    U->>DV: POST /verify/documentValidation/v2/start
+    Note over DV: Validate document images<br/>Extract document data
+    DV-->>U: scanReference + validation result
+
+    U->>IV: POST /onboarding/v2/identity
+    Note over IV: Biometric validation<br/>Liveness detection<br/>Face comparison
+    IV-->>U: serviceTransactionId + results
+
+    U->>PV: POST /services/previred
+    Note over PV: Process with Previred<br/>Generate evidence
+    PV-->>U: transactionId + hash
+
+    alt Callback URL provided
+        PV->>CB: POST callback notification
+        Note over CB: Transaction status<br/>(succeeded/failed)
+    end
+
+    U->>PV: GET /services/previred/{transactionId}
+    Note over PV: Retrieve token and<br/>download URL
+    PV-->>U: TVI token + PDF URL
+"
+/>
+
+## Dependent Services
+
+### 1. Document Validation (Morphology V2)
+
+**Endpoint:** `/verify/documentValidation/v2/start`
+
+This service performs morphological validation of the identity document:
+
+- Analyzes front and back document images
+- Validates document authenticity
+- Extracts document data
+- Generates a `scanReference` required for Previred
+
+**Required fields:**
+- `country`: Document country (e.g., "ESP")
+- `idType`: Document type ("ID_CARD", "RESIDENCE_PERMIT", etc.)
+- `documentFrontRawImage`: Base64 front image
+- `documentBackRawImage`: Base64 back image
+
+### 2. Identity Validation V2 (Onboarding)
+
+**Endpoint:** `/onboarding/v2/identity`
+
+This service performs biometric identity validation:
+
+- Compares document photo with user's selfie
+- Performs liveness detection
+- Generates a `serviceTransactionId` required for Previred
+
+**Required fields:**
+- `token1`: Reference image (from document or Base64)
+- `bestImageToken`: Tokenized image token from Selphi widget
+- `method`: Comparison method ("3" or "5")
+
+### 3. Previred Services
+
+**Endpoint:** `/services/previred`
+
+This final service integrates with Previred using the previous results:
+
+**Required fields:**
+- `customerId`: Customer ID
+- `identityTransactionId`: Identity step ID
+- `documentValidationScanReference`: Validation step reference
+- `ipVerified`: IP where verification was performed
+- `callbackUrl`: Callback URL (optional)
+
+## Detailed Flow
+
+### Step 1: Document Validation
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
+--header 'x-api-key: {API_KEY}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "country": "CHL",
+    "idType": "ID_CARD",
+    "documentRawImageMimeType": "image/jpeg",
+    "documentFrontRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE...",
+    "documentBackRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE..."
+}'
+```
+
+**Response:**
+```json
+{
+    "timestamp": "1970-01-01T00:00:00.000Z",
+    "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+    "type": "1"
+}
+```
+
+### Step 2: Biometric Identity Validation
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
+--header 'x-api-key: {API_KEY}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "token1": "/9j/4AAQSkZJRgABAQAASAB...",
+    "bestImageToken": "BAMBAQLNHJoWGPj...",
+    "method": "3"
+}'
+```
+
+**Response:**
+```json
+{
+    "serviceTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d",
+    "serviceResultCode": 0,
+    "facialAuthenticationResult": 3,
+    "passiveLivenessResult": 3
+}
+```
+
+### Step 3: Create Previred Transaction
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
+--header 'x-api-key: {API_KEY}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "customerId": "{CUSTOMER_ID}",
+    "identityTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d",
+    "documentValidationScanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+    "ipVerified": "{IP_VERIFIED}",
+    "callbackUrl": "{CALLBACK_URL}"
+}'
+```
+
+**Response:**
+```json
+{
+    "timestamp": 1709708084,
+    "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+    "hash": "61cf9b68412783c57dd5a9b0ca702a0902d81054"
+}
+```
+
+### Step 4: Get TVI Token
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/services/previred/0fec0e8d-3ef3-477f-ae9e-e350cda74b33' \
+--header 'x-api-key: {API_KEY}'
+```
+
+**Response:**
+```json
+{
+    "timestamp": 1709708084,
+    "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+    "token": "VI19:yCQAnOEPolfgPg5rSG8Px1Ism2DMKgyaWc1pqvYsz5vTx1E7nEAfh1oOrOa59...",
+    "url": "https://api.identity-platform.io/services/custody/download?token=eyJhbG..."
+}
+```
+
+## Callback Event
+
+If a callback URL's specified, a notification will be sent when the process finishes:
+
+```json
+{
+    "timestamp": 1709708084,
+    "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+    "statusCode": 200,
+    "status": "succeeded"
+}
+```
+
+**Possible states:**
+- `succeeded`: Successful process
+- `failed`: Failed process
+
+## Important Considerations
+
+1. **Sequential order**: Services must be called in the specified order
+2. **Error handling**: Each step can fail independently
+3. **Timeouts**: Processes can take several seconds
+4. **Callbacks**: Recommended for async processes
+5. **Security**: All calls require a valid API key
+
+## Related Links
+
+- [Morphology V2 API](/docs/services/morphology-v2) - Document validation
+- [Onboarding API](/docs/services/onboarding) - Biometric validation
+- [Previred API](/docs/services/previred/previred) - OpenAPI specification
