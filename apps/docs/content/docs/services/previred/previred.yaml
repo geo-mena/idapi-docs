@@ -1,0 +1,329 @@
+openapi: 3.1.1
+info:
+  title: Previred Services API
+  description: |
+    The Previred Services API provides integration with Previred (Chile) for identity verification and document validation workflows.
+
+    ## Features
+
+    * **Create Transaction**: Performs the complete integration flow and returns the corresponding identifier
+    * **Get Token**: Returns the token associated with an identifier
+    * **Callback Events**: Optional callback notifications when transactions complete
+
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: Previred
+    description: Integration services for Previred (Chile)
+paths:
+  '/services/previred':
+    post:
+      tags:
+        - Previred
+      summary: Create Transaction
+      description: |
+        Initiates the complete Previred integration flow and returns a transaction identifier.
+
+        This service performs the entire integration workflow with Previred and provides a transaction ID that can be used to retrieve the generated token and evidence documents.
+
+        **Prerequisites**
+
+        Before calling this service, you must have:
+        - A valid `serviceTransactionId` from calling [`/onboarding/v2/identity`](/docs/services/onboarding/identityValidationV2)
+        - A valid `scanReference` from calling [`/verify/documentValidation/v2/start`](/docs/services/morphology-v2/documentValidationStartV2)
+      operationId: createPreviredTransaction
+      requestBody:
+        description: Transaction creation request with customer and verification data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreviredCreateRequest'
+            example:
+              customerId: "customer_123"
+              identityTransactionId: "2db602ee-3564-4304-af95-92a52eaae12d"
+              documentValidationScanReference: "doc_scan_456"
+              ipVerified: "192.168.1.100"
+              callbackUrl: "https://example.com/callback"
+      responses:
+        '200':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviredCreateResponse'
+              example:
+                timestamp: 1709708084
+                transactionId: "0fec0e8d-3ef3-477f-ae9e-e350cda74b33"
+                hash: "61cf9b68412783c57dd5a9b0ca702a0902d81054"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadGatewayError'
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayTimeoutError'
+      security:
+        - apiKey: []
+  '/services/previred/{transactionId}':
+    get:
+      tags:
+        - Previred
+      summary: Get Token
+      description: |
+        Retrieves the authentication token and download URL for a completed Previred transaction.
+
+        This endpoint returns the TVI authentication token and a URL to download the PDF evidence document generated during the verification process.
+      operationId: getPreviredToken
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          description: Transaction ID returned by the create transaction endpoint
+          schema:
+            type: string
+            example: "0fec0e8d-3ef3-477f-ae9e-e350cda74b33"
+      responses:
+        '200':
+          description: Token retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviredTokenResponse'
+              example:
+                timestamp: 1709708084
+                transactionId: "0fec0e8d-3ef3-477f-ae9e-e350cda74b33"
+                token: "VI19:yCQAnOEPolfgPg5rSG8Px1Ism2DMKgyaWc1pqvYsz5vTx1E7nEAfh1oOrOa59..."
+                url: "https://api.identity-platform.io/services/custody/download?token=eyJhbG..."
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadGatewayError'
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayTimeoutError'
+      security:
+        - apiKey: []
+
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API access authorization
+  schemas:
+    BadRequestError:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        title:
+          type: string
+          example: "Bad Request"
+        detail:
+          type: string
+          example: "Invalid request."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+        errors:
+          type: array
+          example: []
+    UnauthorizedError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Unauthorized"
+    ForbiddenError:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: "User is not authorized to access this resource with an explicit deny"
+    NotFoundError:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 404
+        title:
+          type: string
+          example: "Not Found"
+        detail:
+          type: string
+          example: "Transaction not found."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+    BadGatewayError:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 502
+        title:
+          type: string
+          example: "Bad Gateway"
+        detail:
+          type: string
+          example: "Server got an invalid response."
+        type:
+          type: string
+          example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    GatewayTimeoutError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Endpoint request timed out"
+    PreviredCreateRequest:
+      type: object
+      required:
+        - customerId
+        - identityTransactionId
+        - documentValidationScanReference
+        - ipVerified
+      properties:
+        customerId:
+          type: string
+          description: Customer ID assigned to the institution making the request
+          example: "customer_123"
+        identityTransactionId:
+          type: string
+          description: Identifier returned from calling `/v2/identity`
+          example: "2db602ee-3564-4304-af95-92a52eaae12d"
+        documentValidationScanReference:
+          type: string
+          description: Identifier returned from calling `/verify/documentValidation/v2/start`
+          example: "doc_scan_456"
+        ipVerified:
+          type: string
+          description: IP address of the identity verification endpoint
+          example: "192.168.1.100"
+        callbackUrl:
+          type: string
+          description: Optional callback URL for transaction completion notifications
+          example: "https://example.com/callback"
+    PreviredCreateResponse:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          description: Unix timestamp of the response in seconds
+          example: 1709708084
+        transactionId:
+          type: string
+          description: Transaction ID linked to the evidence generation process
+          example: "0fec0e8d-3ef3-477f-ae9e-e350cda74b33"
+        hash:
+          type: string
+          description: Control string for the message received by the service (informational data)
+          example: "61cf9b68412783c57dd5a9b0ca702a0902d81054"
+    PreviredTokenResponse:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          description: Unix timestamp of the response in seconds
+          example: 1709708084
+        transactionId:
+          type: string
+          description: Transaction ID linked to the evidence generation process
+          example: "0fec0e8d-3ef3-477f-ae9e-e350cda74b33"
+        token:
+          type: string
+          description: TVI authentication token
+          example: "VI19:yCQAnOEPolfgPg5rSG8Px1Ism2DMKgyaWc1pqvYsz5vTx1E7nEAfh1oOrOa59..."
+        url:
+          type: string
+          description: URL to download the PDF verification evidence document
+          example: "https://api.identity-platform.io/services/custody/download?token=eyJhbG..."
+    PreviredCallbackEvent:
+      type: object
+      description: |
+        Callback event sent to the specified callback URL when a transaction completes.
+
+        This event is sent as a POST request with `Content-Type: application/json` to the callback URL provided during transaction creation.
+      properties:
+        timestamp:
+          type: integer
+          description: Unix timestamp of the response in seconds
+          example: 1709708084
+        transactionId:
+          type: string
+          description: Transaction ID linked to the evidence generation process
+          example: "0fec0e8d-3ef3-477f-ae9e-e350cda74b33"
+        statusCode:
+          type: integer
+          description: HTTP status code indicating the result
+          example: 200
+        status:
+          type: string
+          description: Final transaction status
+          enum: ["succeeded", "failed"]
+          example: "succeeded"
