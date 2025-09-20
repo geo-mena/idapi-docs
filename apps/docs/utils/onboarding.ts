@@ -34,6 +34,7 @@ export interface PostmanCollection {
 
 export const SUPPORTED_ONBOARDING_SERVICES = {
   '/docs/services/onboarding/evaluatePassiveLivenessToken': 'evaluatePassiveLivenessToken',
+  '/docs/services/onboarding/evaluatePassiveLiveness': 'evaluatePassiveLiveness',
   '/docs/services/onboarding/authenticateFacial': 'authenticateFacial',
   '/docs/services/tracking/finishTracking': 'finishTracking',
   '/docs/services/onboarding/identityValidationV2': 'identityV2',
@@ -119,6 +120,65 @@ export function generateEvaluatePassiveLivenessTokenCollection(): PostmanCollect
             path: ["services", "evaluatePassiveLivenessToken"]
           },
           description: "Performs liveness validation using tokenized image from Selphi widget. Requires Selphi Mobile widget or Selphi Web widget integration."
+        }
+      }
+    ]
+  };
+}
+
+export function generateEvaluatePassiveLivenessCollection(): PostmanCollection {
+  return {
+    info: {
+      name: "IDAPI: Evaluate Passive Liveness",
+      description: "This service performs a liveness test using the provided selfie image of the user.",
+      schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    variable: [
+      {
+        key: "baseUrl",
+        value: "{{IDENTITY_API_BASE_URL}}",
+        type: "string"
+      },
+      {
+        key: "apiKey",
+        value: "{{API_KEY}}",
+        type: "string"
+      },
+      {
+        key: "imageBuffer",
+        value: "{{IMAGE_BUFFER_BASE64}}",
+        type: "string"
+      }
+    ],
+    item: [
+      {
+        name: "Evaluate Passive Liveness",
+        request: {
+          method: "POST",
+          header: [
+            {
+              key: "x-api-key",
+              value: "{{apiKey}}",
+              type: "text"
+            },
+            {
+              key: "Content-Type",
+              value: "application/json",
+              type: "text"
+            }
+          ],
+          body: {
+            mode: "raw",
+            raw: JSON.stringify({
+              imageBuffer: "{{imageBuffer}}"
+            }, null, 2)
+          },
+          url: {
+            raw: "{{baseUrl}}/services/evaluatePassiveLiveness",
+            host: ["{{baseUrl}}"],
+            path: ["services", "evaluatePassiveLiveness"]
+          },
+          description: "Performs liveness validation using Base64 encoded selfie image. No widget integration required."
         }
       }
     ]
@@ -647,6 +707,8 @@ export function generateOnboardingPostmanCollection(serviceName: string): Postma
   switch (serviceName) {
     case 'evaluatePassiveLivenessToken':
       return generateEvaluatePassiveLivenessTokenCollection();
+    case 'evaluatePassiveLiveness':
+      return generateEvaluatePassiveLivenessCollection();
     case 'authenticateFacial':
       return generateAuthenticateFacialCollection();
     case 'finishTracking':

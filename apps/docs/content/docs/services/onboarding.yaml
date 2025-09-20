@@ -7,7 +7,7 @@ info:
     ## Features
     
     * **Facial Authentication**: Compare faces between images or templates
-    * **Passive Liveness Detection**: Verify if a selfie image shows a live person
+    * **Passive Liveness Detection**: Verify if a selfie image shows a live person using tokenized or standard Base64 images
     * **Real-time Processing**: Fast response times for critical applications
     
   version: 1.0.0
@@ -278,6 +278,80 @@ paths:
                 $ref: '#/components/schemas/GatewayTimeoutError'
       security:
         - apiKey: []
+
+  '/services/evaluatePassiveLiveness':
+    post:
+      tags:
+        - Onboarding
+      summary: Evaluate Passive Liveness
+      description: This service performs a liveness test using the provided selfie image of the user.
+      operationId: evaluatePassiveLiveness
+      requestBody:
+        description: Base64 encoded selfie image for liveness evaluation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassiveLivenessRequest'
+            example:
+              imageBuffer: "iVBORw0KGgoAAAANSUhEUgAAAAE..."
+      responses:
+        '200':
+          description: Successfully processed liveness evaluation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassiveLivenessResponse'
+              examples:
+                Live:
+                  summary: Live Result
+                  value:
+                    serviceResultCode: 0
+                    serviceResultLog: "Live"
+                    serviceTime: "799"
+                    serviceTransactionId: "35d93da8-b843-4033-8e78-c0aabedcef8b"
+                    serviceLivenessResult: 3
+                NoLive:
+                  summary: No Live Result
+                  value:
+                    serviceResultCode: 0
+                    serviceResultLog: "NoLive"
+                    serviceTime: "81"
+                    serviceTransactionId: "3f332c81-3dfa-4952-b593-20e3b5651b5b"
+                    serviceLivenessResult: 0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadGatewayError'
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayTimeoutError'
+      security:
+        - apiKey: []
+
 components:
   securitySchemes:
     apiKey:
@@ -349,6 +423,16 @@ components:
           example: "BAMBAQLNHJoWGPjfeuDIzDXdZuP..."
         tracking:
           $ref: '#/components/schemas/TrackingInfo'
+    PassiveLivenessRequest:
+      type: object
+      required:
+        - imageBuffer
+      properties:
+        imageBuffer:
+          type: string
+          format: byte
+          description: Base64 encoded image of the user's face. Supported formats are JPEG and PNG.
+          example: "iVBORw0KGgoAAAANSUhEUgAAAAE..."
     TrackingInfo:
       type: object
       description: Object that represents necessary tracking information.
