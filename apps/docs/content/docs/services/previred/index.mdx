@@ -57,7 +57,7 @@ sequenceDiagram
 
 ## Detailed Flow
 
-### 1. Document Validation V2
+### 1. Start Document Validation
 
 **Endpoint:** `/verify/documentValidation/v2/start`
 
@@ -73,7 +73,6 @@ This service performs morphological validation of the identity document:
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
 --header 'x-api-key: {API_KEY}' \
---header 'family: {FAMILY}' \
 --header 'Content-Type: application/json' \
 --data '{
     "country": "CHL",
@@ -90,7 +89,7 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
 ```json
 {
   "timestamp": "1970-01-01T00:00:00.000Z",
-  "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+  "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064", // [!code highlight]
   "type": "1"
 }
 ```
@@ -129,7 +128,7 @@ curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
 
 ```json
 {
-  "serviceTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d",
+  "serviceTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d", // [!code highlight]
   "serviceResultCode": 0,
   "serviceResultLog": "[identity] Service executed ok",
   "serviceTime": "2235",
