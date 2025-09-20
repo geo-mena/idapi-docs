@@ -59,7 +59,7 @@ sequenceDiagram
 
 ### 1. Start Document Validation
 
-**Endpoint:** `/verify/documentValidation/v2/start`
+**Endpoint:** [`/verify/documentValidation/v2/start`](/docs/services/morphology-v2/documentValidationStartV2)
 
 This service performs morphological validation of the identity document:
 
@@ -96,7 +96,7 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
 
 ### 2. Identity Validation V2
 
-**Endpoint:** `/onboarding/v2/identity`
+**Endpoint:** [`/onboarding/v2/identity`](/docs/services/onboarding/identityValidationV2)
 
 This service performs biometric identity validation:
 
@@ -142,7 +142,7 @@ curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
 
 ### 3. Check Document Validation Status
 
-**Endpoint:** `/verify/documentValidation/v2/status`
+**Endpoint:** [`/verify/documentValidation/v2/status`](/docs/services/morphology-v2/documentValidationStatusV2)
 
 This service checks the processing status of the document validation:
 
@@ -173,7 +173,7 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/status' \
 
 ### 4. Get Document Validation Data
 
-**Endpoint:** `/verify/documentValidation/v2/data`
+**Endpoint:** [`/verify/documentValidation/v2/data`](/docs/services/morphology-v2/documentValidationDataV2)
 
 This service retrieves the extracted data from the validated document:
 
@@ -241,7 +241,7 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/data' \
 
 ### 5. Create Previred Transaction
 
-**Endpoint:** `/services/previred`
+**Endpoint:** [`/services/previred`](/docs/services/previred/createPreviredTransaction)
 
 This service integrates with Previred using the previous results:
 
@@ -278,7 +278,7 @@ curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
 
 ### 6. Get TVI Token
 
-**Endpoint:** `/services/previred/{transactionId}`
+**Endpoint:** [`/services/previred/{transactionId}`](/docs/services/previred/getPreviredToken)
 
 This service retrieves the final Previred token and download URL:
 
