@@ -259,8 +259,8 @@ curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
 --header 'Content-Type: application/json' \
 --data '{
     "customerId": "{CUSTOMER_ID}",
-    "identityTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d",
-    "documentValidationScanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+    "identityTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d", // [!code ++]
+    "documentValidationScanReference": "fe294c25-17e1-4d98-a958-710edbf00064", // [!code ++]
     "ipVerified": "{IP_VERIFIED}",
     "callbackUrl": "{CALLBACK_URL}"
 }'
@@ -271,7 +271,7 @@ curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
 ```json
 {
   "timestamp": 1709708084,
-  "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+  "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33", // [!code highlight]
   "hash": "61cf9b68412783c57dd5a9b0ca702a0902d81054"
 }
 ```
