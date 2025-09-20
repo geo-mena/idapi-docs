@@ -55,7 +55,7 @@ sequenceDiagram
 "
 />
 
-## Dependent Services
+## Detailed Flow
 
 ### 1. Document Validation V2
 
@@ -68,50 +68,7 @@ This service performs morphological validation of the identity document:
 - Extracts document data
 - Generates a `scanReference` required for Previred
 
-**Required fields:**
-
-- `country`: Document country (e.g., "CHL")
-- `idType`: Document type ("ID_CARD", "RESIDENCE_PERMIT", etc.)
-- `documentFrontRawImage`: Base64 encoded open or tokenized image of ID front side
-- `documentBackRawImage`: Base64 encoded open or tokenized image of ID back side
-
-### 2. Identity Validation V2
-
-**Endpoint:** `/onboarding/v2/identity`
-
-This service performs biometric identity validation:
-
-- Compares document photo with user's selfie
-- Performs liveness detection
-- Generates a `serviceTransactionId` required for Previred
-
-**Required fields:**
-
-- `token1`: Reference image (from document or Base64)
-- `bestImageToken`: Tokenized image token from Selphi widget
-- `method`: Comparison method ("3" or "5")
-- `tracking`: Optional tracking object with `extraData` and `operationId`
-
-**Optional headers:**
-- `family`: Customer family identifier. Required value **"OnBoarding"** when using tracking fields
-
-### 3. Previred Services
-
-**Endpoint:** `/services/previred`
-
-This final service integrates with Previred using the previous results:
-
-**Required fields:**
-
-- `customerId`: Customer ID
-- `identityTransactionId`: Identity step ID
-- `documentValidationScanReference`: Validation step reference
-- `ipVerified`: IP where verification was performed
-- `callbackUrl`: Callback URL (optional)
-
-## Detailed Flow
-
-### Step 1: Document Validation
+**Required fields:** `country`, `idType`, `documentFrontRawImage`, `documentBackRawImage`
 
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
@@ -138,7 +95,19 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
 }
 ```
 
-### Step 2: Biometric Identity Validation
+### 2. Identity Validation V2
+
+**Endpoint:** `/onboarding/v2/identity`
+
+This service performs biometric identity validation:
+
+- Compares document photo with user's selfie
+- Performs liveness detection
+- Generates a `serviceTransactionId` required for Previred
+
+**Required fields:** `token1`, `bestImageToken`, `method`, `tracking`
+
+**Optional headers:** `family: "OnBoarding"` when using tracking fields
 
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
@@ -172,7 +141,16 @@ curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
 }
 ```
 
-### Step 3: Check Document Validation Status
+### 3. Check Document Validation Status
+
+**Endpoint:** `/verify/documentValidation/v2/status`
+
+This service checks the processing status of the document validation:
+
+- Verifies if document processing is complete
+- Must return "DONE" status before proceeding to data extraction
+
+**Required fields:** `scanReference`, `type`
 
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/status' \
@@ -194,20 +172,25 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/status' \
 }
 ```
 
-### Step 4: Get Document Validation Data
+### 4. Get Document Validation Data
+
+**Endpoint:** `/verify/documentValidation/v2/data`
+
+This service retrieves the extracted data from the validated document:
+
+- Returns document information (name, ID number, dates, etc.)
+- Provides transaction details
+- Required for complete document validation process
+
+**Required fields:** `scanReference`, `type`
 
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/data' \
 --header 'x-api-key: {API_KEY}' \
---header 'family: OnBoarding' \
 --header 'Content-Type: application/json' \
 --data '{
     "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
     "type": "1",
-    "tracking": {
-        "extraData": "{extraData}",
-        "operationId": "{operationId}"
-    }
 }'
 ```
 
@@ -257,7 +240,19 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/data' \
 }
 ```
 
-### Step 5: Create Previred Transaction
+### 5. Create Previred Transaction
+
+**Endpoint:** `/services/previred`
+
+This service integrates with Previred using the previous results:
+
+- Processes all validation data with Previred
+- Generates evidence and compliance documentation
+- Returns transaction ID for token retrieval
+
+**Required fields:** `customerId`, `identityTransactionId`, `documentValidationScanReference`, `ipVerified`
+
+**Optional fields:** `callbackUrl`
 
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
@@ -282,7 +277,17 @@ curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
 }
 ```
 
-### Step 6: Get TVI Token
+### 6. Get TVI Token
+
+**Endpoint:** `/services/previred/{transactionId}`
+
+This service retrieves the final Previred token and download URL:
+
+- Returns the TVI token for compliance verification
+- Provides PDF download URL with evidence documentation
+- Completes the Previred integration process
+
+**Required:** Transaction ID from previous step
 
 ```bash
 curl --location '{IDENTITY_API_BASE_URL}/services/previred/0fec0e8d-3ef3-477f-ae9e-e350cda74b33' \
