@@ -62,10 +62,10 @@ This service performs morphological validation of the identity document:
 
 **Required fields:**
 
-- `country`: Document country (e.g., "ESP")
+- `country`: Document country (e.g., "CHL")
 - `idType`: Document type ("ID_CARD", "RESIDENCE_PERMIT", etc.)
-- `documentFrontRawImage`: Base64 front image
-- `documentBackRawImage`: Base64 back image
+- `documentFrontRawImage`: Base64 encoded open or tokenized image of ID front side
+- `documentBackRawImage`: Base64 encoded open or tokenized image of ID back side.
 
 ### 2. Identity Validation V2
 
