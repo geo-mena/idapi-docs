@@ -7,8 +7,8 @@ This API allows you to perform the integration flow with Previred.
 
 The supported operations are:
 
-* **Create Transaction:** performs the complete flow and returns the corresponding identifier.
-* **Get Token:** returns the token associated with an identifier.
+- [Create Transaction:](/docs/services/previred/createPreviredTransaction) performs the complete flow and returns the corresponding identifier.
+- [Get Token:](/docs/services/previred/getPreviredToken) returns the token associated with an identifier.
 
 ## Integration Flow
 
@@ -43,12 +43,13 @@ sequenceDiagram
     U->>PV: GET /services/previred/{transactionId}
     Note over PV: Retrieve token and<br/>download URL
     PV-->>U: TVI token + PDF URL
+
 "
 />
 
 ## Dependent Services
 
-### 1. Document Validation (Morphology V2)
+### 1. Document Validation V2
 
 **Endpoint:** `/verify/documentValidation/v2/start`
 
@@ -60,12 +61,13 @@ This service performs morphological validation of the identity document:
 - Generates a `scanReference` required for Previred
 
 **Required fields:**
+
 - `country`: Document country (e.g., "ESP")
 - `idType`: Document type ("ID_CARD", "RESIDENCE_PERMIT", etc.)
 - `documentFrontRawImage`: Base64 front image
 - `documentBackRawImage`: Base64 back image
 
-### 2. Identity Validation V2 (Onboarding)
+### 2. Identity Validation V2
 
 **Endpoint:** `/onboarding/v2/identity`
 
@@ -76,6 +78,7 @@ This service performs biometric identity validation:
 - Generates a `serviceTransactionId` required for Previred
 
 **Required fields:**
+
 - `token1`: Reference image (from document or Base64)
 - `bestImageToken`: Tokenized image token from Selphi widget
 - `method`: Comparison method ("3" or "5")
@@ -87,6 +90,7 @@ This service performs biometric identity validation:
 This final service integrates with Previred using the previous results:
 
 **Required fields:**
+
 - `customerId`: Customer ID
 - `identityTransactionId`: Identity step ID
 - `documentValidationScanReference`: Validation step reference
@@ -107,15 +111,17 @@ curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
     "documentRawImageMimeType": "image/jpeg",
     "documentFrontRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE...",
     "documentBackRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE..."
+    "merchantIdScanReference": "custom-ref-123"
 }'
 ```
 
 **Response:**
+
 ```json
 {
-    "timestamp": "1970-01-01T00:00:00.000Z",
-    "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
-    "type": "1"
+  "timestamp": "1970-01-01T00:00:00.000Z",
+  "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+  "type": "1"
 }
 ```
 
@@ -133,12 +139,18 @@ curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
 ```
 
 **Response:**
+
 ```json
 {
-    "serviceTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d",
-    "serviceResultCode": 0,
-    "facialAuthenticationResult": 3,
-    "passiveLivenessResult": 3
+  "serviceTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d",
+  "serviceResultCode": 0,
+  "serviceResultLog": "[identity] Service executed ok",
+  "serviceTime": "2235",
+  "facialAuthenticationResult": 3,
+  "facialAuthenticationLog": "Positive",
+  "facialAuthenticationSimilarity": 0.99214232,
+  "passiveLivenessResult": 3,
+  "passiveLivenessLog": "Live"
 }
 ```
 
@@ -158,11 +170,12 @@ curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
 ```
 
 **Response:**
+
 ```json
 {
-    "timestamp": 1709708084,
-    "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
-    "hash": "61cf9b68412783c57dd5a9b0ca702a0902d81054"
+  "timestamp": 1709708084,
+  "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+  "hash": "61cf9b68412783c57dd5a9b0ca702a0902d81054"
 }
 ```
 
@@ -174,12 +187,13 @@ curl --location '{IDENTITY_API_BASE_URL}/services/previred/0fec0e8d-3ef3-477f-ae
 ```
 
 **Response:**
+
 ```json
 {
-    "timestamp": 1709708084,
-    "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
-    "token": "VI19:yCQAnOEPolfgPg5rSG8Px1Ism2DMKgyaWc1pqvYsz5vTx1E7nEAfh1oOrOa59...",
-    "url": "https://api.identity-platform.io/services/custody/download?token=eyJhbG..."
+  "timestamp": 1709708084,
+  "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+  "token": "VI19:yCQAnOEPolfgPg5rSG8Px1Ism2DMKgyaWc1pqvYsz5vTx1E7nEAfh1oOrOa59...",
+  "url": "https://api.identity-platform.io/services/custody/download?token=eyJhbG..."
 }
 ```
 
@@ -189,14 +203,15 @@ If a callback URL's specified, a notification will be sent when the process fini
 
 ```json
 {
-    "timestamp": 1709708084,
-    "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
-    "statusCode": 200,
-    "status": "succeeded"
+  "timestamp": 1709708084,
+  "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+  "statusCode": 200,
+  "status": "succeeded"
 }
 ```
 
 **Possible states:**
+
 - `succeeded`: Successful process
 - `failed`: Failed process
 
@@ -210,6 +225,7 @@ If a callback URL's specified, a notification will be sent when the process fini
 
 ## Related Links
 
-- [Morphology V2 API](/docs/services/morphology-v2) - Document validation
-- [Onboarding API](/docs/services/onboarding) - Biometric validation
-- [Previred API](/docs/services/previred/previred) - OpenAPI specification
+- [Document Validation V2 API](/docs/services/morphology-v2) - Document validation
+- [Identity Validation V2 API](/docs/services/onboarding/identityValidationV2) - Biometric identity validation
+
+View the Services API for Previred Integration
