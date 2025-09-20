@@ -1,7 +1,7 @@
 import { buildRegistry } from '@/scripts/build-registry';
 import * as OpenAPI from 'fumadocs-openapi';
 import { rimraf } from 'rimraf';
-import { openapi, geocodingapi, onboardingapi, authenticationapi, ocrapi, morphologyapi, morphologyv2api, padapi, iadapi, trackingapi } from '@/lib/openapi';
+import { openapi, geocodingapi, onboardingapi, authenticationapi, ocrapi, morphologyapi, morphologyv2api, padapi, iadapi, trackingapi, previredapi } from '@/lib/openapi';
 
 export async function generateDocs() {
   await rimraf('./content/docs/openapi/(generated)');
@@ -15,6 +15,7 @@ export async function generateDocs() {
   await rimraf('./content/docs/services/pad/(generated)');
   await rimraf('./content/docs/services/security/(generated)');
   await rimraf('./content/docs/services/tracking/(generated)');
+  await rimraf('./content/docs/services/previred/(generated)');
 
   await Promise.all([
     OpenAPI.generateFiles({
@@ -76,7 +77,13 @@ export async function generateDocs() {
       output: './content/docs/services/tracking/(generated)',
       per: 'operation',
       includeDescription: true,
-    })
+    }),
+    OpenAPI.generateFiles({
+      input: previredapi,
+      output: './content/docs/services/previred/(generated)',
+      per: 'operation',
+      includeDescription: true,
+    }),
   ]);
 }
 

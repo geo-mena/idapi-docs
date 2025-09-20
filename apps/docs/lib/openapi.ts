@@ -132,6 +132,18 @@ export const trackingapi = createOpenAPI({
   },
 });
 
+export const previredapi = createOpenAPI({
+  input: ['./content/docs/services/previred/previred.yaml'],
+  
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
 export const civilvalidationecapi = createOpenAPI({
   input: [
     './content/docs/services/civil-validation-ec/full-mobile.yaml',

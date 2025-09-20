@@ -12,6 +12,7 @@
     "onboarding/(generated)/authenticateFacial",
     "onboarding/(generated)/evaluatePassiveLivenessToken",
     "onboarding/(generated)/evaluatePassiveLiveness",
+    "previred",
     "---Authentication---",
     "authentication/(generated)/authenticateUser",
     "authentication/(generated)/authenticateUserV2",

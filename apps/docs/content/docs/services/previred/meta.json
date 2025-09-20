@@ -1,0 +1,7 @@
+{
+  "title": "Previred Integration (Chile)",
+  "pages": [
+    "(generated)/createPreviredTransaction",
+    "(generated)/getPreviredToken"
+  ]
+}
