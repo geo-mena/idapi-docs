@@ -1,0 +1,339 @@
+---
+title: Previred Integration (Chile)
+index: true
+---
+
+This API allows you to perform the integration flow with Previred.
+
+The supported operations are:
+
+- [Create Transaction:](/docs/services/previred/createPreviredTransaction) performs the complete flow and returns the corresponding identifier.
+- [Get Token:](/docs/services/previred/getPreviredToken) returns the token associated with an identifier.
+
+## Integration Flow
+
+Previred integration requires completing several steps that involve different platform services:
+
+<Mermaid
+  chart="
+sequenceDiagram
+    participant U as User/Client
+    participant DV as Document Validation API
+    participant IV as Identity Validation API
+    participant PV as Previred API
+    participant CB as Callback URL
+
+    U->>DV: POST /verify/documentValidation/v2/start
+    Note over DV: Validate document images<br/>Extract document data
+    DV-->>U: scanReference + validation result
+
+    U->>IV: POST /onboarding/v2/identity
+    Note over IV: Biometric validation<br/>Liveness detection<br/>Face comparison
+    IV-->>U: serviceTransactionId + results
+
+    U->>DV: POST /verify/documentValidation/v2/status
+    Note over DV: Check processing status
+    DV-->>U: status (DONE)
+
+    U->>DV: POST /verify/documentValidation/v2/data
+    Note over DV: Retrieve extracted data<br/>from document
+    DV-->>U: document data + transaction info
+
+    U->>PV: POST /services/previred
+    Note over PV: Process with Previred<br/>Generate evidence
+    PV-->>U: transactionId + hash
+
+    alt Callback URL provided
+        PV->>CB: POST callback notification
+        Note over CB: Transaction status<br/>(succeeded/failed)
+    end
+
+    U->>PV: GET /services/previred/{transactionId}
+    Note over PV: Retrieve token and<br/>download URL
+    PV-->>U: TVI token + PDF URL
+
+"
+/>
+
+## Detailed Flow
+
+### 1. Start Document Validation
+
+**Endpoint:** [`/verify/documentValidation/v2/start`](/docs/services/morphology-v2/documentValidationStartV2)
+
+This service performs morphological validation of the identity document:
+
+- Analyzes front and back document images
+- Validates document authenticity
+- Extracts document data
+- Generates a `scanReference` required for Previred
+
+**Required fields:** `country`, `idType`, `documentFrontRawImage`, `documentBackRawImage`
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/start' \
+--header 'x-api-key: {API_KEY}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "country": "CHL",
+    "idType": "ID_CARD",
+    "documentRawImageMimeType": "image/jpeg",
+    "documentFrontRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE...",
+    "documentBackRawImage": "iVBORw0KGgoAAAANSUhEUgAAAAE...",
+    "merchantIdScanReference": "custom-ref-123"
+}'
+```
+
+**Response:**
+
+```json
+{
+  "timestamp": "1970-01-01T00:00:00.000Z",
+  "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064", // [!code highlight]
+  "type": "1"
+}
+```
+
+### 2. Identity Validation V2
+
+**Endpoint:** [`/onboarding/v2/identity`](/docs/services/onboarding/identityValidationV2)
+
+This service performs biometric identity validation:
+
+- Compares document photo with user's selfie
+- Performs liveness detection
+- Generates a `serviceTransactionId` required for Previred
+
+**Required fields:** `token1`, `bestImageToken`, `method`, `tracking`
+
+**Optional headers:** `family: "OnBoarding"` when using tracking fields
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/onboarding/v2/identity' \
+--header 'x-api-key: {API_KEY}' \
+--header 'family: OnBoarding' \
+--header 'Content-Type: application/json' \
+--data '{
+    "token1": "/9j/4AAQSkZJRgABAQAASAB...",
+    "bestImageToken": "BAMBAQLNHJoWGPj...",
+    "method": "3",
+    "tracking": {
+        "extraData": "{extraData}",
+        "operationId": "{operationId}"
+    }
+}'
+```
+
+**Response:**
+
+```json
+{
+  "serviceTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d", // [!code highlight]
+  "serviceResultCode": 0,
+  "serviceResultLog": "[identity] Service executed ok",
+  "serviceTime": "2235",
+  "facialAuthenticationResult": 3,
+  "facialAuthenticationLog": "Positive",
+  "facialAuthenticationSimilarity": 0.99214232,
+  "passiveLivenessResult": 3,
+  "passiveLivenessLog": "Live"
+}
+```
+
+### 3. Check Document Validation Status
+
+**Endpoint:** [`/verify/documentValidation/v2/status`](/docs/services/morphology-v2/documentValidationStatusV2)
+
+This service checks the processing status of the document validation:
+
+- Verifies if document processing is complete
+- Must return "DONE" status before proceeding to data extraction
+
+**Required fields:** `scanReference`, `type`
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/status' \
+--header 'x-api-key: {API_KEY}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+    "type": "1"
+}'
+```
+
+**Response:**
+
+```json
+{
+  "timestamp": "2025-04-29T15:07:39Z",
+  "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+  "status": "DONE"
+}
+```
+
+### 4. Get Document Validation Data
+
+**Endpoint:** [`/verify/documentValidation/v2/data`](/docs/services/morphology-v2/documentValidationDataV2)
+
+This service retrieves the extracted data from the validated document:
+
+- Returns document information (name, ID number, dates, etc.)
+- Provides transaction details
+- Required for complete document validation process
+
+**Required fields:** `scanReference`, `type`
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/verify/documentValidation/v2/data' \
+--header 'x-api-key: {API_KEY}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "scanReference": "fe294c25-17e1-4d98-a958-710edbf00064",
+    "type": "1",
+}'
+```
+
+**Response:**
+
+```json
+{
+  "document": {
+    "dateOfBirthParts": {
+      "year": "1989",
+      "month": "06",
+      "day": "22"
+    },
+    "dob": "1989-06-22",
+    "expiry": "2029-06-22",
+    "expiryDateParts": {
+      "year": "2029",
+      "month": "06",
+      "day": "22"
+    },
+    "firstName": "JUAN PABLO",
+    "gender": null,
+    "idSubtype": null,
+    "issuingCountry": "CHL",
+    "lastName": "TORRES IRIARTE",
+    "nationality": null,
+    "number": "516048876",
+    "optionalData2": "17088942 8",
+    "status": "APPROVED_VERIFIED",
+    "type": "ID_CARD",
+    "issuingDate": null,
+    "issuingDateParts": null,
+    "issuingPlace": null,
+    "issuingAuthority": null
+  },
+  "transaction": {
+    "date": "2025-04-29T15:04:29.889679Z",
+    "merchantScanReference": "custom-ref-123",
+    "source": "API",
+    "status": "DONE",
+    "updatedAt": "2025-04-29T15:04:38.036799Z"
+  },
+  "verification": {
+    "additionalChecks": null,
+    "mrzCheck": null
+  }
+}
+```
+
+### 5. Create Previred Transaction
+
+**Endpoint:** [`/services/previred`](/docs/services/previred/createPreviredTransaction)
+
+This service integrates with Previred using the previous results:
+
+- Processes all validation data with Previred
+- Generates evidence and compliance documentation
+- Returns transaction ID for token retrieval
+
+**Required fields:** `customerId`, `identityTransactionId`, `documentValidationScanReference`, `ipVerified`
+
+**Optional fields:** `callbackUrl`
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/services/previred' \
+--header 'x-api-key: {API_KEY}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "customerId": "{CUSTOMER_ID}",
+    "identityTransactionId": "2db602ee-3564-4304-af95-92a52eaae12d", // [!code ++]
+    "documentValidationScanReference": "fe294c25-17e1-4d98-a958-710edbf00064", // [!code ++]
+    "ipVerified": "{IP_VERIFIED}",
+    "callbackUrl": "{CALLBACK_URL}"
+}'
+```
+
+**Response:**
+
+```json
+{
+  "timestamp": 1709708084,
+  "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33", // [!code highlight]
+  "hash": "61cf9b68412783c57dd5a9b0ca702a0902d81054"
+}
+```
+
+### 6. Get TVI Token
+
+**Endpoint:** [`/services/previred/{transactionId}`](/docs/services/previred/getPreviredToken)
+
+This service retrieves the final Previred token and download URL:
+
+- Returns the TVI token for compliance verification
+- Provides PDF download URL with evidence documentation
+- Completes the Previred integration process
+
+**Required:** Transaction ID from previous step
+
+```bash
+curl --location '{IDENTITY_API_BASE_URL}/services/previred/0fec0e8d-3ef3-477f-ae9e-e350cda74b33' \
+--header 'x-api-key: {API_KEY}'
+```
+
+**Response:**
+
+```json
+{
+  "timestamp": 1709708084,
+  "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+  "token": "VI19:yCQAnOEPolfgPg5rSG8Px1Ism2DMKgyaWc1pqvYsz5vTx1E7nEAfh1oOrOa59...",
+  "url": "https://api.identity-platform.io/services/custody/download?token=eyJhbG..."
+}
+```
+
+## Callback Event
+
+If a callback URL's specified, a notification will be sent when the process finishes:
+
+```json
+{
+  "timestamp": 1709708084,
+  "transactionId": "0fec0e8d-3ef3-477f-ae9e-e350cda74b33",
+  "statusCode": 200,
+  "status": "succeeded"
+}
+```
+
+**Possible states:**
+
+- `succeeded`: Successful process
+- `failed`: Failed process
+
+## Important Considerations
+
+1. **Sequential order**: Services must be called in the specified order
+2. **Error handling**: Each step can fail independently
+3. **Timeouts**: Processes can take several seconds
+4. **Callbacks**: Recommended for async processes
+5. **Security**: All calls require a valid API key
+6. **Tracking fields**: When using `tracking` object with `extraData` and `operationId`, the `family` header must be set to "OnBoarding"
+
+## Related Links
+
+- [Document Validation V2 API](/docs/services/morphology-v2) - Document validation
+- [Identity Validation V2 API](/docs/services/onboarding/identityValidationV2) - Biometric identity validation
+
+View the Services API for Previred Integration
