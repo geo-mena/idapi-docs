@@ -56,6 +56,12 @@ import {
   downloadPostmanCollection as downloadPADCollection
 } from '@/utils/pad';
 import {
+  isSupportedPreviredService,
+  getCurrentPreviredService,
+  generatePreviredPostmanCollection,
+  downloadPostmanCollection as downloadPreviredCollection
+} from '@/utils/previred';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -123,8 +129,9 @@ export function PostmanButton() {
   const isMorphologyV2Service = isSupportedMorphologyV2Service(pathname);
   const isIADService = isSupportedIADService(pathname);
   const isPADService = isSupportedPADService(pathname);
+  const isPreviredService = isSupportedPreviredService(pathname);
 
-  if (!isOcrService && !isAuthService && !isOnboardingService && !isMorphologyService && !isMorphologyV2Service && !isIADService && !isPADService) {
+  if (!isOcrService && !isAuthService && !isOnboardingService && !isMorphologyService && !isMorphologyV2Service && !isIADService && !isPADService && !isPreviredService) {
     return null;
   }
 
@@ -185,6 +192,14 @@ export function PostmanButton() {
       if (!collection) return;
 
       downloadPADCollection(collection);
+    } else if (isPreviredService) {
+      const serviceName = getCurrentPreviredService(pathname);
+      if (!serviceName) return;
+
+      const collection = generatePreviredPostmanCollection(serviceName);
+      if (!collection) return;
+
+      downloadPreviredCollection(collection);
     }
   };
 
