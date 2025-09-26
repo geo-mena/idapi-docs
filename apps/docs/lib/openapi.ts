@@ -132,6 +132,18 @@ export const trackingapi = createOpenAPI({
   },
 });
 
+export const detokenizeapi = createOpenAPI({
+  input: ['./content/docs/services/detokenize/detokenize.yaml'],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
 export const previredapi = createOpenAPI({
   input: ['./content/docs/services/previred/previred.yaml'],
   

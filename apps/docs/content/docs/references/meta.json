@@ -1,0 +1,11 @@
+{
+  "title": "References",
+  "description": "Biometric onboarding and authentication references",
+  "root": true,
+  "icon": "Fingerprint",
+  "pages": [
+    "---Common integrations---",
+    "index",
+    "authentication"
+  ]
+}

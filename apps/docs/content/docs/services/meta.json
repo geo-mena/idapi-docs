@@ -1,6 +1,6 @@
 {
   "title": "Identity API",
-  "description": "Identity verification and biometric services",
+  "description": "Biometric identity verification",
   "root": true,
   "icon": "Server",
   "pages": [
@@ -29,9 +29,9 @@
     "---Civil Validation---",
     "civil-validation-ec",
     "civil-validation-cr",
-    "---Tracking---",
+    "---Tracking and Security---",
     "tracking/(generated)/finishTracking",
-    "---Security---",
-    "security/(generated)/injectionAttackDetection"
+    "security/(generated)/injectionAttackDetection",
+    "detokenize/(generated)/detokenizeImage"
   ]
 }
