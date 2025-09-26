@@ -1,0 +1,11 @@
+{
+  "title": "Panama",
+  "pages": [
+    "variant/(generated)/full-mobile",
+    "variant/(generated)/full-web",
+    "variant/(generated)/data-mobile",
+    "variant/(generated)/data-web",
+    "variant/(generated)/facial-mobile",
+    "variant/(generated)/facial-web"
+  ]
+}

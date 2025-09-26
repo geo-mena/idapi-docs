@@ -1,0 +1,262 @@
+openapi: 3.1.1
+info:
+  title: Civil Validation Panama - Data Mobile API
+  description: |
+    Data validation for Panama using mobile platform.
+    This service performs data validation against Civil Registry records using OCR token from mobile capture.
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: Civil Validation Panama
+    description: Civil Registry validation services for Panama
+paths:
+  '/services/civilValidation':
+    post:
+      tags:
+        - Civil Validation Panama
+      summary: Data Validation Mobile
+      description: This service performs data validation between the properties sent and the data from the Civil Registry of Panama using mobile platform.
+      operationId: dataMobile
+      requestBody:
+        description: Data validation request for mobile platform
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dataMobileRequest'
+            example:
+              operation: "DATA"
+              platform: "MOBILE"
+              tokenOcr: "{{tokenOcrPAN}}"
+              countryCode: "PAN"
+              returnPII: true
+              tracking:
+                extraData: "BQABAQG2gBNjuHN..."
+                operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+      responses:
+        '200':
+          description: Successfully processed data validation - mobile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CivilValidationDataResponse'
+              example:
+                serviceResultCode: 0
+                serviceTime: "1232"
+                serviceResultLog: "Service executed ok"
+                serviceTransactionId: "796a580b-67b5-4a6e-a19a-5b9145ad55cd"
+                civilDataValidation:
+                  - field: "firstName"
+                    code: "-99"
+                    message: "Possibly adulterated"
+                  - field: "lastName"
+                    code: "0"
+                    message: "Validated ok"
+                  - field: "dateOfBirth"
+                    code: "0"
+                    message: "Validated ok"
+                serviceDocument: "{\"Back/INPUT/Issuer\":\"PAN\",\"Back/ML/DateOfBirth\":\"13/04/1964\",\"Back/ML/DateOfExpiry\":\"16/04/2023\",\"Back/ML/DocumentNumber\":\"1 0627 0723\",\"Back/ML/ElectoralAddress\":\"\",\"Back/ML/FatherName\":\"LUOOT NOT. HOSPITAL CENTRAL SAN JOSE\",\"Back/ML/Gender\":\"\",\"Back/ML/MotherName\":\"XO F\",\"Back/ML/PlaceOfBirth\":\"Domicilio Ectoral SAN BOSCO CENTRAL SAN JOSE\",\"DateOfBirth\":\"13/04/1964\",\"DateOfExpiry\":\"16/04/2023\",\"DocumentCaptured\":\"CR/All\",\"DocumentNumber\":\"1 0627 0723\",\"FirstName\":\"\",\"Front/INPUT/Issuer\":\"PAN\",\"Front/ML/CC\":\".:\")"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API access authorization
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              title:
+                type: string
+                example: "Bad Request"
+              detail:
+                type: string
+                example: "Invalid request."
+              type:
+                type: string
+                example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+              errors:
+                type: array
+                example: []
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "User is not authorized to access this resource with an explicit deny"
+    BadGateway:
+      description: Bad Gateway
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 502
+              title:
+                type: string
+                example: "Bad Gateway"
+              detail:
+                type: string
+                example: "Server got an invalid response."
+              type:
+                type: string
+                example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    GatewayTimeout:
+      description: Gateway Timeout
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Endpoint request timed out"
+  schemas:
+    TrackingInfo:
+      type: object
+      description: Object that represents necessary tracking information.
+      properties:
+        extraData:
+          type: string
+          format: byte
+          description: Token generated by Mobile/Web SDK. Contains tokenized tracking information with Platform.
+          example: "BQABAQG2gBNjuHN..."
+        operationId:
+          type: string
+          description: Operation identifier generated by Mobile/Web SDK.
+          example: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+    dataMobileRequest:
+      type: object
+      required:
+        - operation
+        - platform
+        - tokenOcr
+        - countryCode
+      properties:
+        operation:
+          type: string
+          description: Validation operation to perform. For this endpoint, must be "DATA".
+          enum: ["DATA"]
+          example: "DATA"
+        platform:
+          type: string
+          description: Platform on which the request is made. For this endpoint, must be "MOBILE".
+          enum: ["MOBILE"]
+          example: "MOBILE"
+        tokenOcr:
+          type: string
+          format: byte
+          description: Token generated by the native or hybrid SelphID widget, AES256 encrypted and tokenized, sent in Base64 format. Contains the OCR result generated from the identity document capture. Required for MOBILE platform.
+          example: "{{tokenOcrPAN}}"
+        countryCode:
+          type: string
+          description: Country code in ISO 3166-1 alpha-3 format. Must be "PAN" for Panama.
+          enum: ["PAN"]
+          example: "PAN"
+        returnPII:
+          type: boolean
+          description: Indicates if personal data generated by both the OCR service and the Civil Registry response is to be received.
+          example: true
+        documentValidation:
+          type: boolean
+          description: Indicates if document validation is to be initiated, returning scanReference and type.
+          example: true
+        tracking:
+          $ref: '#/components/schemas/TrackingInfo'
+    CivilDataValidationItem:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Field name being validated (e.g., firstName, lastName, dateOfBirth).
+          example: "firstName"
+        code:
+          type: string
+          description: |
+            Validation result code:
+            - "0": Validated ok
+            - "-99": Possibly adulterated
+            - Other codes may indicate specific validation issues
+          example: "0"
+        message:
+          type: string
+          description: Human-readable validation result message.
+          example: "Validated ok"
+    CivilValidationDataResponse:
+      type: object
+      properties:
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
+          example: 0
+        serviceTime:
+          type: string
+          description: Field indicating the processing time in milliseconds.
+          example: "1232"
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the service execution result. Includes details when there is an error or exception in the module.
+          example: "Service executed ok"
+        serviceTransactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API.
+          example: "796a580b-67b5-4a6e-a19a-5b9145ad55cd"
+        civilDataValidation:
+          type: array
+          description: Array representing the OCR validations against the data obtained from the Civil Registry. The presence of this object depends on the consulted Civil Registry.
+          items:
+            $ref: '#/components/schemas/CivilDataValidationItem'
+        serviceDocument:
+          type: string
+          description: JSON string representing the captured document. Its properties are all the fields extracted by the OCR process.
+          example: "{\"Back/INPUT/Issuer\":\"PAN\",\"Back/ML/DateOfBirth\":\"13/04/1964\",\"Back/ML/DocumentNumber\":\"1 0627 0723\"}"
+        civilServiceData:
+          type: string
+          description: JSON string representing the personal data obtained from the Civil Registry (returned only if returnPII was sent as true in the request).
+          example: "{\"nombres\":\"APUY STIER\",\"fechaNacimiento\":\"13/04/1964\",\"lugarNacimiento\":\"HOSPITAL CENTRAL SAN JOSE\"}"

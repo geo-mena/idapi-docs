@@ -1,7 +1,23 @@
 import { buildRegistry } from '@/scripts/build-registry';
 import * as OpenAPI from 'fumadocs-openapi';
 import { rimraf } from 'rimraf';
-import { openapi, geocodingapi, onboardingapi, authenticationapi, ocrapi, morphologyapi, morphologyv2api, padapi, iadapi, trackingapi, previredapi, detokenizeapi } from '@/lib/openapi';
+import {
+  openapi,
+  geocodingapi,
+  onboardingapi,
+  authenticationapi,
+  ocrapi,
+  morphologyapi,
+  morphologyv2api,
+  padapi,
+  iadapi,
+  trackingapi,
+  previredapi,
+  detokenizeapi,
+  civilvalidationargapi,
+  civilvalidationperapi,
+  civilvalidationgtmapi,
+} from '@/lib/openapi';
 
 export async function generateDocs() {
   await rimraf('./content/docs/openapi/(generated)');
@@ -17,6 +33,11 @@ export async function generateDocs() {
   await rimraf('./content/docs/services/tracking/(generated)');
   await rimraf('./content/docs/services/previred/(generated)');
   await rimraf('./content/docs/services/detokenize/(generated)');
+  await rimraf(
+    './content/docs/services/civil-validation/argentina/(generated)',
+  );
+  await rimraf('./content/docs/services/civil-validation/peru/(generated)');
+  await rimraf('./content/docs/services/civil-validation/guatemala/(generated)');
 
   await Promise.all([
     OpenAPI.generateFiles({
@@ -88,6 +109,24 @@ export async function generateDocs() {
     OpenAPI.generateFiles({
       input: detokenizeapi,
       output: './content/docs/services/detokenize/(generated)',
+      per: 'operation',
+      includeDescription: true,
+    }),
+    OpenAPI.generateFiles({
+      input: civilvalidationargapi,
+      output: './content/docs/services/civil-validation/argentina/(generated)',
+      per: 'operation',
+      includeDescription: true,
+    }),
+    OpenAPI.generateFiles({
+      input: civilvalidationperapi,
+      output: './content/docs/services/civil-validation/peru/(generated)',
+      per: 'operation',
+      includeDescription: true,
+    }),
+    OpenAPI.generateFiles({
+      input: civilvalidationgtmapi,
+      output: './content/docs/services/civil-validation/guatemala/(generated)',
       per: 'operation',
       includeDescription: true,
     }),
