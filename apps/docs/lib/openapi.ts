@@ -193,3 +193,60 @@ export const civilvalidationcrapi = createOpenAPI({
     },
   },
 });
+
+export const civilvalidationargapi = createOpenAPI({
+  input: [
+    './content/docs/services/civil-validation/argentina/full-mobile.yaml',
+    './content/docs/services/civil-validation/argentina/full-web.yaml',
+    './content/docs/services/civil-validation/argentina/data-mobile.yaml',
+    './content/docs/services/civil-validation/argentina/data-web.yaml',
+    './content/docs/services/civil-validation/argentina/facial-mobile.yaml',
+    './content/docs/services/civil-validation/argentina/facial-web.yaml'
+  ],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
+export const civilvalidationperapi = createOpenAPI({
+  input: [
+    './content/docs/services/civil-validation/peru/full-mobile.yaml',
+    './content/docs/services/civil-validation/peru/full-web.yaml',
+    './content/docs/services/civil-validation/peru/data-mobile.yaml',
+    './content/docs/services/civil-validation/peru/data-web.yaml',
+    './content/docs/services/civil-validation/peru/facial-mobile.yaml',
+    './content/docs/services/civil-validation/peru/facial-web.yaml'
+  ],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
+
+export const civilvalidationgtmapi = createOpenAPI({
+  input: [
+    './content/docs/services/civil-validation/guatemala/full-mobile.yaml',
+    './content/docs/services/civil-validation/guatemala/full-web.yaml',
+    './content/docs/services/civil-validation/guatemala/data-mobile.yaml',
+    './content/docs/services/civil-validation/guatemala/data-web.yaml',
+    './content/docs/services/civil-validation/guatemala/facial-mobile.yaml',
+    './content/docs/services/civil-validation/guatemala/facial-web.yaml'
+  ],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});

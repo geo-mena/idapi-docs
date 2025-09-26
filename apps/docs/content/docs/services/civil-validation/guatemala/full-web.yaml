@@ -1,0 +1,292 @@
+openapi: 3.1.1
+info:
+  title: Civil Validation Guatemala - Full Web API
+  description: |
+    Full validation (data validation and facial matching) for Guatemala using web platform.
+    This service performs both data validation against Civil Registry records and facial matching using document images.
+  version: 1.0.0
+  contact:
+    name: FacePhi Support
+    email: support@facephi.com
+servers:
+  - url: '{IDENTITY_API_BASE_URL}'
+    description: Identity API Base URL
+    variables:
+      IDENTITY_API_BASE_URL:
+        default: 'https://api.identity-platform.io'
+security:
+  - apiKey: []
+tags:
+  - name: Civil Validation Guatemala
+    description: Civil Registry validation services for Guatemala
+paths:
+  '/services/civilValidation':
+    post:
+      tags:
+        - Civil Validation Guatemala
+      summary: Full Validation Web
+      description: This service performs facial matching and data validation between the properties sent and the data from the Civil Registry of Guatemala using web platform.
+      operationId: fullWeb
+      requestBody:
+        description: Full validation request for web platform
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fullWebRequest'
+            example:
+              operation: "FULL"
+              platform: "WEB"
+              imageBackDocument: "{{imageBackDocumentGTM}}"
+              imageFrontDocument: "{{imageFrontDocumentGTM}}"
+              templateRaw: "{{templateRawGTM}}"
+              countryCode: "GTM"
+              returnPII: false
+              tracking:
+                extraData: "BQABAQG2gBNjuHN..."
+                operationId: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+      responses:
+        '200':
+          description: Successfully processed full validation - web
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CivilValidationFullResponse'
+              example:
+                serviceResultCode: 0
+                serviceTime: "4074"
+                serviceResultLog: "Negative | Service executed ok"
+                serviceTransactionId: "e1243a68-be8f-464c-94a7-e8a5562d71a0"
+                civilDataValidation:
+                  - field: "firstName"
+                    code: "-99"
+                    message: "Possibly adulterated"
+                  - field: "lastName"
+                    code: "0"
+                    message: "Validated ok"
+                  - field: "dateOfBirth"
+                    code: "0"
+                    message: "Validated ok"
+                serviceFacialAuthenticationResult: 1
+                serviceFacialSimilarityResult: 0
+                serviceFacialAuthenticationHash: "NA"
+                serviceDocument: "{\"ASK4BACK\":\"NO\",\"BACKSIDE\":{\"FIELD_DATA\":{\"ADDRESS\":\"SAN RAFAEL POAS ALAJUELA\",\"BARCODES\":[{\"DATA\":\"\",\"TYPE\":\"\"}],\"BIRTH_DATE\":\" 19 10 1984\",\"BIRTH_PLACE\":\"CENTRO CENTRAL ALAJUELA\",\"EXPIRATION_DATE\":\" 07 02 2028\",\"FATHER_NAME\":\"LUIS RODRIGUEZ CASTRO\",\"IDENTITY_NUMBER\":\"205990558\",\"MOTHER_NAME\":\"FLORA ISABEL QUESADA CASTRO\",\"SEX\":\"\",\"VERTICAL_NUMBER\":\"000631975\"}},\"CHECKS\":{\"IDENTITY_NUMBER_SIDE_MATCH\":true},\"COUNTRY_CODE\":\"GTM\",\"DOC_MODEL\":\"NEW\",\"FRONTSIDE\":{\"FIELD_DATA\":{\"FIRST_SURNAME\":\"RODRIGUEZ\",\"IDENTITY_NUMBER\":\"205990558\",\"NAME\":\"LUIS\",\"SECOND_SURNAME\":\"QUESADA\"}},\"SCORING\":{\"BACK_CONFIDENCE\":0.976855586876,\"BACK_SHA256\":\"4dfb73e9c8cbba6db42d1e4938ba1e62244bfe26efecd55579a4f65c9aed63ae\",\"FIELDS_RETURNED\":15,\"FIELDS_TOTAL\":15,\"FRONT_CONFIDENCE\":0.922833224138,\"FRONT_SHA256\":\"506b3192e0e80f851012f895300c63e8c85fea0ca78b9d99195e6256afadc5d4\",\"OVERALL_RATING\":100.0,\"OVERALL_SIDE_CORRESPONDENCE\":100.0}}"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API access authorization
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              title:
+                type: string
+                example: "Bad Request"
+              detail:
+                type: string
+                example: "Invalid request."
+              type:
+                type: string
+                example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+              errors:
+                type: array
+                example: []
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "User is not authorized to access this resource with an explicit deny"
+    BadGateway:
+      description: Bad Gateway
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 502
+              title:
+                type: string
+                example: "Bad Gateway"
+              detail:
+                type: string
+                example: "Server got an invalid response."
+              type:
+                type: string
+                example: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    GatewayTimeout:
+      description: Gateway Timeout
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Endpoint request timed out"
+  schemas:
+    TrackingInfo:
+      type: object
+      description: Object that represents necessary tracking information.
+      properties:
+        extraData:
+          type: string
+          format: byte
+          description: Token generated by Mobile/Web SDK. Contains tokenized tracking information with Platform.
+          example: "BQABAQG2gBNjuHN..."
+        operationId:
+          type: string
+          description: Operation identifier generated by Mobile/Web SDK.
+          example: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
+    fullWebRequest:
+      type: object
+      required:
+        - operation
+        - platform
+        - imageFrontDocument
+        - imageBackDocument
+        - templateRaw
+        - countryCode
+      properties:
+        operation:
+          type: string
+          description: Validation operation to perform. For this endpoint, must be "FULL".
+          enum: ["FULL"]
+          example: "FULL"
+        platform:
+          type: string
+          description: Platform on which the request is made. For this endpoint, must be "WEB".
+          enum: ["WEB"]
+          example: "WEB"
+        imageFrontDocument:
+          type: string
+          format: byte
+          description: Front capture of the document, base64 image without the mime type header. Required for WEB platform.
+          example: "{{imageFrontDocumentGTM}}"
+        imageBackDocument:
+          type: string
+          format: byte
+          description: Back capture of the document, base64 image without the mime type header. Required for WEB platform.
+          example: "{{imageBackDocumentGTM}}"
+        templateRaw:
+          type: string
+          format: byte
+          description: Biometric template, property generated by the Selphi widget. Required for FACIAL or FULL operations.
+          example: "{{templateRawGTM}}"
+        countryCode:
+          type: string
+          description: Country code in ISO 3166-1 alpha-3 format. Must be "GTM" for Guatemala.
+          enum: ["GTM"]
+          example: "GTM"
+        returnPII:
+          type: boolean
+          description: Indicates if personal data generated by both the OCR service and the Civil Registry response is to be received.
+          example: false
+        documentValidation:
+          type: boolean
+          description: Indicates if document validation is to be initiated, returning scanReference and type.
+          example: true
+        tracking:
+          $ref: '#/components/schemas/TrackingInfo'
+    CivilDataValidationItem:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Field name being validated (e.g., firstName, lastName, dateOfBirth).
+          example: "firstName"
+        code:
+          type: string
+          description: |
+            Validation result code:
+            - "0": Validated ok
+            - "-99": Possibly adulterated
+            - Other codes may indicate specific validation issues
+          example: "0"
+        message:
+          type: string
+          description: Human-readable validation result message.
+          example: "Validated ok"
+    CivilValidationFullResponse:
+      type: object
+      properties:
+        serviceResultCode:
+          type: integer
+          description: Code indicating the overall result of the service execution. See [Service Result Code](/docs/services/serviceResultCodes#service-result-code)
+          example: 0
+        serviceTime:
+          type: string
+          description: Field indicating the processing time in milliseconds.
+          example: "4074"
+        serviceResultLog:
+          type: string
+          description: Descriptive field of the service execution result. Includes details when there is an error or exception in the module.
+          example: "Negative | Service executed ok"
+        serviceTransactionId:
+          type: string
+          description: Transaction identifier associated with the request processed by the API.
+          example: "e1243a68-be8f-464c-94a7-e8a5562d71a0"
+        civilDataValidation:
+          type: array
+          description: Array representing the OCR validations against the data obtained from the Civil Registry. The presence of this object depends on the consulted Civil Registry.
+          items:
+            $ref: '#/components/schemas/CivilDataValidationItem'
+        serviceFacialAuthenticationResult:
+          type: integer
+          description: Code indicating the result of the facial matching. See [Service Facial Authentication Result](/docs/services/serviceResultCodes#service-facial-authentication-result)
+          example: 1
+        serviceFacialAuthenticationHash:
+          type: string
+          description: Integrity hash of the biometric template used in a positive or uncertain facial authentication.
+          example: "NA"
+        serviceFacialSimilarityResult:
+          type: number
+          format: float
+          description: Value indicating the facial similarity between the face in the identity document photo and the selfie taken by the user. 1.0 = 100%.
+          example: 0
+        serviceDocument:
+          type: string
+          description: JSON string representing the captured document. Its properties are all the fields extracted by the OCR process.
+          example: "{\"ASK4BACK\":\"NO\",\"BACKSIDE\":{\"FIELD_DATA\":{\"ADDRESS\":\"SAN RAFAEL POAS ALAJUELA\",\"BARCODES\":[{\"DATA\":\"\",\"TYPE\":\"\"}],\"BIRTH_DATE\":\" 19 10 1984\"}}"
+        civilServiceData:
+          type: string
+          description: JSON string representing the personal data obtained from the Civil Registry (returned only if returnPII was sent as true in the request).
+          example: "{\"nombres\":\"LUIS RODRIGUEZ QUESADA\",\"fechaNacimiento\":\"19/10/1984\",\"lugarNacimiento\":\"CENTRO CENTRAL ALAJUELA\",\"direccion\":\"SAN RAFAEL POAS ALAJUELA\"}"
