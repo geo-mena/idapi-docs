@@ -29,9 +29,8 @@
     "---Civil Validation---",
     "civil-validation-ec",
     "civil-validation-cr",
-    "---Tracking---",
+    "---Tracking and Security---",
     "tracking/(generated)/finishTracking",
-    "---Security---",
     "security/(generated)/injectionAttackDetection"
   ]
 }
