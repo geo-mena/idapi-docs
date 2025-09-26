@@ -1,6 +1,6 @@
 {
   "title": "Landing",
-  "description": "Biometric onboarding gateway with No-Code SDK",
+  "description": "No-Code biometric onboarding",
   "root": true,
   "icon": "Fingerprint",
   "pages": [

@@ -1,6 +1,6 @@
 {
   "title": "Identity API",
-  "description": "Identity verification and biometric services",
+  "description": "Biometric identity verification",
   "root": true,
   "icon": "Server",
   "pages": [

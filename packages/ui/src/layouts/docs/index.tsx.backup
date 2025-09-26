@@ -227,11 +227,11 @@ export function DocsLayout({
               </SidebarCollapseTrigger>
             )}
           </div>
-          {tabs.length > 0 && <RootToggle options={tabs} />}
           {searchToggle.enabled !== false &&
             (searchToggle.components?.lg ?? (
               <LargeSearchToggle hideIfDisabled />
             ))}
+          {tabs.length > 0 && <RootToggle options={tabs} />}
 
           {banner}
         </SidebarHeader>
