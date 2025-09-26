@@ -31,6 +31,7 @@
     "civil-validation-cr",
     "---Tracking and Security---",
     "tracking/(generated)/finishTracking",
-    "security/(generated)/injectionAttackDetection"
+    "security/(generated)/injectionAttackDetection",
+    "detokenize/(generated)/detokenizeImage"
   ]
 }
