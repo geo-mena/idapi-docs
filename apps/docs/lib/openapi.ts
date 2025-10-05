@@ -250,3 +250,22 @@ export const civilvalidationgtmapi = createOpenAPI({
     },
   },
 });
+
+export const civilvalidationcriapi = createOpenAPI({
+  input: [
+    './content/docs/services/civil-validation/costa-rica/full-mobile.yaml',
+    './content/docs/services/civil-validation/costa-rica/full-web.yaml',
+    './content/docs/services/civil-validation/costa-rica/data-mobile.yaml',
+    './content/docs/services/civil-validation/costa-rica/data-web.yaml',
+    './content/docs/services/civil-validation/costa-rica/facial-mobile.yaml',
+    './content/docs/services/civil-validation/costa-rica/facial-web.yaml'
+  ],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});

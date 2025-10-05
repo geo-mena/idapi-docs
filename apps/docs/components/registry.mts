@@ -117,6 +117,10 @@ export const registry: Registry = {
           type: 'lib',
           path: 'utils/pad.ts',
         },
+        {
+          type: 'lib',
+          path: 'utils/previred.ts',
+        },
       ],
     },
   ],
