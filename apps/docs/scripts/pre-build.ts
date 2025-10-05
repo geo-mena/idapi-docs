@@ -17,7 +17,8 @@ import {
   civilvalidationargapi,
   civilvalidationperapi,
   civilvalidationgtmapi,
-  civilvalidationcriapi
+  civilvalidationcriapi,
+  civilvalidationecuapi,
 } from '@/lib/openapi';
 
 export async function generateDocs() {
@@ -38,8 +39,13 @@ export async function generateDocs() {
     './content/docs/services/civil-validation/argentina/(generated)',
   );
   await rimraf('./content/docs/services/civil-validation/peru/(generated)');
-  await rimraf('./content/docs/services/civil-validation/guatemala/(generated)');
-  await rimraf('./content/docs/services/civil-validation/costa-rica/(generated)');
+  await rimraf(
+    './content/docs/services/civil-validation/guatemala/(generated)',
+  );
+  await rimraf(
+    './content/docs/services/civil-validation/costa-rica/(generated)',
+  );
+  await rimraf('./content/docs/services/civil-validation/ecuador/(generated)');
 
   await Promise.all([
     OpenAPI.generateFiles({
@@ -135,6 +141,12 @@ export async function generateDocs() {
     OpenAPI.generateFiles({
       input: civilvalidationcriapi,
       output: './content/docs/services/civil-validation/costa-rica/(generated)',
+      per: 'operation',
+      includeDescription: true,
+    }),
+    OpenAPI.generateFiles({
+      input: civilvalidationecuapi,
+      output: './content/docs/services/civil-validation/ecuador/(generated)',
       per: 'operation',
       includeDescription: true,
     }),

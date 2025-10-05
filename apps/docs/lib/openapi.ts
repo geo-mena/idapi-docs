@@ -269,3 +269,22 @@ export const civilvalidationcriapi = createOpenAPI({
     },
   },
 });
+
+export const civilvalidationecuapi = createOpenAPI({
+  input: [
+    './content/docs/services/civil-validation/ecuador/full-mobile.yaml',
+    './content/docs/services/civil-validation/ecuador/full-web.yaml',
+    './content/docs/services/civil-validation/ecuador/data-mobile.yaml',
+    './content/docs/services/civil-validation/ecuador/data-web.yaml',
+    './content/docs/services/civil-validation/ecuador/facial-mobile.yaml',
+    './content/docs/services/civil-validation/ecuador/facial-web.yaml'
+  ],
+
+  proxyUrl: '/api/proxy',
+  shikiOptions: {
+    themes: {
+      dark: 'vesper',
+      light: 'vitesse-light',
+    },
+  },
+});
