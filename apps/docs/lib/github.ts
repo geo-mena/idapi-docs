@@ -1,8 +1,8 @@
 import { App, Octokit } from 'octokit';
 import type { ActionResponse, Feedback } from '@/components/rate';
 
-export const repo = 'fumadocs';
-export const owner = 'fuma-nama';
+export const repo = 'idapi-docs';
+export const owner = 'geo-mena';
 export const DocsCategory = 'Docs Feedback';
 
 let instance: Octokit | undefined;
@@ -50,7 +50,7 @@ interface RepositoryInfo {
 
 let cachedDestination: RepositoryInfo | undefined;
 async function getFeedbackDestination() {
-  if (cachedDestination) return cachedDestination;
+    if (cachedDestination) return cachedDestination;
   const octokit = await getOctokit();
 
   const {
