@@ -27,6 +27,7 @@
     "ai": "^5.0.22",
     "class-variance-authority": "^0.7.1",
     "feed": "^5.1.0",
+    "framer-motion": "^12.23.22",
     "fumadocs-core": "workspace:*",
     "fumadocs-docgen": "workspace:^",
     "fumadocs-mdx": "workspace:*",
